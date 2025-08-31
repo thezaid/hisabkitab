@@ -3,105 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Protected Page</title>
-    <!-- Tailwind CSS for styling -->
+    <title>Hisab Kitab</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter font from Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Include CryptoJS for hashing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
         }
+        /* Custom animation for the shake effect */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 flex items-center justify-center min-h-screen">
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-sm p-8 space-y-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg">
-        <div class="text-center">
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Protected Area</h1>
-            <p class="mt-2 text-gray-500 dark:text-gray-400">Please enter the password to proceed.</p>
-        </div>
-
-        <!-- Password entry form -->
-        <form id="passwordForm" class="space-y-6">
-            <div>
-                <label for="password" class="sr-only">Password</label>
-                <input type="password" id="password" name="password" placeholder="Password" required class="w-full px-4 py-3 text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-300">
-                <!-- Error message display area -->
-                <p id="errorMessage" class="mt-2 text-sm text-red-600 dark:text-red-400 h-5"></p>
+    <div class="w-full max-w-sm">
+        <div id="password-card" class="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-8 shadow-2xl transition-all duration-300">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold tracking-tight text-white">Hisab Kitab</h1>
+                <p class="text-gray-400 mt-2">Enter the password to continue.</p>
             </div>
 
-            <div>
-                <button type="submit" class="w-full px-4 py-3 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition duration-300">
+            <!-- Password Form -->
+            <form id="password-form" class="space-y-6">
+                <div>
+                    <label for="password" class="sr-only">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password"
+                           class="w-full bg-gray-700/50 border border-gray-600 text-white rounded-lg px-4 py-3 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300">
+                </div>
+                <button type="submit"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-indigo-500 transition-all duration-300 transform hover:scale-105">
                     Unlock
                 </button>
+            </form>
+            
+            <!-- Wrong Password Message -->
+            <div id="error-message" class="mt-4 text-center text-red-400 font-medium opacity-0 transition-opacity duration-300 h-5">
+                <span>Wrong Password! Try again.</span>
             </div>
-        </form>
+
+            <!-- Hint Link -->
+            <div class="text-center mt-6">
+                <a href="#" id="hint-link" class="text-sm text-gray-500 hover:text-indigo-400 transition-colors">
+                    Need a hint?
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hint Modal/Overlay -->
+    <div id="hint-modal" class="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div id="hint-box" class="bg-gray-800 border border-gray-700 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl transform scale-95 transition-all duration-300">
+            <h3 class="text-xl font-bold text-white mb-4">Hint</h3>
+            <p class="text-gray-300">Please check the mail sent by Zaid with the subject "hisab kitab password".</p>
+            <button id="close-hint" class="mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-indigo-500 transition-all">
+                Got it
+            </button>
+        </div>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
-        // IMPORTANT: The plain text password is "links".
-        // This is its SHA-256 hash. The password itself is NOT stored in the code.
-        // To change your password, generate a new SHA-256 hash for your new password
-        // using an online tool and replace the hash below.
-        const CORRECT_PASSWORD_HASH = "c1724377a344d6ff15b57f2409c9520a327d73f4e3c4a259c8115505e6114e59";
-        const REDIRECT_URL = "https://zaidshaikh.notion.site/Hisab-Kitab-37b802e3d85244b8953a42824ed632ff";
-        // --- END CONFIGURATION ---
-
-        const form = document.getElementById('passwordForm');
+        const form = document.getElementById('password-form');
         const passwordInput = document.getElementById('password');
-        const errorMessage = document.getElementById('errorMessage');
+        const errorMessage = document.getElementById('error-message');
+        const passwordCard = document.getElementById('password-card');
+        const hintLink = document.getElementById('hint-link');
+        const hintModal = document.getElementById('hint-modal');
+        const hintBox = document.getElementById('hint-box');
+        const closeHintButton = document.getElementById('close-hint');
+        
+        // The SHA-256 hash of the password 'hk321'
+        const correctPasswordHash = '5f22359aa3d45f7556d78f23a0d5885744a56c4c9b9b16790903829be658f815';
 
-        /**
-         * Hashes a string using the SHA-256 algorithm.
-         * @param {string} string The string to hash.
-         * @returns {Promise<string>} A promise that resolves with the hex-encoded hash.
-         */
-        async function sha256(string) {
-            // Encode the string as UTF-8
-            const textAsBuffer = new TextEncoder().encode(string);
-            // Hash the buffer
-            const hashBuffer = await crypto.subtle.digest('SHA-256', textAsBuffer);
-            // Convert the ArrayBuffer to a hexadecimal string
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            return hashHex;
-        }
-
-        form.addEventListener('submit', async function(event) {
-            // Prevent the form from submitting the traditional way
+        form.addEventListener('submit', function(event) {
             event.preventDefault();
-
             const enteredPassword = passwordInput.value;
-            // Hash the entered password before comparing
-            const enteredPasswordHash = await sha256(enteredPassword);
+            
+            // Hash the entered password using SHA-256
+            const enteredPasswordHash = CryptoJS.SHA256(enteredPassword).toString();
 
-            // Check if the entered password's hash is correct
-            if (enteredPasswordHash === CORRECT_PASSWORD_HASH) {
-                // If correct, show a success message and redirect
-                errorMessage.textContent = 'Success! Redirecting...';
-                errorMessage.classList.remove('text-red-600', 'dark:text-red-400');
-                errorMessage.classList.add('text-green-600', 'dark:text-green-400');
-                
-                setTimeout(() => {
-                    window.location.href = REDIRECT_URL;
-                }, 1000); // Wait 1 second before redirecting
-
+            if (enteredPasswordHash === correctPasswordHash) {
+                // Correct password, redirect
+                window.location.href = 'https://zaidshaikh.notion.site/Hisab-Kitab-37b802e3d85244b8953a42824ed632ff';
             } else {
-                // If incorrect, show an error message
-                errorMessage.textContent = 'Incorrect password. Please try again.';
-                errorMessage.classList.add('text-red-600', 'dark:text-red-400');
-                errorMessage.classList.remove('text-green-600', 'dark:text-green-400');
-                passwordInput.value = ''; // Clear the password field
-                passwordInput.focus(); // Set focus back to the input
+                // Incorrect password
+                passwordCard.classList.add('shake');
+                errorMessage.classList.remove('opacity-0');
+                passwordInput.value = ''; // Clear the input field
+                passwordInput.focus();
+
+                // Remove the shake and error message after a short delay
+                setTimeout(() => {
+                    passwordCard.classList.remove('shake');
+                    errorMessage.classList.add('opacity-0');
+                }, 2000);
             }
         });
-    </script>
 
+        // Show hint modal
+        hintLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            hintModal.classList.remove('opacity-0', 'pointer-events-none');
+            hintBox.classList.remove('scale-95');
+        });
+
+        // Hide hint modal
+        const closeHint = () => {
+            hintModal.classList.add('opacity-0', 'pointer-events-none');
+            hintBox.classList.add('scale-95');
+        }
+
+        closeHintButton.addEventListener('click', closeHint);
+        hintModal.addEventListener('click', (e) => {
+            // Close if clicking on the background overlay
+            if (e.target === hintModal) {
+                closeHint();
+            }
+        });
+
+    </script>
 </body>
 </html>
-
 
