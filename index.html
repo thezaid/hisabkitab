@@ -9,8 +9,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --font-main: 'Inter', sans-serif;
+        }
+        html, body {
+            height: 100vh;
+            overflow: hidden;
+        }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-main);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         /* Custom scrollbar for better dark mode aesthetics */
         ::-webkit-scrollbar {
@@ -37,86 +46,89 @@
         }
     </style>
 </head>
-<body class="bg-zinc-900 text-gray-300 font-sans flex items-center justify-center min-h-screen">
+<body class="bg-zinc-900 text-gray-300 font-sans flex flex-col justify-center items-center h-screen p-4">
 
-    <div class="w-full max-w-md p-4">
-        <h1 class="text-2xl font-semibold text-center mb-6 text-white">Hisab Kitab</h1>
+    <div class="w-full max-w-md h-full flex flex-col">
+        <h1 class="text-2xl font-semibold text-center mb-6 text-white flex-shrink-0">Hisab Kitab</h1>
 
-        <form id="data-form" class="space-y-4">
-            <!-- Name Selection -->
-            <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
-                <fieldset>
-                    <legend class="text-lg font-semibold text-white sr-only">Select Name <span class="text-red-500">*</span></legend>
-                    <div class="space-y-2">
-                        <label class="flex items-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                            <input type="radio" name="name" value="Gulnaz Dena" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2" required>
-                            <span class="ml-3 text-gray-300">Gulnaz Dena</span>
-                        </label>
-                        <label class="flex items-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                            <input type="radio" name="name" value="Ghazala Dena" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                            <span class="ml-3 text-gray-300">Ghazala Dena</span>
-                        </label>
-                    </div>
-                </fieldset>
-            </div>
+        <div class="overflow-y-auto flex-grow">
+            <form id="data-form" class="space-y-4">
+                <!-- Name Selection -->
+                <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
+                    <fieldset>
+                        <legend class="text-lg font-semibold text-white sr-only">Select Name <span class="text-red-500">*</span></legend>
+                        <div class="flex justify-between gap-2">
+                            <label class="flex-1 flex items-center justify-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
+                                <input type="radio" name="name" value="Gulnaz Dena" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2" required>
+                                <span class="ml-3 text-gray-300">Gulnaz Dena</span>
+                            </label>
+                            <label class="flex-1 flex items-center justify-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
+                                <input type="radio" name="name" value="Ghazala Dena" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
+                                <span class="ml-3 text-gray-300">Ghazala Dena</span>
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
 
-            <!-- Amount -->
-            <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
-                <label for="amount" class="block text-lg font-semibold text-white sr-only">Amount</label>
-                <input type="number" id="amount" name="amount" placeholder="Amount" class="w-full bg-zinc-700 text-white p-3 rounded-md border border-zinc-600 focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition">
-            </div>
+                <!-- Amount -->
+                <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
+                    <label for="amount" class="block text-lg font-semibold text-white sr-only">Amount</label>
+                    <input type="number" id="amount" name="amount" placeholder="Amount ₹" pattern="[0-9]*" inputmode="numeric" class="w-full bg-zinc-700 text-white p-3 rounded-md border border-zinc-600 focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition">
+                </div>
 
-            <!-- Tag -->
-            <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
-                <fieldset>
-                    <legend class="text-lg font-semibold text-white mb-2 sr-only">Tag</legend>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                            <input type="radio" name="tag" value="Mutton" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2" required>
-                            <span class="ml-2 text-gray-300 text-sm">Mutton</span>
-                        </label>
-                        <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                            <input type="radio" name="tag" value="Beef" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                            <span class="ml-2 text-gray-300 text-sm">Beef</span>
-                        </label>
-                        <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                            <input type="radio" name="tag" value="Chicken" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                            <span class="ml-2 text-gray-300 text-sm">Chicken</span>
-                        </label>
-                        <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                            <input type="radio" name="tag" value="Fish" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                            <span class="ml-2 text-gray-300 text-sm">Fish</span>
-                        </label>
-                        <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                            <input type="radio" name="tag" value="Light Bill" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                            <span class="ml-2 text-gray-300 text-sm">Light Bill</span>
-                        </label>
-                        <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                            <input type="radio" name="tag" value="Kirana" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                            <span class="ml-2 text-gray-300 text-sm">Kirana</span>
-                        </label>
-                        <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer col-span-2 sm:col-span-1">
-                            <input type="radio" name="tag" id="other-tag-radio" value="" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                            <span class="ml-2 text-gray-300 text-sm">Others</span>
-                        </label>
-                    </div>
-                    <input type="text" id="other-tag-input" placeholder="Specify other tag" class="mt-3 w-full bg-zinc-700 text-white p-3 rounded-md border border-zinc-600 focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition hidden">
-                </fieldset>
-            </div>
+                <!-- Tag -->
+                <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
+                    <fieldset>
+                        <legend class="text-lg font-semibold text-white mb-2 sr-only">Tag</legend>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
+                                <input type="radio" name="tag" value="Mutton" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2" required>
+                                <span class="ml-2 text-gray-300 text-sm">Mutton</span>
+                            </label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
+                                <input type="radio" name="tag" value="Beef" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
+                                <span class="ml-2 text-gray-300 text-sm">Beef</span>
+                            </label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
+                                <input type="radio" name="tag" value="Chicken" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
+                                <span class="ml-2 text-gray-300 text-sm">Chicken</span>
+                            </label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
+                                <input type="radio" name="tag" value="Fish" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
+                                <span class="ml-2 text-gray-300 text-sm">Fish</span>
+                            </label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
+                                <input type="radio" name="tag" value="Light Bill" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
+                                <span class="ml-2 text-gray-300 text-sm">Light Bill</span>
+                            </label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
+                                <input type="radio" name="tag" value="Kirana" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
+                                <span class="ml-2 text-gray-300 text-sm">Kirana</span>
+                            </label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer col-span-2 sm:col-span-1">
+                                <input type="radio" name="tag" id="other-tag-radio" value="" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
+                                <span class="ml-2 text-gray-300 text-sm">Others</span>
+                            </label>
+                        </div>
+                        <input type="text" id="other-tag-input" placeholder="Specify other tag" class="mt-3 w-full bg-zinc-700 text-white p-3 rounded-md border border-zinc-600 focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition hidden">
+                    </fieldset>
+                </div>
+            </form>
+        </div>
 
-            <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-                <button type="submit" id="submit-button" class="w-full sm:w-auto bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+        <!-- Action Buttons -->
+        <div class="flex-shrink-0 pt-4">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <button type="submit" form="data-form" id="submit-button" class="w-full sm:w-auto bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
                     Submit
                 </button>
-                <button type="reset" class="w-full sm:w-auto text-gray-400 hover:text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                <button type="reset" form="data-form" class="w-full sm:w-auto text-gray-400 hover:text-white font-semibold py-3 px-6 rounded-lg transition-colors">
                     Clear Form
                 </button>
             </div>
-        </form>
-        
-        <!-- Status Message -->
-        <div id="status-message" class="mt-4 text-center text-lg"></div>
+             <!-- Status Message -->
+            <div id="status-message" class="mt-4 text-center text-base h-6"></div>
+        </div>
     </div>
 
     <script>
@@ -170,7 +182,7 @@
                 .then(data => {
                     console.log('Success:', data);
                     statusMessage.textContent = 'Success! Your data has been saved.';
-                    statusMessage.className = 'mt-4 text-center text-lg text-green-400';
+                    statusMessage.className = 'mt-4 text-center text-base h-6 text-green-400';
                     form.reset();
                     // After reset, also hide the 'Others' input field again
                     otherTagInput.classList.add('hidden');
@@ -178,7 +190,7 @@
                 .catch(error => {
                     console.error('Error!', error.message);
                     statusMessage.textContent = 'Error! Could not save data. Please try again.';
-                    statusMessage.className = 'mt-4 text-center text-lg text-red-400';
+                    statusMessage.className = 'mt-4 text-center text-base h-6 text-red-400';
                 })
                 .finally(() => {
                     // Re-enable button
