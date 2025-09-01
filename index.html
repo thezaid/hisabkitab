@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* This is the single place to change the font for the entire site */
             --font-main: 'Inter', sans-serif;
         }
         html, body {
@@ -116,16 +117,18 @@
 
                 <!-- Action Buttons -->
                 <div>
-                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <button type="submit" id="submit-button" class="w-full sm:w-auto bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+                    <div class="flex items-center justify-between gap-4">
+                        <button type="submit" id="submit-button" class="flex-grow bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
                             Submit
                         </button>
-                        <button type="button" id="view-entries-btn" class="text-gray-400 hover:text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-                            View Entries
-                        </button>
-                        <button type="reset" class="w-full sm:w-auto text-gray-400 hover:text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-                            Clear Form
-                        </button>
+                        <div class="flex flex-col gap-1 items-end flex-shrink-0">
+                            <button type="button" id="view-entries-btn" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm whitespace-nowrap">
+                                View All Entries
+                            </button>
+                             <button type="reset" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm whitespace-nowrap">
+                                Clear Form
+                            </button>
+                        </div>
                     </div>
                     <!-- Status Message -->
                     <div id="status-message" class="mt-4 text-center text-base h-6"></div>
@@ -143,24 +146,35 @@
         </div>
     </main>
     
-
     <!-- View Entries Modal -->
-    <div id="entries-modal" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 hidden">
+    <div id="entries-modal" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 hidden z-40">
         <div class="bg-zinc-800 rounded-lg shadow-xl w-full max-w-lg h-full max-h-[80vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-zinc-700">
-                <div id="total-amount-container" class="text-xl font-bold text-green-400"></div>
-                <button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button>
+            <div class="flex justify-between items-start p-4 border-b border-zinc-700">
+                <div id="summary-container" class="text-base flex-grow"></div>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl leading-none -mt-2 ml-4">&times;</button>
             </div>
-            <div id="entries-container" class="p-4 overflow-y-auto">
-                <!-- Entries will be loaded here -->
+            <div id="entries-container" class="overflow-y-auto">
+                <!-- Entries will be loaded here as a table -->
             </div>
+        </div>
+    </div>
+
+    <!-- Submission Status Modal -->
+    <div id="submission-modal" class="fixed inset-0 bg-black bg-opacity-50 flex-col justify-center items-center p-4 hidden z-50">
+        <div class="bg-zinc-800 rounded-lg shadow-xl w-full max-w-xs h-48 flex flex-col justify-center items-center">
+            <!-- Spinner -->
+            <svg class="animate-spin h-10 w-10 text-white mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p id="submission-text" class="text-lg text-white">Submitting...</p>
         </div>
     </div>
 
 
     <script>
         // IMPORTANT: Paste your Google Apps Script Web App URL here
-        const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'; 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzWQJ34pYoILQuF-DoG3ZgKBz9ftPpLbFEbx8zZAAnn9ps3Hw-xQ0dMOYmy_LiR4katBg/exec'; 
         
         const form = document.getElementById('data-form');
         const submitButton = document.getElementById('submit-button');
@@ -172,8 +186,9 @@
         const entriesModal = document.getElementById('entries-modal');
         const closeModalBtn = document.getElementById('close-modal-btn');
         const entriesContainer = document.getElementById('entries-container');
-        const totalAmountContainer = document.getElementById('total-amount-container');
+        const summaryContainer = document.getElementById('summary-container');
         const recentEntriesContainer = document.getElementById('recent-entries');
+        const submissionModal = document.getElementById('submission-modal');
 
         // --- Event Listeners ---
         document.addEventListener('DOMContentLoaded', fetchRecentEntries);
@@ -195,7 +210,38 @@
         closeModalBtn.addEventListener('click', () => { entriesModal.classList.add('hidden'); });
 
         // --- Functions ---
-        function handleFormSubmit(e) {
+
+        // UPDATED: Fetches client IP, Network, Device, AND Location info
+        async function getClientInfo() {
+            try {
+                const response = await fetch('https://ipapi.co/json/');
+                if (!response.ok) throw new Error('Network response was not ok.');
+                const data = await response.json();
+                
+                const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+                const network = data.org ? data.org : (connection ? `${connection.effectiveType} (${connection.type})` : 'N/A');
+                const location = `${data.city || ''}, ${data.region || ''}, ${data.country_name || ''}`;
+                
+                return {
+                    ipAddress: data.ip || 'N/A',
+                    networkInfo: network,
+                    deviceInfo: navigator.userAgent,
+                    locationInfo: location
+                };
+            } catch (error) {
+                console.error("Could not fetch IP/network info:", error);
+                // Fallback if the API fails
+                return {
+                    ipAddress: 'Unavailable',
+                    networkInfo: 'Unavailable',
+                    deviceInfo: navigator.userAgent,
+                    locationInfo: 'Unavailable'
+                };
+            }
+        }
+
+        // MODIFIED: handleFormSubmit is now async
+        async function handleFormSubmit(e) {
             e.preventDefault();
 
             // --- Form Validation ---
@@ -214,7 +260,6 @@
                 statusMessage.textContent = 'Please enter an amount.';
                 return;
             }
-            // Check if amount is a whole number (integer)
             if (!/^\d+$/.test(amount)) {
                 statusMessage.textContent = 'Amount must be a whole number (no decimals).';
                 return;
@@ -231,84 +276,166 @@
             }
 
             submitButton.disabled = true;
-            submitButton.textContent = 'Submitting...';
             statusMessage.textContent = '';
+            submissionModal.classList.remove('hidden');
+            submissionModal.classList.add('flex');
             
+            // UPDATED: Get client info (including location) before submitting
+            const clientInfo = await getClientInfo();
+            formData.append('ipAddress', clientInfo.ipAddress);
+            formData.append('networkInfo', clientInfo.networkInfo);
+            formData.append('deviceInfo', clientInfo.deviceInfo);
+            formData.append('locationInfo', clientInfo.locationInfo);
+
             fetch(scriptURL, { method: 'POST', body: formData })
                 .then(response => response.json())
                 .then(data => {
                     if(data.result === "success"){
-                        statusMessage.textContent = 'Success! Your data has been saved.';
+                        statusMessage.textContent = 'Thank you, entry submitted! Please confirm from below.';
                         statusMessage.className = 'mt-4 text-center text-base h-6 text-green-400';
                         form.reset();
                         otherTagInput.classList.add('hidden');
-                        fetchRecentEntries(); // Refresh recent entries list
+                        fetchRecentEntries(); 
                     } else {
                          throw new Error(data.error || 'Server indicated an error.');
                     }
                 })
                 .catch(error => {
                     console.error('Error!', error.message);
-                    statusMessage.textContent = 'Error! Could not save data.';
+                    statusMessage.textContent = "Oops! Couldn't save. Please contact Zaid.";
                     statusMessage.className = 'mt-4 text-center text-base h-6 text-red-400';
                 })
                 .finally(() => {
                     submitButton.disabled = false;
-                    submitButton.textContent = 'Submit';
+                    submissionModal.classList.add('hidden');
+                    submissionModal.classList.remove('flex');
                 });
         }
 
-        function renderEntries(entries, container, showTotal = false, limit = null) {
+        function formatTimestamp(timestamp) {
+            if (!timestamp || typeof timestamp !== 'string') return '';
+            try {
+                const datePart = timestamp.split(',')[0]; // "01 Sep 2025"
+                const parts = datePart.split(' '); // ["01", "Sep", "2025"]
+                if (parts.length < 3) return timestamp; // fallback
+                return `${parts[0]} ${parts[1]} ${parts[2].slice(-2)}`; // "01 Sep 25"
+            } catch (e) {
+                return timestamp; // Return original if formatting fails
+            }
+        }
+
+        function renderEntries(data, container, isModal = false, limit = null) {
+            const entries = Array.isArray(data.entries) ? data.entries : [];
+            const summary = (data && typeof data === 'object' && !Array.isArray(data)) ? data.summary || {} : {};
+
             container.innerHTML = '';
-            if (showTotal) {
-                const totalAmount = entries.reduce((sum, entry) => {
-                    const gulnaz = parseFloat(entry[0] || 0);
-                    const ghazala = parseFloat(entry[1] || 0);
-                    return sum + gulnaz + ghazala;
-                }, 0);
-                totalAmountContainer.textContent = `Total: ₹${totalAmount.toLocaleString('en-IN')}`;
+            
+            if (isModal) {
+                summaryContainer.innerHTML = `
+                    <p class="font-bold text-white">So I say, ${summary.h1 || ''} owes ₹ ${summary.i1 || 0}</p>
+                    <p class="text-gray-400 mt-1">Gulnaz ${summary.f1 || 0} dena, aur Ghazala ${summary.g1 || 0} dena.</p>
+                `;
             }
 
             const entriesToDisplay = limit ? entries.slice(0, limit) : entries;
+
             if (entriesToDisplay.length === 0) {
-                container.innerHTML = '<p class="text-center text-gray-400 text-sm">No entries found.</p>';
+                container.innerHTML = isModal ? '' : '<p class="text-center text-gray-400 text-sm p-4">No entries yet.</p>';
+                if (isModal) summaryContainer.innerHTML += '<p class="text-center text-gray-400 text-sm p-4">No entries found.</p>';
                 return;
             }
 
-            container.innerHTML = entriesToDisplay.map(entry => {
-                const [gulnazAmount, ghazalaAmount, tag, timestamp] = entry;
-                const name = gulnazAmount ? "Gulnaz Dena" : "Ghazala Dena";
-                const amount = gulnazAmount || ghazalaAmount;
-                
-                return `
-                    <div class="bg-zinc-700 p-3 rounded-md text-sm">
-                        <div class="flex justify-between items-center">
-                            <span class="font-bold text-white">${name}</span>
-                            <span class="text-base font-semibold text-green-400">₹${amount}</span>
-                        </div>
-                        <div class="text-gray-400 mt-1 flex justify-between">
-                            <span>${tag}</span>
-                            <span class="text-xs">${timestamp}</span>
-                        </div>
-                    </div>
+            if (isModal) {
+                // --- RENDER TABLE for MODAL ---
+                const tableHeader = `
+                    <table class="w-full text-sm text-left text-gray-400">
+                        <thead class="text-xs text-gray-300 uppercase bg-zinc-900/50 sticky top-0 backdrop-blur-sm">
+                            <tr>
+                                <th scope="col" class="px-4 py-3">Gulnaz Dena</th>
+                                <th scope="col" class="px-4 py-3">Ghazala Dena</th>
+                                <th scope="col" class="px-4 py-3">Tag</th>
+                                <th scope="col" class="px-4 py-3">Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                 `;
-            }).join('');
+                const tableFooter = `</tbody></table>`;
+                
+                const tableRows = entriesToDisplay.map(entry => {
+                    const [gulnazAmount, ghazalaAmount, tag, timestamp] = entry;
+                    return `
+                        <tr class="border-b border-zinc-700 hover:bg-zinc-700/50">
+                            <td class="px-4 py-3 text-white">${gulnazAmount || ''}</td>
+                            <td class="px-4 py-3 text-white">${ghazalaAmount || ''}</td>
+                            <td class="px-4 py-3">${tag}</td>
+                            <td class="px-4 py-3 text-xs whitespace-nowrap">${formatTimestamp(timestamp)}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                container.innerHTML = tableHeader + tableRows + tableFooter;
+
+            } else {
+                // --- RENDER CARD for RECENT ENTRIES ---
+                const entriesHTML = entriesToDisplay.map((entry, index) => {
+                    const [gulnazAmount, ghazalaAmount, tag, timestamp] = entry;
+                    const name = gulnazAmount ? "Gulnaz Dena" : "Ghazala Dena";
+                    const amount = gulnazAmount || ghazalaAmount;
+                    const displayName = name.replace(' Dena', ' dena');
+                    const separator = index < entriesToDisplay.length - 1 ? '<hr class="border-zinc-600 my-2">' : '';
+
+                    return `
+                        <div>
+                            <p class="text-white">
+                                <span>${displayName} </span>
+                                <span class="text-green-400">${amount}</span>
+                                <span> — ${tag}</span>
+                            </p>
+                            <p class="text-gray-400 text-xs mt-1">${formatTimestamp(timestamp)}</p>
+                        </div>
+                        ${separator}
+                    `;
+                }).join('');
+
+                container.innerHTML = `<div class="bg-zinc-700 p-3 rounded-md text-sm text-gray-300">${entriesHTML}</div>`;
+            }
         }
 
+        const skeletonLoaderHTML = `
+            <div class="bg-zinc-700 p-3 rounded-md animate-pulse space-y-3">
+                <div class="space-y-2">
+                    <div class="h-4 bg-zinc-600 rounded w-3/4"></div>
+                    <div class="h-3 bg-zinc-600 rounded w-1/4"></div>
+                </div>
+                <div class="border-t border-zinc-600"></div>
+                <div class="space-y-2">
+                    <div class="h-4 bg-zinc-600 rounded w-2/3"></div>
+                    <div class="h-3 bg-zinc-600 rounded w-1/3"></div>
+                </div>
+                 <div class="border-t border-zinc-600"></div>
+                <div class="space-y-2">
+                    <div class="h-4 bg-zinc-600 rounded w-4/5"></div>
+                    <div class="h-3 bg-zinc-600 rounded w-1/5"></div>
+                </div>
+            </div>
+            `;
+        
+        const fetchErrorHTML = `<p class="text-center text-yellow-400 text-sm p-4">Looks like something's up. Please contact Zaid.<br>Don't worry, any missed entries can be added later once things are back online.</p>`;
+
         function fetchEntries() { // For the modal
-            if (scriptURL === 'https://script.google.com/macros/s/AKfycbzWQJ34pYoILQuF-DoG3ZgKBz9ftPpLbFEbx8zZAAnn9ps3Hw-xQ0dMOYmy_LiR4katBg/exec') {
-                entriesContainer.innerHTML = '<p class="text-center text-yellow-400">Please configure the Google Apps Script URL to view entries.</p>';
+            if (scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+                entriesContainer.innerHTML = '<p class="text-center text-yellow-400 p-4">Please configure the Google Apps Script URL to view entries.</p>';
                 return;
             }
 
-            entriesContainer.innerHTML = '<p class="text-center text-gray-400">Loading entries...</p>';
-            totalAmountContainer.textContent = '';
+            entriesContainer.innerHTML = skeletonLoaderHTML;
+            summaryContainer.innerHTML = '';
             fetch(scriptURL)
                 .then(response => response.json())
                 .then(data => renderEntries(data, entriesContainer, true))
                 .catch(error => {
                     console.error('Error fetching entries!', error);
-                    entriesContainer.innerHTML = '<p class="text-center text-red-400">Could not load entries.</p>';
+                    entriesContainer.innerHTML = fetchErrorHTML;
                 });
         }
 
@@ -318,13 +445,13 @@
                 return;
             }
 
-            recentEntriesContainer.innerHTML = '<p class="text-center text-gray-400 text-sm">Loading...</p>';
+            recentEntriesContainer.innerHTML = skeletonLoaderHTML;
             fetch(scriptURL)
                 .then(response => response.json())
                 .then(data => renderEntries(data, recentEntriesContainer, false, 5))
                 .catch(error => {
                     console.error('Error fetching recent entries!', error);
-                    recentEntriesContainer.innerHTML = '<p class="text-center text-red-400 text-sm">Could not load recent entries.</p>';
+                    recentEntriesContainer.innerHTML = fetchErrorHTML;
                 });
         }
     </script>
