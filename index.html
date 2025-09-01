@@ -9,164 +9,87 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            /* This is the single place to change the font for the entire site */
-            --font-main: 'Inter', sans-serif;
-        }
-        /* More robust mobile height and scrolling */
-        html {
-            height: -webkit-fill-available;
-        }
+        :root { --font-main: 'Inter', sans-serif; }
+        html { height: -webkit-fill-available; }
         body {
             font-family: var(--font-main);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
-            /* Mobile Safari */
             min-height: -webkit-fill-available;
+            overflow: hidden;
         }
-        /* Custom scrollbar for better dark mode aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #27272a; /* zinc-800 */
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #52525b; /* zinc-600 */
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #71717a; /* zinc-500 */
-        }
-        /* Hide arrows from number input */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #27272a; }
+        ::-webkit-scrollbar-thumb { background: #52525b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #71717a; }
         input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        .sortable { cursor: pointer; position: relative; padding-right: 1.5rem; }
+        .sort-icon { position: absolute; right: 0.25rem; top: 50%; transform: translateY(-50%); opacity: 0.5; transition: opacity 0.2s; }
+        .sortable:hover .sort-icon { opacity: 1; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); }
         }
-        input[type=number] {
-            -moz-appearance: textfield; /* Firefox */
-        }
-        /* Styles for sortable table headers */
-        .sortable {
-            cursor: pointer;
-            position: relative;
-            padding-right: 1.5rem; /* Space for the sort icon */
-        }
-        .sort-icon {
-            position: absolute;
-            right: 0.25rem;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0.5;
-            transition: opacity 0.2s;
-        }
-        .sortable:hover .sort-icon {
-            opacity: 1;
-        }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .animate-shake { animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both; }
     </style>
 </head>
 <body class="bg-zinc-900 text-gray-300 font-sans flex items-center justify-center p-4">
 
-    <main class="w-full max-w-md flex flex-col h-full max-h-[95vh] bg-zinc-800/80 rounded-lg shadow-2xl">
+    <main class="w-full max-w-md flex flex-col h-full max-h-[95vh] bg-zinc-800/80 rounded-lg shadow-2xl animate-fade-in">
         <h1 class="text-2xl font-semibold text-center py-6 text-white flex-shrink-0">Hisab Kitab</h1>
         
         <div class="overflow-y-auto px-4 pb-4">
             <form id="data-form" class="space-y-4" novalidate>
-                <!-- Name Selection -->
                 <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
-                    <fieldset>
-                        <legend class="text-lg font-semibold text-white sr-only">Select Name</legend>
+                    <fieldset><legend class="sr-only">Select Name</legend>
                         <div class="flex justify-between gap-2">
-                            <label class="flex-1 flex items-center justify-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                                <input type="radio" name="name" value="Gulnaz Dena" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                                <span class="ml-3 text-gray-300">Gulnaz Dena</span>
-                            </label>
-                            <label class="flex-1 flex items-center justify-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                                <input type="radio" name="name" value="Ghazala Dena" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                                <span class="ml-3 text-gray-300">Ghazala Dena</span>
-                            </label>
+                            <label class="flex-1 flex items-center justify-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="name" value="Gulnaz Dena" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-3 text-gray-300">Gulnaz Dena</span></label>
+                            <label class="flex-1 flex items-center justify-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="name" value="Ghazala Dena" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-3 text-gray-300">Ghazala Dena</span></label>
                         </div>
                     </fieldset>
                 </div>
-
-                <!-- Amount -->
                 <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
-                    <label for="amount" class="block text-lg font-semibold text-white sr-only">Amount</label>
+                    <label for="amount" class="sr-only">Amount</label>
                     <input type="number" id="amount" name="amount" placeholder="Amount ₹" pattern="[0-9]*" inputmode="numeric" class="w-full bg-zinc-700 text-white p-3 rounded-md border border-zinc-600 focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition">
                 </div>
-
-                <!-- Tag -->
                 <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
-                    <fieldset>
-                        <legend class="text-lg font-semibold text-white mb-2 sr-only">Tag</legend>
+                    <fieldset><legend class="sr-only">Tag</legend>
                         <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                                <input type="radio" name="tag" value="Mutton" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                                <span class="ml-2 text-gray-300 text-sm">Mutton</span>
-                            </label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                                <input type="radio" name="tag" value="Beef" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                                <span class="ml-2 text-gray-300 text-sm">Beef</span>
-                            </label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                                <input type="radio" name="tag" value="Chicken" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                                <span class="ml-2 text-gray-300 text-sm">Chicken</span>
-                            </label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                                <input type="radio" name="tag" value="Fish" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                                <span class="ml-2 text-gray-300 text-sm">Fish</span>
-                            </label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                                <input type="radio" name="tag" value="Light Bill" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                                <span class="ml-2 text-gray-300 text-sm">Light Bill</span>
-                            </label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer">
-                                <input type="radio" name="tag" value="Kirana" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                                <span class="ml-2 text-gray-300 text-sm">Kirana</span>
-                            </label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer col-span-2 sm:col-span-1">
-                                <input type="radio" name="tag" id="other-tag-radio" value="" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2">
-                                <span class="ml-2 text-gray-300 text-sm">Others</span>
-                            </label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Mutton" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Mutton</span></label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Beef" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Beef</span></label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Chicken" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Chicken</span></label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Fish" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Fish</span></label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Light Bill" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Light Bill</span></label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Kirana" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Kirana</span></label>
+                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer col-span-2 sm:col-span-1"><input type="radio" name="tag" id="other-tag-radio" value="" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Others</span></label>
                         </div>
                         <input type="text" id="other-tag-input" placeholder="Specify other tag" class="mt-3 w-full bg-zinc-700 text-white p-3 rounded-md border border-zinc-600 focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition hidden">
                     </fieldset>
                 </div>
-
-                <!-- Action Buttons -->
                 <div>
                     <div class="flex items-center justify-between gap-4">
-                        <button type="submit" id="submit-button" class="flex-grow bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
-                            Submit
-                        </button>
+                        <button type="submit" id="submit-button" class="flex-grow bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">Submit</button>
                         <div class="flex flex-col gap-1 items-end flex-shrink-0">
-                            <button type="button" id="view-entries-btn" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm whitespace-nowrap">
-                                View All Entries
-                            </button>
-                             <button type="reset" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm whitespace-nowrap">
-                                Clear Form
-                            </button>
+                            <button type="button" id="view-entries-btn" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm whitespace-nowrap">View All Entries</button>
+                            <button type="reset" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm whitespace-nowrap">Clear Form</button>
                         </div>
                     </div>
-                    <!-- Status Message -->
                     <div id="status-message" class="mt-4 text-center text-base h-6"></div>
                 </div>
             </form>
             
-            <!-- Recent Entries -->
             <div id="recent-entries-wrapper" class="mt-4 border-t border-zinc-700 pt-4">
                  <h3 class="text-base text-gray-400 mb-3 text-center">Recent Entries</h3>
-                 <div id="recent-entries" class="space-y-2">
-                    <!-- Recent entries will be loaded here -->
-                </div>
+                 <div id="recent-entries" class="space-y-2"></div>
             </div>
-
         </div>
     </main>
     
-    <!-- View Entries Modal -->
     <div id="entries-modal" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 hidden z-40">
         <div class="bg-zinc-800 rounded-lg shadow-xl w-full max-w-2xl h-full max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-start p-4 border-b border-zinc-700 flex-shrink-0">
@@ -176,256 +99,104 @@
             <div class="p-4 flex-shrink-0 border-b border-zinc-700">
                 <input type="text" id="filter-input" placeholder="Type to filter entries..." class="w-full bg-zinc-700 text-white p-2 rounded-md border border-zinc-600 focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition">
             </div>
-            <div id="entries-table-container" class="overflow-y-auto flex-grow">
-                <!-- Entries will be loaded here as a table -->
-            </div>
-            <div id="load-more-container" class="p-4 border-t border-zinc-700 text-center space-x-2 flex-shrink-0">
-                <!-- Load more buttons will be here -->
-            </div>
+            <div id="entries-table-container" class="overflow-y-auto flex-grow"></div>
+            <div id="load-more-container" class="p-4 border-t border-zinc-700 text-center space-x-2 flex-shrink-0"></div>
         </div>
     </div>
-
-    <!-- Submission Status Modal -->
-    <div id="submission-modal" class="fixed inset-0 bg-black bg-opacity-50 flex-col justify-center items-center p-4 hidden z-50">
-        <div class="bg-zinc-800 rounded-lg shadow-xl w-full max-w-xs h-48 flex flex-col justify-center items-center">
-            <!-- Spinner -->
-            <svg class="animate-spin h-10 w-10 text-white mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p id="submission-text" class="text-lg text-white">Submitting...</p>
-        </div>
-    </div>
-
 
     <script>
-        // --- CONFIG ---
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzWQJ34pYoILQuF-DoG3ZgKBz9ftPpLbFEbx8zZAAnn9ps3Hw-xQ0dMOYmy_LiR4katBg/exec'; 
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwoFc2VyGtJMtFIh2D_qf99BBFLNfQLnFO5MjFv3EtKL3AYYj0C9uNpvmAh-eYy-cisMg/exec'; 
         const INITIAL_LOAD_COUNT = 50;
         
-        // --- DOM Elements ---
         const form = document.getElementById('data-form');
         const submitButton = document.getElementById('submit-button');
         const statusMessage = document.getElementById('status-message');
-        const tagRadios = document.querySelectorAll('input[name="tag"]');
-        const otherTagInput = document.getElementById('other-tag-input');
-        const otherTagRadio = document.getElementById('other-tag-radio');
         const viewEntriesBtn = document.getElementById('view-entries-btn');
         const entriesModal = document.getElementById('entries-modal');
         const closeModalBtn = document.getElementById('close-modal-btn');
-        const entriesTableContainer = document.getElementById('entries-table-container');
-        const summaryContainer = document.getElementById('summary-container');
         const recentEntriesContainer = document.getElementById('recent-entries');
-        const submissionModal = document.getElementById('submission-modal');
+        const summaryContainer = document.getElementById('summary-container');
+        const entriesTableContainer = document.getElementById('entries-table-container');
         const filterInput = document.getElementById('filter-input');
         const loadMoreContainer = document.getElementById('load-more-container');
-        const pageLoadTime = new Date();
-
-        // --- Global State for Modal Table ---
+        
+        let sessionStartTime;
         let allEntries = [];
         let filteredEntries = [];
         let visibleCount = INITIAL_LOAD_COUNT;
-        let sortColumn = 3; // Default sort by timestamp
-        let sortDirection = 'desc'; // Default descending
+        let sortState = { column: 3, direction: 'desc' };
+        let deviceDetails = {};
 
-        // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', fetchRecentEntries);
-        tagRadios.forEach(radio => radio.addEventListener('change', handleTagChange));
-        otherTagInput.addEventListener('input', () => { otherTagRadio.value = otherTagInput.value; });
-        form.addEventListener('submit', handleFormSubmit);
-        viewEntriesBtn.addEventListener('click', openEntriesModal);
-        closeModalBtn.addEventListener('click', () => entriesModal.classList.add('hidden'));
-        filterInput.addEventListener('input', handleFilter);
+        document.addEventListener('DOMContentLoaded', initializeApp);
 
-        // --- Helper Functions ---
-        const formatAmount = (num) => {
-            if (!num || isNaN(num)) return '';
-            return Number(num).toLocaleString('en-IN');
-        };
+        function initializeApp() {
+            sessionStartTime = new Date();
+            form.addEventListener('submit', handleFormSubmit);
+            viewEntriesBtn.addEventListener('click', openEntriesModal);
+            closeModalBtn.addEventListener('click', () => entriesModal.classList.add('hidden'));
+            filterInput.addEventListener('input', handleFilter);
+            document.querySelectorAll('input[name="tag"]').forEach(r => r.addEventListener('change', handleTagChange));
+            document.getElementById('other-tag-input').addEventListener('input', (e) => {
+                document.getElementById('other-tag-radio').value = e.target.value;
+            });
+            fetchInitialData();
+            getDeviceDetails(); // Start gathering device details
+        }
 
-        // --- Main Functions ---
-
+        const formatAmount = (num) => num ? Number(num).toLocaleString('en-IN') : '';
+        
         function handleTagChange() {
-            otherTagInput.classList.toggle('hidden', !otherTagRadio.checked);
-            if (otherTagRadio.checked) otherTagInput.focus();
-            else otherTagInput.value = otherTagRadio.value = '';
+            const otherInput = document.getElementById('other-tag-input');
+            const otherRadio = document.getElementById('other-tag-radio');
+            const isOtherChecked = otherRadio.checked;
+            otherInput.classList.toggle('hidden', !isOtherChecked);
+            if (isOtherChecked) otherInput.focus();
+            else otherInput.value = otherRadio.value = '';
         }
 
-        async function getAnalyticsInfo() {
-            // ... (Analytics function remains the same from previous version)
-        }
-
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-            // ... (Form submission logic remains the same from previous version)
-        }
-
-        // --- NEW MODAL & TABLE LOGIC ---
-        function openEntriesModal() {
-            entriesModal.classList.remove('hidden');
-            fetchAndRenderAllEntries();
-        }
-
-        function fetchAndRenderAllEntries() {
-            // ... (This function remains largely the same)
-        }
-
-        function sortAndRenderTable() {
-            // ... (Sorting logic remains the same)
-        }
-
-        function renderTable() {
-            const entriesToDisplay = filteredEntries.slice(0, visibleCount);
-            
-            if (filteredEntries.length === 0) {
-                entriesTableContainer.innerHTML = `<p class="p-4 text-center text-gray-400">No entries match your filter.</p>`;
-                loadMoreContainer.innerHTML = '';
-                return;
-            }
-
-            const headers = [
-                { title: 'Gulnaz Dena', index: 0 },
-                { title: 'Ghazala Dena', index: 1 },
-                { title: 'Tag', index: 2 },
-                { title: 'Timestamp', index: 3 }
-            ];
-
-            const headerHTML = headers.map(h => {
-                const icon = sortColumn === h.index 
-                    ? (sortDirection === 'asc' ? '&#9650;' : '&#9660;') 
-                    : '&#8693;';
-                return `<th scope="col" class="px-4 py-3 sortable" data-index="${h.index}">${h.title}<span class="sort-icon">${icon}</span></th>`;
-            }).join('');
-            
-            const tableHeader = `
-                <table class="w-full text-sm text-left text-gray-400">
-                    <thead class="text-xs text-gray-300 uppercase bg-zinc-900/50 sticky top-0 backdrop-blur-sm">
-                        <tr>${headerHTML}</tr>
-                    </thead>
-                    <tbody>
-            `;
-            const tableFooter = `</tbody></table>`;
-            
-            const tableRows = entriesToDisplay.map(entry => {
-                const [gulnazAmount, ghazalaAmount, tag, timestamp] = entry;
-                return `
-                    <tr class="border-b border-zinc-700 hover:bg-zinc-700/50">
-                        <td class="px-4 py-3 text-white">${formatAmount(gulnazAmount)}</td>
-                        <td class="px-4 py-3 text-white">${formatAmount(ghazalaAmount)}</td>
-                        <td class="px-4 py-3">${tag}</td>
-                        <td class="px-4 py-3 text-xs whitespace-nowrap">${timestamp}</td>
-                    </tr>
-                `;
-            }).join('');
-
-            entriesTableContainer.innerHTML = tableHeader + tableRows + tableFooter;
-            
-            document.querySelectorAll('.sortable').forEach(th => th.addEventListener('click', handleSort));
-
-            renderLoadMoreButtons();
-        }
-        
-        function renderLoadMoreButtons() {
-           // ... (This function remains the same)
-        }
-        
-        function handleSort(e) {
-            // ... (This function remains the same)
-        }
-
-        function handleFilter() {
-           // ... (This function remains the same)
-        }
-        
-        function handleLoadMore(e) {
-            // ... (This function remains the same)
-        }
-
-        // --- Recent Entries Logic ---
-        function renderRecentEntries(data, container) {
-            const entries = Array.isArray(data.entries) ? data.entries.slice(0, 5) : [];
-            if (entries.length === 0) {
-                container.innerHTML = '<p class="text-center text-gray-400 text-sm p-4">No entries yet.</p>';
-                return;
-            }
-
-            const entriesHTML = entries.map((entry, index) => {
-                 const [gulnazAmount, ghazalaAmount, tag, timestamp] = entry;
-                const name = gulnazAmount ? "Gulnaz Dena" : "Ghazala Dena";
-                const amount = gulnazAmount || ghazalaAmount;
-                const displayName = name.replace(' Dena', ' dena');
-                const separator = index < entries.length - 1 ? '<hr class="border-zinc-600 my-2">' : '';
-                return `
-                    <div>
-                        <p class="text-white">
-                            <span>${displayName} </span>
-                            <span class="text-green-400">${formatAmount(amount)}</span>
-                            <span> — ${tag}</span>
-                        </p>
-                        <p class="text-gray-400 text-xs mt-1">${timestamp}</p>
-                    </div>
-                    ${separator}
-                `;
-            }).join('');
-            container.innerHTML = `<div class="bg-zinc-700 p-3 rounded-md text-sm text-gray-300">${entriesHTML}</div>`;
-        }
-
-        const skeletonLoaderHTML = `
-            <div class="bg-zinc-700 p-3 rounded-md animate-pulse space-y-3">
-                <div class="space-y-2"><div class="h-4 bg-zinc-600 rounded w-3/4"></div><div class="h-3 bg-zinc-600 rounded w-1/4"></div></div>
-                <div class="border-t border-zinc-600"></div>
-                <div class="space-y-2"><div class="h-4 bg-zinc-600 rounded w-2/3"></div><div class="h-3 bg-zinc-600 rounded w-1/3"></div></div>
-                <div class="border-t border-zinc-600"></div>
-                <div class="space-y-2"><div class="h-4 bg-zinc-600 rounded w-4/5"></div><div class="h-3 bg-zinc-600 rounded w-1/5"></div></div>
-            </div>`;
-        
-        const fetchErrorHTML = `<p class="text-center text-yellow-400 text-sm p-4">Looks like something's up. Please contact Zaid.<br>Don't worry, any missed entries can be added later.</p>`;
-
-        function getFetchUrl() {
-            return scriptURL + '?cacheBust=' + new Date().getTime();
-        }
-
-        function fetchRecentEntries() {
-            // ... (This function remains the same)
-        }
-        
-        // --- Full Functions (to avoid breaking the file) ---
-        async function getAnalyticsInfo() {
-            const info = {
-                ipAddress: 'N/A', networkInfo: 'N/A', locationInfo: 'N/A',
-                connectionType: 'N/A', browserName: 'N/A', osVersion: 'N/A',
-                manufacturer: 'N/A', deviceModel: 'N/A'
+        async function getDeviceDetails() {
+            // Basic fallback details
+            deviceDetails = {
+                browserName: 'Unknown',
+                osVersion: 'Unknown',
+                manufacturer: 'Unknown',
+                marketingName: 'Unknown'
             };
-            const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            info.connectionType = (connection || {}).effectiveType || 'N/A';
-            try {
-                const response = await fetch('https://ipapi.co/json/');
-                if (response.ok) {
-                    const data = await response.json();
-                    info.ipAddress = data.ip || 'N/A';
-                    info.networkInfo = data.org || 'N/A';
-                    info.locationInfo = `${data.city || ''}, ${data.region || ''}, ${data.country_name || ''}`;
-                }
-            } catch (e) { console.error("Could not fetch IP info:", e); }
+
+            const ua = navigator.userAgent;
+            const platform = navigator.platform;
+
+            // Basic OS Detection
+            if (/Win/.test(platform)) deviceDetails.osVersion = "Windows";
+            else if (/Mac/.test(platform)) deviceDetails.osVersion = "MacOS";
+            else if (/Linux/.test(platform)) deviceDetails.osVersion = "Linux";
+            else if (/iPhone|iPad|iPod/.test(ua)) deviceDetails.osVersion = "iOS";
+            else if (/Android/.test(ua)) deviceDetails.osVersion = "Android";
+
+            // Basic Browser Detection
+            if (ua.includes("Firefox")) deviceDetails.browserName = "Firefox";
+            else if (ua.includes("SamsungBrowser")) deviceDetails.browserName = "Samsung Internet";
+            else if (ua.includes("Opera") || ua.includes("OPR")) deviceDetails.browserName = "Opera";
+            else if (ua.includes("Edge")) deviceDetails.browserName = "Edge";
+            else if (ua.includes("Chrome")) deviceDetails.browserName = "Chrome";
+            else if (ua.includes("Safari")) deviceDetails.browserName = "Safari";
+            
+            // Advanced details using User-Agent Client Hints (for Chromium browsers)
             if (navigator.userAgentData) {
                 try {
-                    const ua = navigator.userAgentData;
-                    const highEntropyValues = await ua.getHighEntropyValues([ "model", "platform", "platformVersion", "manufacturer" ]);
-                    info.osVersion = `${highEntropyValues.platform} ${highEntropyValues.platformVersion}`;
-                    info.deviceModel = highEntropyValues.model || 'N/A';
-                    info.manufacturer = highEntropyValues.manufacturer || 'N/A';
-                    const browserBrand = ua.brands.find(brand => !brand.brand.includes("Not"));
-                    info.browserName = browserBrand ? `${browserBrand.brand} ${browserBrand.version}` : 'N/A';
-                } catch (e) { console.error("Could not get high entropy user agent values:", e); }
-            } else {
-                const uaString = navigator.userAgent;
-                info.deviceModel = uaString.match(/Mobi|Android|iPhone/i) ? 'Mobile' : 'Desktop';
-                const osMatch = uaString.match(/(Windows NT \d+\.\d+|Mac OS X [\d_]+|Android [\d\.]+?|iPhone OS [\d_]+|Linux)/);
-                info.osVersion = osMatch ? osMatch[0].replace(/_/g, '.') : 'N/A';
-                const browserMatch = uaString.match(/(Firefox|Chrome|Safari|Edg)\/[\d\.]+/);
-                info.browserName = browserMatch ? browserMatch[0] : 'N/A';
+                    const uaData = await navigator.userAgentData.getHighEntropyValues([
+                        "platform", "platformVersion", "architecture", "model", "uaFullVersion", "brand"
+                    ]);
+                    deviceDetails.osVersion = `${uaData.platform} ${uaData.platformVersion}`;
+                    deviceDetails.marketingName = uaData.model || 'N/A';
+                    if (uaData.brands && uaData.brands.length) {
+                        deviceDetails.manufacturer = uaData.brands[0].brand.replace(/Not A;Brand/g, '').trim() || 'N/A';
+                        deviceDetails.browserName = uaData.brands.find(b => !b.brand.includes('Not')).brand || deviceDetails.browserName;
+                    }
+                } catch(e) {
+                    console.warn("Could not get high-entropy user agent values.", e);
+                }
             }
-            return info;
         }
 
         async function handleFormSubmit(e) {
@@ -434,134 +205,150 @@
             const name = formData.get('name');
             const amount = formData.get('amount');
             const tag = formData.get('tag');
+
             statusMessage.className = 'mt-4 text-center text-base h-6 text-yellow-400';
             if (!name) { statusMessage.textContent = 'Please select a name.'; return; }
             if (!amount) { statusMessage.textContent = 'Please enter an amount.'; return; }
-            if (!/^\d+$/.test(amount)) { statusMessage.textContent = 'Amount must be a whole number (no decimals).'; return; }
+            if (!/^\d+$/.test(amount)) { statusMessage.textContent = 'Amount must be a whole number.'; return; }
             if (!tag) { statusMessage.textContent = 'Please select or specify a tag.'; return; }
-            if (scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') { statusMessage.textContent = 'Please configure the script URL first.'; return; }
+            
+            if (SCRIPT_URL === 'YOUR_NEW_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                statusMessage.textContent = 'Please configure the Google Apps Script URL first!';
+                return;
+            }
+
             submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
             statusMessage.textContent = '';
-            submissionModal.classList.remove('hidden');
-            submissionModal.classList.add('flex');
-            const analytics = await getAnalyticsInfo();
-            const sessionDuration = Math.round((new Date() - pageLoadTime) / 1000);
-            formData.append('ipAddress', analytics.ipAddress);
-            formData.append('networkInfo', analytics.networkInfo);
-            formData.append('locationInfo', analytics.locationInfo);
-            formData.append('connectionType', analytics.connectionType);
-            formData.append('sessionDuration', `${sessionDuration}s`);
-            formData.append('browserName', analytics.browserName);
-            formData.append('osVersion', analytics.osVersion);
-            formData.append('manufacturer', analytics.manufacturer);
-            formData.append('deviceModel', analytics.deviceModel);
-            fetch(scriptURL, { method: 'POST', body: formData })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.result === "success"){
-                        statusMessage.textContent = 'Thank you, entry submitted! Please confirm from below.';
-                        statusMessage.className = 'mt-4 text-center text-base h-6 text-green-400';
-                        form.reset();
-                        otherTagInput.classList.add('hidden');
-                        fetchRecentEntries(); 
-                    } else {
-                         throw new Error(data.error || 'Server indicated an error.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error!', error.message);
-                    statusMessage.textContent = "Oops! Couldn't save. Please contact Zaid.";
-                    statusMessage.className = 'mt-4 text-center text-base h-6 text-red-400';
-                })
-                .finally(() => {
-                    submitButton.disabled = false;
-                    submissionModal.classList.add('hidden');
-                    submissionModal.classList.remove('flex');
-                });
+            
+            formData.append('sessionDuration', `${Math.round((new Date() - sessionStartTime) / 1000)}s`);
+            formData.append('browserName', deviceDetails.browserName);
+            formData.append('osVersion', deviceDetails.osVersion);
+            formData.append('manufacturer', deviceDetails.manufacturer);
+            formData.append('marketingName', deviceDetails.marketingName);
+
+            try {
+                const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                const data = await response.json();
+                if (data.result !== "success") throw new Error(data.error || 'Server error.');
+                
+                statusMessage.textContent = 'Thank you, entry submitted!';
+                statusMessage.className = 'mt-4 text-center text-base h-6 text-green-400 animate-fade-in';
+                form.reset();
+                document.getElementById('other-tag-input').classList.add('hidden');
+                fetchInitialData();
+            } catch (error) {
+                console.error('Submission Error!', error);
+                statusMessage.textContent = "Oops! Couldn't save. Please contact Zaid.";
+                statusMessage.className = 'mt-4 text-center text-base h-6 text-red-400 animate-fade-in';
+                form.classList.add('animate-shake');
+                form.addEventListener('animationend', () => form.classList.remove('animate-shake'), { once: true });
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit';
+            }
         }
 
-        function fetchRecentEntries() {
-            if (scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                recentEntriesContainer.innerHTML = '<p class="text-center text-yellow-400 text-sm">Please configure the script URL.</p>';
-                return;
-            }
-            recentEntriesContainer.innerHTML = skeletonLoaderHTML;
-            fetch(getFetchUrl())
-                .then(response => response.json())
-                .then(data => renderRecentEntries(data, recentEntriesContainer))
-                .catch(error => {
-                    console.error('Error fetching recent entries!', error);
-                    recentEntriesContainer.innerHTML = fetchErrorHTML;
-                });
+        function openEntriesModal() {
+            entriesModal.classList.remove('hidden');
+            filteredEntries = [...allEntries];
+            visibleCount = INITIAL_LOAD_COUNT;
+            sortAndRenderTable();
         }
 
-        function fetchAndRenderAllEntries() {
-            if (scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                entriesTableContainer.innerHTML = `<p class="p-4 text-center text-yellow-400">Please configure the Google Apps Script URL.</p>`;
+        async function fetchInitialData() {
+            recentEntriesContainer.innerHTML = `<div class="bg-zinc-700 p-3 rounded-md animate-pulse space-y-3"><div class="h-4 bg-zinc-600 rounded w-3/4"></div><div class="h-3 bg-zinc-600 rounded w-1/4"></div><hr class="border-zinc-600 my-2"><div class="h-4 bg-zinc-600 rounded w-2/3"></div><div class="h-3 bg-zinc-600 rounded w-1/3"></div><hr class="border-zinc-600 my-2"><div class="h-4 bg-zinc-600 rounded w-4/5"></div><div class="h-3 bg-zinc-600 rounded w-1/5"></div></div>`;
+            
+            if (SCRIPT_URL === 'YOUR_NEW_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                 recentEntriesContainer.innerHTML = `<p class="text-center text-yellow-400 text-sm p-4">Please configure the script URL to load entries.</p>`;
+                 return;
+            }
+
+            try {
+                const url = SCRIPT_URL + '?cacheBust=' + new Date().getTime();
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                const data = await response.json();
+                if (data.error) throw new Error(data.error);
+
+                allEntries = Array.isArray(data.entries) ? data.entries : [];
+                renderRecentEntries(allEntries);
+                renderSummary(data.summary);
+            } catch (error) {
+                console.error('Error fetching initial data!', error);
+                recentEntriesContainer.innerHTML = `<p class="text-center text-yellow-400 text-sm p-4">Could not load entries. Please contact Zaid.</p>`;
+            }
+        }
+
+        function renderRecentEntries(entries) {
+            if (entries.length === 0) {
+                recentEntriesContainer.innerHTML = '<p class="text-center text-gray-400 text-sm p-4">No entries yet.</p>';
                 return;
             }
-            entriesTableContainer.innerHTML = skeletonLoaderHTML;
-            summaryContainer.innerHTML = '';
-            loadMoreContainer.innerHTML = '';
-            fetch(getFetchUrl())
-                .then(response => response.json())
-                .then(data => {
-                    allEntries = Array.isArray(data.entries) ? data.entries : [];
-                    filteredEntries = [...allEntries];
-                    if (data.summary) {
-                        summaryContainer.innerHTML = `
-                            <p class="font-bold text-white">So I say, ${data.summary.h1 || ''} owes ₹ ${formatAmount(data.summary.i1)}</p>
-                            <p class="text-gray-400 mt-1">Gulnaz ${formatAmount(data.summary.f1)} dena, aur Ghazala ${formatAmount(data.summary.g1)} dena.</p>
-                        `;
-                    }
-                    visibleCount = INITIAL_LOAD_COUNT;
-                    sortAndRenderTable();
-                })
-                .catch(error => {
-                    console.error('Error fetching all entries!', error);
-                    entriesTableContainer.innerHTML = fetchErrorHTML;
-                });
+            const recent = entries.slice(0, 5);
+            const entriesHTML = recent.map(([gAmount, zAmount, tag, timestamp], i) => {
+                const name = gAmount ? "Gulnaz dena" : "Ghazala dena";
+                const amount = gAmount || zAmount;
+                const separator = i < recent.length - 1 ? '<hr class="border-zinc-600 my-2">' : '';
+                return `<div><p class="text-white"><span>${name} </span><span class="text-green-400">${formatAmount(amount)}</span><span> — ${tag}</span></p><p class="text-gray-400 text-xs mt-1">${timestamp}</p></div>${separator}`;
+            }).join('');
+            recentEntriesContainer.innerHTML = `<div class="bg-zinc-700 p-3 rounded-md text-sm text-gray-300">${entriesHTML}</div>`;
+        }
+        
+        function renderSummary(summary) {
+            if (!summary) return;
+            summaryContainer.innerHTML = `
+                <p class="font-bold text-white">So I say, ${summary.h1 || ''} owes ₹ ${formatAmount(summary.i1)}</p>
+                <p class="text-gray-400 mt-1">Gulnaz ${formatAmount(summary.f1)} dena, aur Ghazala ${formatAmount(summary.g1)} dena.</p>
+            `;
         }
 
         function sortAndRenderTable() {
+            const { column, direction } = sortState;
             filteredEntries.sort((a, b) => {
-                let valA = a[sortColumn];
-                let valB = b[sortColumn];
-                if (sortColumn === 0 || sortColumn === 1) {
-                    valA = parseFloat(valA) || 0;
-                    valB = parseFloat(valB) || 0;
-                } else if (sortColumn === 3) {
-                    try {
-                        valA = new Date(valA.replace(/(\d+ \w+ \d+),/, '$1'));
-                        valB = new Date(valB.replace(/(\d+ \w+ \d+),/, '$1'));
-                    } catch(e) {
-                        valA = new Date(0);
-                        valB = new Date(0);
-                    }
+                let valA = a[column], valB = b[column];
+                if (column === 0 || column === 1) {
+                    valA = parseFloat(valA) || 0; valB = parseFloat(valB) || 0;
+                } else if (column === 3) { // Use the full timestamp for sorting accuracy
+                    valA = new Date(valA); valB = new Date(valB);
                 } else {
-                    valA = String(valA).toLowerCase();
-                    valB = String(valB).toLowerCase();
+                    valA = String(valA).toLowerCase(); valB = String(valB).toLowerCase();
                 }
-                if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
-                if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+                if (valA < valB) return direction === 'asc' ? -1 : 1;
+                if (valA > valB) return direction === 'asc' ? 1 : -1;
                 return 0;
             });
             renderTable();
         }
 
+        function renderTable() {
+            if (filteredEntries.length === 0) {
+                entriesTableContainer.innerHTML = `<p class="p-4 text-center text-gray-400">No entries match your filter.</p>`;
+                loadMoreContainer.innerHTML = ''; return;
+            }
+            const headers = [{ title: 'Gulnaz Dena', index: 0 }, { title: 'Ghazala Dena', index: 1 }, { title: 'Tag', index: 2 }, { title: 'Date', index: 3 }];
+            const headerHTML = headers.map(h => `<th scope="col" class="px-4 py-3 sortable" data-index="${h.index}">${h.title}<span class="sort-icon">${sortState.column === h.index ? (sortState.direction === 'asc' ? '▲' : '▼') : '↕'}</span></th>`).join('');
+            
+            const tableRows = filteredEntries.slice(0, visibleCount)
+                .map(([gAmount, zAmount, tag, timestamp]) => `<tr class="border-b border-zinc-700 hover:bg-zinc-700/50"><td class="px-4 py-3 text-white">${formatAmount(gAmount)}</td><td class="px-4 py-3 text-white">${formatAmount(zAmount)}</td><td class="px-4 py-3">${tag}</td><td class="px-4 py-3 text-xs whitespace-nowrap">${timestamp.substring(0, 11)}</td></tr>`)
+                .join('');
+
+            entriesTableContainer.innerHTML = `<table class="w-full text-sm text-left text-gray-400"><thead class="text-xs text-gray-300 uppercase bg-zinc-900/50 sticky top-0 backdrop-blur-sm"><tr>${headerHTML}</tr></thead><tbody>${tableRows}</tbody></table>`;
+            document.querySelectorAll('.sortable').forEach(th => th.addEventListener('click', handleSort));
+            renderLoadMoreButtons();
+        }
+
         function renderLoadMoreButtons() {
-            loadMoreContainer.innerHTML = '';
             if (visibleCount >= filteredEntries.length) {
                 loadMoreContainer.innerHTML = `<p class="text-xs text-gray-500">Showing all ${filteredEntries.length} entries.</p>`;
                 return;
             }
             const remaining = filteredEntries.length - visibleCount;
-            const buttons = [ { label: `50`, amount: 50 }, { label: `100`, amount: 100 }, { label: `200`, amount: 200 } ];
+            const buttons = [{ val: 50 }, { val: 100 }, { val: 200 }];
             let buttonHTML = `<span class="text-sm text-gray-400 mr-2">Load more:</span>`;
             buttons.forEach(btn => {
-                if (remaining >= btn.amount) {
-                    buttonHTML += `<button data-amount="${btn.amount}" class="load-more-btn bg-zinc-700 hover:bg-zinc-600 text-xs py-1 px-3 rounded">${btn.label}</button>`;
-                }
+                if (remaining >= btn.val) buttonHTML += `<button data-amount="${btn.val}" class="load-more-btn bg-zinc-700 hover:bg-zinc-600 text-xs py-1 px-3 rounded">${btn.val}</button>`;
             });
             buttonHTML += `<button data-amount="${remaining}" class="load-more-btn bg-zinc-700 hover:bg-zinc-600 text-xs py-1 px-3 rounded">All (${remaining})</button>`;
             loadMoreContainer.innerHTML = buttonHTML;
@@ -569,13 +356,10 @@
         }
 
         function handleSort(e) {
-            const newSortColumn = parseInt(e.currentTarget.dataset.index, 10);
-            if (sortColumn === newSortColumn) {
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                sortColumn = newSortColumn;
-                sortDirection = (newSortColumn === 3) ? 'desc' : 'asc';
-            }
+            const newCol = parseInt(e.currentTarget.dataset.index, 10);
+            const { column, direction } = sortState;
+            sortState.direction = column === newCol ? (direction === 'asc' ? 'desc' : 'asc') : ((newCol === 3) ? 'desc' : 'asc');
+            sortState.column = newCol;
             sortAndRenderTable();
         }
 
@@ -587,10 +371,10 @@
         }
 
         function handleLoadMore(e) {
-            const amount = parseInt(e.currentTarget.dataset.amount, 10);
-            visibleCount += amount;
+            visibleCount += parseInt(e.currentTarget.dataset.amount, 10);
             renderTable();
         }
     </script>
 </body>
 </html>
+
