@@ -257,18 +257,7 @@
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
-        
-        // Firebase configuration for analytics
-        const firebaseAnalyticsConfig = {
-            apiKey: "AIzaSyA5bKSAZN0JHAK_atwbSRz4dCTJ8NaH4vI",
-            authDomain: "auth-demo-9a4bc.firebaseapp.com",
-            projectId: "auth-demo-9a4bc",
-            storageBucket: "auth-demo-9a4bc.firebasestorage.app",
-            messagingSenderId: "554871726025",
-            appId: "1:554871726025:web:ec8d1171f6a85b13c65218",
-            measurementId: "G-J95YDM55T8"
-        };
-        
+              
         // Initialize Firebase Analytics
         const analyticsApp = initializeApp(firebaseAnalyticsConfig, 'analytics');
         const analytics = getAnalytics(analyticsApp);
