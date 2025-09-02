@@ -3,21 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hisab Kitab</title>
+    <title>Hisab Kitab - Secure Access</title>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J95YDM55T8"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-J95YDM55T8');
+    </script>
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --font-main: 'Inter', sans-serif; }
+        /* Single font definition - change 'Inter' to any font you want */
+        :root { 
+            --app-font: 'Inter', sans-serif; 
+        }
         html { height: -webkit-fill-available; }
         body {
-            font-family: var(--font-main);
+            font-family: var(--app-font);
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             min-height: 100vh;
             min-height: -webkit-fill-available;
-            overflow: hidden;
         }
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #27272a; }
@@ -34,91 +47,277 @@
             10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); }
             30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); }
         }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
         .animate-shake { animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both; }
+        .animate-spin { animation: spin 1s linear infinite; }
+        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        
+        /* Hamburger menu styles */
+        .hamburger-menu {
+            position: fixed;
+            top: 4px;
+            right: 4px;
+            z-index: 60;
+        }
+        
+        .menu-content {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            min-width: 200px;
+            transform: translateY(-10px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-content.show {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
-<body class="bg-zinc-900 text-gray-300 font-sans flex items-center justify-center p-4">
-
-    <main class="w-full max-w-md flex flex-col h-full max-h-[95vh] bg-zinc-800/80 rounded-lg shadow-2xl animate-fade-in">
-        <h1 class="text-2xl font-semibold text-center py-6 text-white flex-shrink-0">Hisab Kitab</h1>
-        
-        <div class="overflow-y-auto px-4 pb-4">
-            <form id="data-form" class="space-y-4" novalidate>
-                <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
-                    <fieldset><legend class="sr-only">Select Name</legend>
-                        <div class="flex justify-between gap-2">
-                            <label class="flex-1 flex items-center justify-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="name" value="Gulnaz Dena" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-3 text-gray-300">Gulnaz Dena</span></label>
-                            <label class="flex-1 flex items-center justify-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="name" value="Ghazala Dena" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-3 text-gray-300">Ghazala Dena</span></label>
-                        </div>
-                    </fieldset>
+<body class="bg-zinc-900 text-gray-300 min-h-screen flex items-center justify-center p-4">
+    
+    <!-- Authentication Container -->
+    <div id="auth-container" class="w-full max-w-md bg-zinc-800/80 rounded-lg shadow-2xl p-8 transition-transform duration-500 ease-in-out animate-fade-in">
+        <!-- Login UI -->
+        <div id="auth-ui" class="text-center transition-opacity duration-500">
+            <h1 class="text-3xl font-bold text-white mb-2">Hisab Kitab</h1>
+            <p class="text-sm text-gray-400 mb-6">Personal accounting for busy people.</p>
+            <!-- Login Form -->
+            <form id="login-form" class="space-y-4">
+                <input type="email" id="email" placeholder="Email" required
+                       class="w-full px-4 py-3 bg-zinc-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                <input type="password" id="password" placeholder="Password" required
+                       class="w-full px-4 py-3 bg-zinc-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                <div class="flex items-center justify-start w-full">
+                    <input id="remember-me" type="checkbox" checked
+                           class="h-4 w-4 text-blue-500 bg-zinc-700 rounded focus:ring-blue-500 focus:ring-2">
+                    <label for="remember-me" class="ml-2 text-sm text-gray-400">Remember Me</label>
                 </div>
-                <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
-                    <label for="amount" class="sr-only">Amount</label>
-                    <input type="number" id="amount" name="amount" placeholder="Amount ₹" pattern="[0-9]*" inputmode="numeric" class="w-full bg-zinc-700 text-white p-3 rounded-md border border-zinc-600 focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition">
-                </div>
-                <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
-                    <fieldset><legend class="sr-only">Tag</legend>
-                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Mutton" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Mutton</span></label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Beef" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Beef</span></label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Chicken" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Chicken</span></label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Fish" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Fish</span></label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Light Bill" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Light Bill</span></label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Kirana" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Kirana</span></label>
-                            <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer col-span-2 sm:col-span-1"><input type="radio" name="tag" id="other-tag-radio" value="" class="h-5 w-5 text-zinc-500 bg-zinc-700 border-zinc-600 focus:ring-zinc-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Others</span></label>
-                        </div>
-                        <input type="text" id="other-tag-input" placeholder="Specify other tag" class="mt-3 w-full bg-zinc-700 text-white p-3 rounded-md border border-zinc-600 focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition hidden">
-                    </fieldset>
-                </div>
-                <div>
-                    <div class="flex items-center justify-between gap-4">
-                        <button type="submit" id="submit-button" class="flex-grow bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">Submit</button>
-                        <div class="flex flex-col gap-1 items-end flex-shrink-0">
-                            <button type="button" id="view-entries-btn" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm whitespace-nowrap">View All Entries</button>
-                            <button type="reset" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm whitespace-nowrap">Clear Form</button>
-                        </div>
-                    </div>
-                    <div id="status-message" class="mt-4 text-center text-base h-6"></div>
-                </div>
+                <button type="submit" id="login-btn"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-zinc-800 transition duration-300 ease-in-out flex items-center justify-center">
+                    <span id="login-text">Log In</span>
+                    <svg id="login-spinner" class="animate-spin -mr-1 ml-3 h-5 w-5 text-white hidden" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
             </form>
-            
-            <div id="recent-entries-wrapper" class="mt-4 border-t border-zinc-700 pt-4">
-                 <h3 class="text-base text-gray-400 mb-3 text-center">Recent Entries</h3>
-                 <div id="recent-entries" class="space-y-2"></div>
+            <div class="flex items-center justify-between mt-4">
+                <a href="#" id="forgot-password-link"
+                    class="text-sm text-blue-400 font-medium hover:text-blue-300 transition duration-300 ease-in-out">
+                    Forgot Password?
+                </a>
+                <button id="signup-button"
+                        class="text-sm text-blue-400 font-medium hover:text-blue-300 transition duration-300 ease-in-out">
+                    Sign up
+                </button>
             </div>
         </div>
-    </main>
-    
-    <div id="entries-modal" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 hidden z-40">
-        <div class="bg-zinc-800 rounded-lg shadow-xl w-full max-w-2xl h-full max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-start p-4 border-b border-zinc-700 flex-shrink-0">
-                <div id="summary-container" class="text-base flex-grow"></div>
-                <button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl leading-none -mt-2 ml-4">&times;</button>
-            </div>
-            <div class="p-4 flex-shrink-0 border-b border-zinc-700">
-                <input type="text" id="filter-input" placeholder="Type to filter entries..." class="w-full bg-zinc-700 text-white p-2 rounded-md border border-zinc-600 focus:ring-2 focus:ring-zinc-500 focus:border-zinc-500 transition">
-            </div>
-            <div id="entries-table-container" class="overflow-y-auto flex-grow"></div>
-            <div id="load-more-container" class="p-4 border-t border-zinc-700 text-center space-x-2 flex-shrink-0"></div>
+        
+        <!-- Password Reset UI -->
+        <div id="password-reset-ui" class="hidden text-center transition-opacity duration-500">
+            <h1 class="text-3xl font-bold text-white mb-2">Password Reset</h1>
+            <p class="text-sm text-gray-400 mb-6">Enter your email to receive a password reset link.</p>
+            <form id="password-reset-form" class="space-y-4">
+                <input type="email" id="reset-email" placeholder="Email" required
+                       class="w-full px-4 py-3 bg-zinc-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                <button type="submit" id="reset-btn"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-zinc-800 transition duration-300 ease-in-out flex items-center justify-center">
+                    <span id="reset-text">Send Reset Email</span>
+                    <svg id="reset-spinner" class="animate-spin -mr-1 ml-3 h-5 w-5 text-white hidden" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </form>
+            <button id="reset-go-back-button" class="mt-4 text-sm text-blue-400 font-medium hover:text-blue-300 transition duration-300 ease-in-out">Go Back to Login</button>
+        </div>
+        
+        <!-- Contact UI -->
+        <div id="contact-ui" class="hidden text-center transition-opacity duration-500">
+            <h1 class="text-3xl font-bold text-white mb-2">Manual Sign Up</h1>
+            <p class="text-sm text-gray-400 mb-6">To create an account, please send an email to:</p>
+            <a href="mailto:your.email@example.com" class="text-lg font-medium text-blue-400 hover:underline">your.email@example.com</a>
+            <p class="mt-6 text-sm text-gray-400">Once your account is created, you will be notified.</p>
+            <button id="go-back-button" class="mt-4 text-sm text-blue-400 font-medium hover:text-blue-300 transition duration-300 ease-in-out">Go Back</button>
         </div>
     </div>
 
-    <script>
+    <!-- Hisab Kitab App Container (Hidden by default) -->
+    <div id="app-container" class="hidden w-full">
+        <!-- Hamburger Menu -->
+        <div class="hamburger-menu">
+            <button id="hamburger-btn" class="flex items-center justify-center w-10 h-10 bg-zinc-800/90 backdrop-blur rounded-lg shadow-lg hover:bg-zinc-700 transition">
+                <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <div id="menu-content" class="menu-content bg-zinc-800/95 backdrop-blur border border-zinc-700 rounded-lg shadow-xl p-4">
+                <div class="space-y-3">
+                    <div class="text-sm text-gray-300 border-b border-zinc-700 pb-2">
+                        Welcome, <span id="user-email-display" class="text-blue-400"></span>
+                    </div>
+                    <button id="logout-button" class="w-full text-left text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded transition flex items-center justify-center">
+                        <span id="logout-text">Logout</span>
+                        <svg id="logout-spinner" class="animate-spin -mr-1 ml-3 h-4 w-4 text-white hidden" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Hisab Kitab App -->
+        <main class="w-full max-w-md mx-auto flex flex-col h-full max-h-[95vh] bg-zinc-800/80 rounded-lg shadow-2xl animate-fade-in">
+            <h1 class="text-2xl font-semibold text-center py-6 text-white flex-shrink-0">Hisab Kitab</h1>
+            
+            <div class="overflow-y-auto px-4 pb-4">
+                <form id="data-form" class="space-y-4" novalidate>
+                    <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
+                        <fieldset><legend class="sr-only">Select Name</legend>
+                            <div class="flex justify-between gap-2">
+                                <label class="flex-1 flex items-center justify-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="name" value="Gulnaz Dena" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2"><span class="ml-3 text-gray-300">Gulnaz Dena</span></label>
+                                <label class="flex-1 flex items-center justify-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="name" value="Ghazala Dena" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2"><span class="ml-3 text-gray-300">Ghazala Dena</span></label>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
+                        <label for="amount" class="sr-only">Amount</label>
+                        <input type="number" id="amount" name="amount" placeholder="Amount ₹" pattern="[0-9]*" inputmode="numeric" class="w-full bg-zinc-700 text-white placeholder-gray-400 p-3 rounded-md focus:ring-2 focus:ring-blue-500 transition">
+                    </div>
+                    <div class="bg-zinc-800 p-4 rounded-lg shadow-md">
+                        <fieldset><legend class="sr-only">Tag</legend>
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Mutton" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Mutton</span></label>
+                                <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Beef" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Beef</span></label>
+                                <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Chicken" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Chicken</span></label>
+                                <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Fish" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Fish</span></label>
+                                <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Light Bill" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Light Bill</span></label>
+                                <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer"><input type="radio" name="tag" value="Kirana" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Kirana</span></label>
+                                <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer col-span-2 sm:col-span-1"><input type="radio" name="tag" id="other-tag-radio" value="" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2"><span class="ml-2 text-gray-300 text-sm">Others</span></label>
+                            </div>
+                            <input type="text" id="other-tag-input" placeholder="Specify other tag" class="mt-3 w-full bg-zinc-700 text-white placeholder-gray-400 p-3 rounded-md focus:ring-2 focus:ring-blue-500 transition hidden">
+                        </fieldset>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between gap-4">
+                            <button type="submit" id="submit-button" class="flex-grow bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center">
+                                <span id="submit-text">Submit</span>
+                                <svg id="submit-spinner" class="animate-spin -mr-1 ml-3 h-5 w-5 text-white hidden" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </button>
+                            <div class="flex flex-col gap-1 items-end flex-shrink-0">
+                                <button type="button" id="view-entries-btn" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm whitespace-nowrap">View All Entries</button>
+                                <button type="reset" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm whitespace-nowrap">Clear Form</button>
+                            </div>
+                        </div>
+                        <div id="status-message" class="mt-4 text-center text-base h-6"></div>
+                    </div>
+                </form>
+                
+                <div id="recent-entries-wrapper" class="mt-4 border-t border-zinc-700 pt-4">
+                     <h3 class="text-base text-gray-400 mb-3 text-center">Recent Entries</h3>
+                     <div id="recent-entries" class="space-y-2"></div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Entries Modal -->
+        <div id="entries-modal" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 hidden z-40">
+            <div class="bg-zinc-800 rounded-lg shadow-xl w-full max-w-2xl h-full max-h-[90vh] flex flex-col">
+                <div class="flex justify-between items-start p-4 border-b border-zinc-700 flex-shrink-0">
+                    <div id="summary-container" class="text-base flex-grow"></div>
+                    <button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl leading-none -mt-2 ml-4">&times;</button>
+                </div>
+                <div class="p-4 flex-shrink-0 border-b border-zinc-700">
+                    <input type="text" id="filter-input" placeholder="Type to filter entries..." class="w-full bg-zinc-700 text-white placeholder-gray-400 p-2 rounded-md focus:ring-2 focus:ring-blue-500 transition">
+                </div>
+                <div id="entries-table-container" class="overflow-y-auto flex-grow"></div>
+                <div id="load-more-container" class="p-4 border-t border-zinc-700 text-center space-x-2 flex-shrink-0"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Box -->
+    <div id="message-box" class="fixed top-4 left-1/2 transform -translate-x-1/2 rounded-md shadow-lg p-4 transition-all duration-300 ease-in-out scale-0 origin-top z-50">
+        <p id="message-text" class="font-medium"></p>
+    </div>
+
+    <!-- Firebase Analytics Script -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
+        
+        // Firebase configuration for analytics
+        const firebaseAnalyticsConfig = {
+            apiKey: "AIzaSyA5bKSAZN0JHAK_atwbSRz4dCTJ8NaH4vI",
+            authDomain: "auth-demo-9a4bc.firebaseapp.com",
+            projectId: "auth-demo-9a4bc",
+            storageBucket: "auth-demo-9a4bc.firebasestorage.app",
+            messagingSenderId: "554871726025",
+            appId: "1:554871726025:web:ec8d1171f6a85b13c65218",
+            measurementId: "G-J95YDM55T8"
+        };
+        
+        // Initialize Firebase Analytics
+        const analyticsApp = initializeApp(firebaseAnalyticsConfig, 'analytics');
+        const analytics = getAnalytics(analyticsApp);
+    </script>
+
+    <script type="module">
+        // Import Firebase modules from CDN
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyA5bKSAZN0JHAK_atwbSRz4dCTJ8NaH4vI",
+            authDomain: "auth-demo-9a4bc.firebaseapp.com",
+            projectId: "auth-demo-9a4bc",
+            storageBucket: "auth-demo-9a4bc.firebasestorage.app",
+            messagingSenderId: "554871726025",
+            appId: "1:554871726025:web:ec8d1171f6a85b13c65218"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        // UI elements for authentication
+        const authContainer = document.getElementById('auth-container');
+        const authUi = document.getElementById('auth-ui');
+        const contactUi = document.getElementById('contact-ui');
+        const passwordResetUi = document.getElementById('password-reset-ui');
+        const appContainer = document.getElementById('app-container');
+        const loginForm = document.getElementById('login-form');
+        const signupButton = document.getElementById('signup-button');
+        const goBackButton = document.getElementById('go-back-button');
+        const logoutButton = document.getElementById('logout-button');
+        const userEmailDisplay = document.getElementById('user-email-display');
+        const rememberMeCheckbox = document.getElementById('remember-me');
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+        const passwordResetForm = document.getElementById('password-reset-form');
+        const resetGoBackButton = document.getElementById('reset-go-back-button');
+        const messageBox = document.getElementById('message-box');
+        const messageText = document.getElementById('message-text');
+        
+        // Hamburger menu elements
+        const hamburgerBtn = document.getElementById('hamburger-btn');
+        const menuContent = document.getElementById('menu-content');
+
+        // Hisab Kitab app variables
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwoFc2VyGtJMtFIh2D_qf99BBFLNfQLnFO5MjFv3EtKL3AYYj0C9uNpvmAh-eYy-cisMg/exec'; 
         const INITIAL_LOAD_COUNT = 50;
-        
-        const form = document.getElementById('data-form');
-        const submitButton = document.getElementById('submit-button');
-        const statusMessage = document.getElementById('status-message');
-        const viewEntriesBtn = document.getElementById('view-entries-btn');
-        const entriesModal = document.getElementById('entries-modal');
-        const closeModalBtn = document.getElementById('close-modal-btn');
-        const recentEntriesContainer = document.getElementById('recent-entries');
-        const summaryContainer = document.getElementById('summary-container');
-        const entriesTableContainer = document.getElementById('entries-table-container');
-        const filterInput = document.getElementById('filter-input');
-        const loadMoreContainer = document.getElementById('load-more-container');
         
         let sessionStartTime;
         let allEntries = [];
@@ -127,20 +326,199 @@
         let sortState = { column: 3, direction: 'desc' };
         let deviceDetails = {};
 
-        document.addEventListener('DOMContentLoaded', initializeApp);
+        // Analytics helper function
+        const trackEvent = (eventName, parameters = {}) => {
+            // Google Analytics 4 tracking
+            if (typeof gtag !== 'undefined') {
+                gtag('event', eventName, parameters);
+            }
+        };
 
-        function initializeApp() {
+        // Hamburger menu functionality
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuContent.classList.toggle('show');
+            trackEvent('hamburger_menu_toggle');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!hamburgerBtn.contains(e.target) && !menuContent.contains(e.target)) {
+                menuContent.classList.remove('show');
+            }
+        });
+
+        // Button animation helpers
+        const showButtonSpinner = (buttonId, textId, spinnerId) => {
+            document.getElementById(buttonId).disabled = true;
+            document.getElementById(textId).style.display = 'none';
+            document.getElementById(spinnerId).classList.remove('hidden');
+        };
+
+        const hideButtonSpinner = (buttonId, textId, spinnerId, originalText) => {
+            document.getElementById(buttonId).disabled = false;
+            document.getElementById(textId).style.display = 'inline';
+            document.getElementById(textId).textContent = originalText;
+            document.getElementById(spinnerId).classList.add('hidden');
+        };
+
+        // Function to show a temporary message box
+        const showMessage = (message, isError = true) => {
+            messageText.textContent = message;
+            if (isError) {
+                messageBox.classList.remove('bg-green-600');
+                messageBox.classList.add('bg-red-600', 'text-white');
+                trackEvent('error_message_shown', { message: message });
+            } else {
+                messageBox.classList.remove('bg-red-600');
+                messageBox.classList.add('bg-green-600', 'text-white');
+                trackEvent('success_message_shown', { message: message });
+            }
+            messageBox.classList.remove('scale-0');
+            messageBox.classList.add('scale-100');
+            setTimeout(() => {
+                messageBox.classList.remove('scale-100');
+                messageBox.classList.add('scale-0');
+            }, 3000);
+        };
+
+        // Authentication event listeners
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = e.target.email.value;
+            const password = e.target.password.value;
+            const rememberMe = rememberMeCheckbox.checked;
+            
+            trackEvent('login_attempt', { email: email });
+            showButtonSpinner('login-btn', 'login-text', 'login-spinner');
+            
+            try {
+                await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessage("Login successful!", false);
+                trackEvent('login_success', { email: email, remember_me: rememberMe });
+            } catch (error) {
+                // UPDATED: Changed to casual message
+                showMessage("Oops! Check your password");
+                trackEvent('login_error', { error: error.message });
+            } finally {
+                hideButtonSpinner('login-btn', 'login-text', 'login-spinner', 'Log In');
+            }
+        });
+
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authUi.classList.add('hidden');
+            passwordResetUi.classList.remove('hidden');
+            trackEvent('forgot_password_clicked');
+        });
+
+        passwordResetForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = e.target['reset-email'].value;
+            
+            trackEvent('password_reset_attempt', { email: email });
+            showButtonSpinner('reset-btn', 'reset-text', 'reset-spinner');
+            
+            try {
+                await sendPasswordResetEmail(auth, email);
+                // UPDATED: Added spam folder reminder
+                showMessage("Password reset email sent. Check your inbox. Don't forget to check your spam folder", false);
+                passwordResetForm.reset();
+                trackEvent('password_reset_success', { email: email });
+            } catch (error) {
+                showMessage(error.message);
+                trackEvent('password_reset_error', { error: error.message });
+            } finally {
+                hideButtonSpinner('reset-btn', 'reset-text', 'reset-spinner', 'Send Reset Email');
+            }
+        });
+
+        signupButton.addEventListener('click', () => {
+            authUi.classList.add('hidden');
+            contactUi.classList.remove('hidden');
+            trackEvent('signup_button_clicked');
+        });
+
+        goBackButton.addEventListener('click', () => {
+            contactUi.classList.add('hidden');
+            authUi.classList.remove('hidden');
+            trackEvent('go_back_clicked');
+        });
+
+        resetGoBackButton.addEventListener('click', () => {
+            passwordResetUi.classList.add('hidden');
+            authUi.classList.remove('hidden');
+            trackEvent('reset_go_back_clicked');
+        });
+
+        logoutButton.addEventListener('click', async () => {
+            trackEvent('logout_attempt');
+            showButtonSpinner('logout-button', 'logout-text', 'logout-spinner');
+            
+            try {
+                await signOut(auth);
+                showMessage("Logged out successfully!", false);
+                menuContent.classList.remove('show');
+                trackEvent('logout_success');
+            } catch (error) {
+                showMessage(error.message);
+                trackEvent('logout_error', { error: error.message });
+            } finally {
+                hideButtonSpinner('logout-button', 'logout-text', 'logout-spinner', 'Logout');
+            }
+        });
+
+        // Listen for authentication state changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in, show the app
+                authContainer.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+                userEmailDisplay.textContent = user.email;
+                trackEvent('user_authenticated', { email: user.email });
+                initializeHisabKitabApp();
+            } else {
+                // User is signed out, show login form
+                authContainer.classList.remove('hidden');
+                appContainer.classList.add('hidden');
+                authUi.classList.remove('hidden');
+                contactUi.classList.add('hidden');
+                passwordResetUi.classList.add('hidden');
+                trackEvent('user_signed_out');
+            }
+        });
+
+        // Hisab Kitab App Functions
+        function initializeHisabKitabApp() {
             sessionStartTime = new Date();
+            trackEvent('app_initialized');
+            
+            const form = document.getElementById('data-form');
+            const submitButton = document.getElementById('submit-button');
+            const statusMessage = document.getElementById('status-message');
+            const viewEntriesBtn = document.getElementById('view-entries-btn');
+            const entriesModal = document.getElementById('entries-modal');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const recentEntriesContainer = document.getElementById('recent-entries');
+            const summaryContainer = document.getElementById('summary-container');
+            const entriesTableContainer = document.getElementById('entries-table-container');
+            const filterInput = document.getElementById('filter-input');
+            const loadMoreContainer = document.getElementById('load-more-container');
+
             form.addEventListener('submit', handleFormSubmit);
             viewEntriesBtn.addEventListener('click', openEntriesModal);
-            closeModalBtn.addEventListener('click', () => entriesModal.classList.add('hidden'));
+            closeModalBtn.addEventListener('click', () => {
+                entriesModal.classList.add('hidden');
+                trackEvent('entries_modal_closed');
+            });
             filterInput.addEventListener('input', handleFilter);
             document.querySelectorAll('input[name="tag"]').forEach(r => r.addEventListener('change', handleTagChange));
             document.getElementById('other-tag-input').addEventListener('input', (e) => {
                 document.getElementById('other-tag-radio').value = e.target.value;
             });
+            
             fetchInitialData();
-            getDeviceDetails(); // Start gathering device details
+            getDeviceDetails();
         }
 
         const formatAmount = (num) => num ? Number(num).toLocaleString('en-IN') : '';
@@ -152,28 +530,25 @@
             otherInput.classList.toggle('hidden', !isOtherChecked);
             if (isOtherChecked) otherInput.focus();
             else otherInput.value = otherRadio.value = '';
+            trackEvent('tag_changed', { other_selected: isOtherChecked });
         }
 
         async function getDeviceDetails() {
-            // Basic fallback details
             deviceDetails = {
                 browserName: 'Unknown',
                 osVersion: 'Unknown',
                 manufacturer: 'Unknown',
-                marketingName: 'Unknown'
+                deviceModel: 'Unknown'
             };
-
             const ua = navigator.userAgent;
             const platform = navigator.platform;
-
-            // Basic OS Detection
+            
             if (/Win/.test(platform)) deviceDetails.osVersion = "Windows";
             else if (/Mac/.test(platform)) deviceDetails.osVersion = "MacOS";
             else if (/Linux/.test(platform)) deviceDetails.osVersion = "Linux";
             else if (/iPhone|iPad|iPod/.test(ua)) deviceDetails.osVersion = "iOS";
             else if (/Android/.test(ua)) deviceDetails.osVersion = "Android";
-
-            // Basic Browser Detection
+            
             if (ua.includes("Firefox")) deviceDetails.browserName = "Firefox";
             else if (ua.includes("SamsungBrowser")) deviceDetails.browserName = "Samsung Internet";
             else if (ua.includes("Opera") || ua.includes("OPR")) deviceDetails.browserName = "Opera";
@@ -181,14 +556,13 @@
             else if (ua.includes("Chrome")) deviceDetails.browserName = "Chrome";
             else if (ua.includes("Safari")) deviceDetails.browserName = "Safari";
             
-            // Advanced details using User-Agent Client Hints (for Chromium browsers)
             if (navigator.userAgentData) {
                 try {
                     const uaData = await navigator.userAgentData.getHighEntropyValues([
                         "platform", "platformVersion", "architecture", "model", "uaFullVersion", "brand"
                     ]);
                     deviceDetails.osVersion = `${uaData.platform} ${uaData.platformVersion}`;
-                    deviceDetails.marketingName = uaData.model || 'N/A';
+                    deviceDetails.deviceModel = uaData.model || 'N/A';
                     if (uaData.brands && uaData.brands.length) {
                         deviceDetails.manufacturer = uaData.brands[0].brand.replace(/Not A;Brand/g, '').trim() || 'N/A';
                         deviceDetails.browserName = uaData.brands.find(b => !b.brand.includes('Not')).brand || deviceDetails.browserName;
@@ -197,36 +571,62 @@
                     console.warn("Could not get high-entropy user agent values.", e);
                 }
             }
+            
+            trackEvent('device_details_collected', deviceDetails);
         }
 
         async function handleFormSubmit(e) {
             e.preventDefault();
-            const formData = new FormData(form);
+            const formData = new FormData(e.target);
             const name = formData.get('name');
             const amount = formData.get('amount');
             const tag = formData.get('tag');
-
+            const statusMessage = document.getElementById('status-message');
+            
+            trackEvent('form_submit_attempt', { name: name, amount: amount, tag: tag });
+            
             statusMessage.className = 'mt-4 text-center text-base h-6 text-yellow-400';
-            if (!name) { statusMessage.textContent = 'Please select a name.'; return; }
-            if (!amount) { statusMessage.textContent = 'Please enter an amount.'; return; }
-            if (!/^\d+$/.test(amount)) { statusMessage.textContent = 'Amount must be a whole number.'; return; }
-            if (!tag) { statusMessage.textContent = 'Please select or specify a tag.'; return; }
+            if (!name) { 
+                statusMessage.textContent = 'Please select a name.'; 
+                trackEvent('form_validation_error', { field: 'name' });
+                return; 
+            }
+            if (!amount) { 
+                statusMessage.textContent = 'Please enter an amount.'; 
+                trackEvent('form_validation_error', { field: 'amount' });
+                return; 
+            }
+            if (!/^\d+$/.test(amount)) { 
+                statusMessage.textContent = 'Amount must be a whole number.'; 
+                trackEvent('form_validation_error', { field: 'amount', error: 'not_numeric' });
+                return; 
+            }
+            if (!tag) { 
+                statusMessage.textContent = 'Please select or specify a tag.'; 
+                trackEvent('form_validation_error', { field: 'tag' });
+                return; 
+            }
             
             if (SCRIPT_URL === 'YOUR_NEW_GOOGLE_APPS_SCRIPT_URL_HERE') {
                 statusMessage.textContent = 'Please configure the Google Apps Script URL first!';
+                trackEvent('configuration_error', { error: 'script_url_not_configured' });
                 return;
             }
-
-            submitButton.disabled = true;
-            submitButton.textContent = 'Submitting...';
+            
+            showButtonSpinner('submit-button', 'submit-text', 'submit-spinner');
             statusMessage.textContent = '';
+            
+            // Get current user's email from Firebase auth
+            const currentUser = auth.currentUser;
+            const userEmail = currentUser ? currentUser.email : 'Unknown';
             
             formData.append('sessionDuration', `${Math.round((new Date() - sessionStartTime) / 1000)}s`);
             formData.append('browserName', deviceDetails.browserName);
             formData.append('osVersion', deviceDetails.osVersion);
             formData.append('manufacturer', deviceDetails.manufacturer);
-            formData.append('marketingName', deviceDetails.marketingName);
-
+            formData.append('deviceModel', deviceDetails.deviceModel);
+            formData.append('userEmail', userEmail);
+            
             try {
                 const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
                 if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
@@ -235,53 +635,72 @@
                 
                 statusMessage.textContent = 'Thank you, entry submitted!';
                 statusMessage.className = 'mt-4 text-center text-base h-6 text-green-400 animate-fade-in';
-                form.reset();
+                e.target.reset();
                 document.getElementById('other-tag-input').classList.add('hidden');
                 fetchInitialData();
+                
+                trackEvent('form_submit_success', { 
+                    name: name, 
+                    amount: amount, 
+                    tag: tag, 
+                    user_email: userEmail 
+                });
             } catch (error) {
                 console.error('Submission Error!', error);
                 statusMessage.textContent = "Oops! Couldn't save. Please contact Zaid.";
                 statusMessage.className = 'mt-4 text-center text-base h-6 text-red-400 animate-fade-in';
-                form.classList.add('animate-shake');
-                form.addEventListener('animationend', () => form.classList.remove('animate-shake'), { once: true });
+                e.target.classList.add('animate-shake');
+                e.target.addEventListener('animationend', () => e.target.classList.remove('animate-shake'), { once: true });
+                
+                trackEvent('form_submit_error', { 
+                    error: error.message,
+                    name: name,
+                    amount: amount,
+                    tag: tag
+                });
             } finally {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Submit';
+                hideButtonSpinner('submit-button', 'submit-text', 'submit-spinner', 'Submit');
             }
         }
 
         function openEntriesModal() {
+            const entriesModal = document.getElementById('entries-modal');
             entriesModal.classList.remove('hidden');
             filteredEntries = [...allEntries];
             visibleCount = INITIAL_LOAD_COUNT;
             sortAndRenderTable();
+            trackEvent('entries_modal_opened');
         }
 
         async function fetchInitialData() {
+            const recentEntriesContainer = document.getElementById('recent-entries');
             recentEntriesContainer.innerHTML = `<div class="bg-zinc-700 p-3 rounded-md animate-pulse space-y-3"><div class="h-4 bg-zinc-600 rounded w-3/4"></div><div class="h-3 bg-zinc-600 rounded w-1/4"></div><hr class="border-zinc-600 my-2"><div class="h-4 bg-zinc-600 rounded w-2/3"></div><div class="h-3 bg-zinc-600 rounded w-1/3"></div><hr class="border-zinc-600 my-2"><div class="h-4 bg-zinc-600 rounded w-4/5"></div><div class="h-3 bg-zinc-600 rounded w-1/5"></div></div>`;
             
             if (SCRIPT_URL === 'YOUR_NEW_GOOGLE_APPS_SCRIPT_URL_HERE') {
                  recentEntriesContainer.innerHTML = `<p class="text-center text-yellow-400 text-sm p-4">Please configure the script URL to load entries.</p>`;
+                 trackEvent('data_fetch_error', { error: 'script_url_not_configured' });
                  return;
             }
-
+            
             try {
                 const url = SCRIPT_URL + '?cacheBust=' + new Date().getTime();
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
-
                 allEntries = Array.isArray(data.entries) ? data.entries : [];
                 renderRecentEntries(allEntries);
                 renderSummary(data.summary);
+                trackEvent('data_fetch_success', { entries_count: allEntries.length });
             } catch (error) {
                 console.error('Error fetching initial data!', error);
                 recentEntriesContainer.innerHTML = `<p class="text-center text-yellow-400 text-sm p-4">Could not load entries. Please contact Zaid.</p>`;
+                trackEvent('data_fetch_error', { error: error.message });
             }
         }
 
         function renderRecentEntries(entries) {
+            const recentEntriesContainer = document.getElementById('recent-entries');
             if (entries.length === 0) {
                 recentEntriesContainer.innerHTML = '<p class="text-center text-gray-400 text-sm p-4">No entries yet.</p>';
                 return;
@@ -297,6 +716,7 @@
         }
         
         function renderSummary(summary) {
+            const summaryContainer = document.getElementById('summary-container');
             if (!summary) return;
             summaryContainer.innerHTML = `
                 <p class="font-bold text-white">So I say, ${summary.h1 || ''} owes ₹ ${formatAmount(summary.i1)}</p>
@@ -310,7 +730,7 @@
                 let valA = a[column], valB = b[column];
                 if (column === 0 || column === 1) {
                     valA = parseFloat(valA) || 0; valB = parseFloat(valB) || 0;
-                } else if (column === 3) { // Use the full timestamp for sorting accuracy
+                } else if (column === 3) {
                     valA = new Date(valA); valB = new Date(valB);
                 } else {
                     valA = String(valA).toLowerCase(); valB = String(valB).toLowerCase();
@@ -323,23 +743,29 @@
         }
 
         function renderTable() {
+            const entriesTableContainer = document.getElementById('entries-table-container');
+            const loadMoreContainer = document.getElementById('load-more-container');
+            
             if (filteredEntries.length === 0) {
                 entriesTableContainer.innerHTML = `<p class="p-4 text-center text-gray-400">No entries match your filter.</p>`;
-                loadMoreContainer.innerHTML = ''; return;
+                loadMoreContainer.innerHTML = ''; 
+                return;
             }
+            
             const headers = [{ title: 'Gulnaz Dena', index: 0 }, { title: 'Ghazala Dena', index: 1 }, { title: 'Tag', index: 2 }, { title: 'Date', index: 3 }];
             const headerHTML = headers.map(h => `<th scope="col" class="px-4 py-3 sortable" data-index="${h.index}">${h.title}<span class="sort-icon">${sortState.column === h.index ? (sortState.direction === 'asc' ? '▲' : '▼') : '↕'}</span></th>`).join('');
             
             const tableRows = filteredEntries.slice(0, visibleCount)
                 .map(([gAmount, zAmount, tag, timestamp]) => `<tr class="border-b border-zinc-700 hover:bg-zinc-700/50"><td class="px-4 py-3 text-white">${formatAmount(gAmount)}</td><td class="px-4 py-3 text-white">${formatAmount(zAmount)}</td><td class="px-4 py-3">${tag}</td><td class="px-4 py-3 text-xs whitespace-nowrap">${timestamp.substring(0, 11)}</td></tr>`)
                 .join('');
-
+            
             entriesTableContainer.innerHTML = `<table class="w-full text-sm text-left text-gray-400"><thead class="text-xs text-gray-300 uppercase bg-zinc-900/50 sticky top-0 backdrop-blur-sm"><tr>${headerHTML}</tr></thead><tbody>${tableRows}</tbody></table>`;
             document.querySelectorAll('.sortable').forEach(th => th.addEventListener('click', handleSort));
             renderLoadMoreButtons();
         }
 
         function renderLoadMoreButtons() {
+            const loadMoreContainer = document.getElementById('load-more-container');
             if (visibleCount >= filteredEntries.length) {
                 loadMoreContainer.innerHTML = `<p class="text-xs text-gray-500">Showing all ${filteredEntries.length} entries.</p>`;
                 return;
@@ -361,20 +787,24 @@
             sortState.direction = column === newCol ? (direction === 'asc' ? 'desc' : 'asc') : ((newCol === 3) ? 'desc' : 'asc');
             sortState.column = newCol;
             sortAndRenderTable();
+            trackEvent('table_sorted', { column: newCol, direction: sortState.direction });
         }
 
         function handleFilter() {
+            const filterInput = document.getElementById('filter-input');
             const query = filterInput.value.toLowerCase();
             filteredEntries = allEntries.filter(entry => entry.some(cell => String(cell).toLowerCase().includes(query)));
             visibleCount = INITIAL_LOAD_COUNT;
             sortAndRenderTable();
+            trackEvent('table_filtered', { query: query, results: filteredEntries.length });
         }
 
         function handleLoadMore(e) {
-            visibleCount += parseInt(e.currentTarget.dataset.amount, 10);
+            const amount = parseInt(e.currentTarget.dataset.amount, 10);
+            visibleCount += amount;
             renderTable();
+            trackEvent('load_more_entries', { amount: amount, total_visible: visibleCount });
         }
     </script>
 </body>
 </html>
-
