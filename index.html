@@ -18,11 +18,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- CHANGED: Font from Inter to Open Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Single font definition - change 'Inter' to any font you want */
+        /* CHANGED: Single font definition - now Open Sans */
         :root { 
-            --app-font: 'Inter', sans-serif; 
+            --app-font: 'Open Sans', sans-serif; 
         }
         
         html { 
@@ -137,12 +138,13 @@
                                class="h-5 w-5 text-blue-500 bg-zinc-700 rounded focus:ring-blue-500 focus:ring-2 flex-shrink-0">
                         <label for="remember-me" class="ml-3 text-sm text-gray-400 flex items-center">Remember Me</label>
                     </div>
+                    <!-- CHANGED: Even more pastel blue button -->
                     <button type="submit" id="login-btn"
-                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-zinc-800 transition duration-300 ease-in-out flex items-center justify-center min-h-[44px]">
+                            class="w-full bg-blue-300 hover:bg-blue-400 text-zinc-800 font-semibold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 focus:ring-offset-zinc-800 transition duration-300 ease-in-out flex items-center justify-center min-h-[44px]">
                         <span id="login-text">Log In</span>
-                        <svg id="login-spinner" class="animate-spin -mr-1 ml-3 h-5 w-5 text-white hidden" fill="none" viewBox="0 0 24 24">
+                        <svg id="login-spinner" class="animate-spin -mr-1 ml-3 h-5 w-5 text-zinc-800 hidden" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                     </button>
                 </form>
@@ -165,23 +167,22 @@
                 <form id="password-reset-form" class="space-y-4">
                     <input type="email" id="reset-email" placeholder="Email" required
                            class="w-full px-4 py-3 bg-zinc-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-base">
+                    <!-- CHANGED: Even more pastel blue button -->
                     <button type="submit" id="reset-btn"
-                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-zinc-800 transition duration-300 ease-in-out flex items-center justify-center min-h-[44px]">
+                            class="w-full bg-blue-300 hover:bg-blue-400 text-zinc-800 font-semibold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 focus:ring-offset-zinc-800 transition duration-300 ease-in-out flex items-center justify-center min-h-[44px]">
                         <span id="reset-text">Send Reset Email</span>
-                        <svg id="reset-spinner" class="animate-spin -mr-1 ml-3 h-5 w-5 text-white hidden" fill="none" viewBox="0 0 24 24">
+                        <svg id="reset-spinner" class="animate-spin -mr-1 ml-3 h-5 w-5 text-zinc-800 hidden" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                     </button>
                 </form>
                 <button id="reset-go-back-button" class="mt-4 text-sm text-blue-400 font-medium hover:text-blue-300 transition duration-300 ease-in-out py-2">Go Back to Login</button>
             </div>
             
-            <!-- Contact UI -->
+            <!-- CHANGED: Removed manual signup heading, simplified contact UI -->
             <div id="contact-ui" class="hidden text-center transition-opacity duration-500">
-                <h1 class="text-2xl font-bold text-white mb-2">Manual Sign Up</h1>
-                <p class="text-sm text-gray-400 mb-6">To create an account, please send an email to:</p>
-                <a href="mailto:your.email@example.com" class="text-lg font-medium text-blue-400 hover:underline block py-2">your.email@example.com</a>
+                <p class="text-sm text-gray-400 mb-6">To create an account, please contact Zaid.</p>
                 <p class="mt-6 text-sm text-gray-400">Once your account is created, you will be notified.</p>
                 <button id="go-back-button" class="mt-4 text-sm text-blue-400 font-medium hover:text-blue-300 transition duration-300 ease-in-out py-2">Go Back</button>
             </div>
@@ -190,10 +191,10 @@
 
     <!-- Hisab Kitab App Container (Hidden by default) -->
     <div id="app-container" class="hidden fixed inset-0 flex flex-col">
-        <!-- CHANGED: Hamburger menu moved to left, title to right -->
-        <div class="flex justify-between items-center p-4 safe-top flex-shrink-0">
-            <!-- Hamburger Menu - NOW ON LEFT -->
-            <div class="hamburger-menu">
+        <!-- CHANGED: Equal top spacing with bottom -->
+        <div class="flex items-center p-4 pt-8 safe-top flex-shrink-0">
+            <!-- Hamburger Menu -->
+            <div class="hamburger-menu mr-4">
                 <button id="hamburger-btn" class="flex items-center justify-center w-12 h-12 bg-zinc-800/90 backdrop-blur rounded-lg shadow-lg hover:bg-zinc-700 transition">
                     <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -204,35 +205,37 @@
                         <div class="text-sm text-gray-300 border-b border-zinc-700 pb-2">
                             Welcome, <span id="user-email-display" class="text-blue-400 break-all"></span>
                         </div>
-                        <button id="logout-button" class="w-full text-left text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded transition flex items-center justify-center min-h-[44px]">
+                        <!-- CHANGED: Even more pastel red button -->
+                        <button id="logout-button" class="w-full text-left text-sm bg-red-300 hover:bg-red-400 text-zinc-800 px-3 py-2 rounded transition flex items-center justify-center min-h-[44px]">
                             <span id="logout-text">Logout</span>
-                            <svg id="logout-spinner" class="animate-spin -mr-1 ml-3 h-4 w-4 text-white hidden" fill="none" viewBox="0 0 24 24">
+                            <svg id="logout-spinner" class="animate-spin -mr-1 ml-3 h-4 w-4 text-zinc-800 hidden" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
                         </button>
                     </div>
                 </div>
             </div>
-            <!-- Title - NOW ON RIGHT -->
+            <!-- Title next to hamburger -->
             <h1 class="text-2xl font-semibold text-white">Hisab Kitab</h1>
         </div>
 
-        <!-- Main App Content - Single Scroll Container -->
-        <div class="flex-1 overflow-y-auto safe-bottom px-4">
+        <!-- Main App Content - Single Scroll Container with balanced margins -->
+        <div class="flex-1 overflow-y-auto safe-bottom px-4 pb-8">
             <div class="w-full max-w-sm mx-auto">
-                <!-- FIXED: Reduced spacing from space-y-4 to space-y-3 -->
-                <form id="data-form" class="space-y-3 mb-6" novalidate>
+                <!-- CHANGED: Reduced spacing from space-y-3 to space-y-2 -->
+                <form id="data-form" class="space-y-2 mb-4" novalidate>
+                    <!-- CHANGED: Left-aligned names in same row -->
                     <div class="bg-zinc-800/90 backdrop-blur p-4 rounded-lg shadow-md">
                         <fieldset><legend class="sr-only">Select Name</legend>
-                            <div class="space-y-2">
-                                <label class="flex items-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
+                            <div class="flex gap-2">
+                                <label class="flex-1 flex items-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
                                     <input type="radio" name="name" value="Gulnaz Dena" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2">
-                                    <span class="ml-3 text-gray-300">Gulnaz Dena</span>
+                                    <span class="ml-3 text-gray-300 text-sm">Gulnaz dena</span>
                                 </label>
-                                <label class="flex items-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
+                                <label class="flex-1 flex items-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
                                     <input type="radio" name="name" value="Ghazala Dena" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2">
-                                    <span class="ml-3 text-gray-300">Ghazala Dena</span>
+                                    <span class="ml-3 text-gray-300 text-sm">Ghazala dena</span>
                                 </label>
                             </div>
                         </fieldset>
@@ -244,9 +247,10 @@
                                class="w-full bg-zinc-700 text-white placeholder-gray-400 p-3 rounded-md focus:ring-2 focus:ring-blue-500 transition text-base min-h-[44px]">
                     </div>
                     
+                    <!-- CHANGED: 3 columns layout and replaced Others with text input -->
                     <div class="bg-zinc-800/90 backdrop-blur p-4 rounded-lg shadow-md">
                         <fieldset><legend class="sr-only">Tag</legend>
-                            <div class="grid grid-cols-2 gap-2">
+                            <div class="grid grid-cols-3 gap-2">
                                 <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
                                     <input type="radio" name="tag" value="Mutton" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2 flex-shrink-0">
                                     <span class="ml-2 text-gray-300 text-sm">Mutton</span>
@@ -271,35 +275,33 @@
                                     <input type="radio" name="tag" value="Kirana" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2 flex-shrink-0">
                                     <span class="ml-2 text-gray-300 text-sm">Kirana</span>
                                 </label>
-                                <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer col-span-2 min-h-[44px]">
-                                    <input type="radio" name="tag" id="other-tag-radio" value="" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2 flex-shrink-0">
-                                    <span class="ml-2 text-gray-300 text-sm">Others</span>
-                                </label>
                             </div>
-                            <input type="text" id="other-tag-input" placeholder="Specify other tag" 
-                                   class="mt-3 w-full bg-zinc-700 text-white placeholder-gray-400 p-3 rounded-md focus:ring-2 focus:ring-blue-500 transition hidden text-base min-h-[44px]">
+                            <!-- CHANGED: Text input always visible -->
+                            <input type="text" id="other-tag-input" name="other-tag" placeholder="Other (specify)" 
+                                   class="mt-3 w-full bg-zinc-700 text-white placeholder-gray-400 p-3 rounded-md focus:ring-2 focus:ring-blue-500 transition text-base min-h-[44px]">
                         </fieldset>
                     </div>
                     
-                    <div class="space-y-3">
-                        <!-- CHANGED: Submit button layout - Submit left, Clear Form right -->
-                        <div class="flex gap-3">
+                    <div class="space-y-2">
+                        <!-- CHANGED: Even more pastel blue submit button -->
+                        <div class="flex items-center gap-3">
                             <button type="submit" id="submit-button" 
-                                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center min-h-[52px]">
+                                    class="flex-1 bg-blue-300 hover:bg-blue-400 text-zinc-800 font-bold py-4 px-6 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 flex items-center justify-center min-h-[52px]">
                                 <span id="submit-text">Submit</span>
-                                <svg id="submit-spinner" class="animate-spin -mr-1 ml-3 h-5 w-5 text-white hidden" fill="none" viewBox="0 0 24 24">
+                                <svg id="submit-spinner" class="animate-spin -mr-1 ml-3 h-5 w-5 text-zinc-800 hidden" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
                             </button>
-                            <button type="reset" class="flex-1 bg-zinc-700 hover:bg-zinc-600 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 ease-in-out min-h-[52px]">
+                            <!-- CHANGED: Clear Form as text link -->
+                            <button type="reset" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm min-h-[44px]">
                                 Clear Form
                             </button>
                         </div>
                         
-                        <!-- KEPT: View All Entries in same position -->
-                        <div class="flex justify-center">
-                            <button type="button" id="view-entries-btn" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-sm min-h-[44px]">
+                        <!-- CHANGED: View All Entries with bigger font -->
+                        <div class="flex justify-center py-1">
+                            <button type="button" id="view-entries-btn" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-base min-h-[44px]">
                                 View All Entries
                             </button>
                         </div>
@@ -308,8 +310,8 @@
                     </div>
                 </form>
                 
-                <!-- CHANGED: Removed mt-4 to eliminate gap -->
-                <div id="recent-entries-wrapper" class="border-t border-zinc-700 pt-4">
+                <!-- CHANGED: Reduced pt-4 to pt-2 to shrink space -->
+                <div id="recent-entries-wrapper" class="border-t border-zinc-700 pt-2">
                     <h3 class="text-base text-gray-400 mb-3 text-center">Recent Entries</h3>
                     <div id="recent-entries" class="space-y-2"></div>
                 </div>
@@ -597,8 +599,16 @@
             });
             filterInput.addEventListener('input', handleFilter);
             document.querySelectorAll('input[name="tag"]').forEach(r => r.addEventListener('change', handleTagChange));
+            
+            // ADDED: Event listener for text input to deselect radio buttons
             document.getElementById('other-tag-input').addEventListener('input', (e) => {
-                document.getElementById('other-tag-radio').value = e.target.value;
+                if (e.target.value.trim()) {
+                    // Clear all radio button selections when typing in text input
+                    document.querySelectorAll('input[name="tag"]').forEach(radio => {
+                        radio.checked = false;
+                    });
+                }
+                trackEvent('other_tag_input_used', { value_length: e.target.value.length });
             });
             
             fetchInitialData();
@@ -608,13 +618,15 @@
         const formatAmount = (num) => num ? Number(num).toLocaleString('en-IN') : '';
         
         function handleTagChange() {
+            // Updated logic for new text input approach
             const otherInput = document.getElementById('other-tag-input');
-            const otherRadio = document.getElementById('other-tag-radio');
-            const isOtherChecked = otherRadio.checked;
-            otherInput.classList.toggle('hidden', !isOtherChecked);
-            if (isOtherChecked) otherInput.focus();
-            else otherInput.value = otherRadio.value = '';
-            trackEvent('tag_changed', { other_selected: isOtherChecked });
+            const checkedTag = document.querySelector('input[name="tag"]:checked');
+            
+            if (checkedTag) {
+                otherInput.value = ''; // Clear other input when radio button is selected
+            }
+            
+            trackEvent('tag_changed', { tag_selected: checkedTag ? checkedTag.value : 'other_input' });
         }
 
         async function getDeviceDetails() {
@@ -664,7 +676,12 @@
             const formData = new FormData(e.target);
             const name = formData.get('name');
             const amount = formData.get('amount');
-            const tag = formData.get('tag');
+            const checkedTag = document.querySelector('input[name="tag"]:checked');
+            const otherTagInput = document.getElementById('other-tag-input');
+            
+            // Determine tag value: radio button selection or text input
+            const tag = checkedTag ? checkedTag.value : otherTagInput.value.trim();
+            
             const statusMessage = document.getElementById('status-message');
             
             trackEvent('form_submit_attempt', { name: name, amount: amount, tag: tag });
@@ -686,7 +703,7 @@
                 return; 
             }
             if (!tag) { 
-                statusMessage.textContent = 'Please select or specify a tag.'; 
+                statusMessage.textContent = 'Please select a tag or specify other.'; 
                 trackEvent('form_validation_error', { field: 'tag' });
                 return; 
             }
@@ -704,15 +721,20 @@
             const currentUser = auth.currentUser;
             const userEmail = currentUser ? currentUser.email : 'Unknown';
             
-            formData.append('sessionDuration', `${Math.round((new Date() - sessionStartTime) / 1000)}s`);
-            formData.append('browserName', deviceDetails.browserName);
-            formData.append('osVersion', deviceDetails.osVersion);
-            formData.append('manufacturer', deviceDetails.manufacturer);
-            formData.append('deviceModel', deviceDetails.deviceModel);
-            formData.append('userEmail', userEmail);
+            // Create FormData for submission
+            const submitFormData = new FormData();
+            submitFormData.append('name', name);
+            submitFormData.append('amount', amount);
+            submitFormData.append('tag', tag);
+            submitFormData.append('sessionDuration', `${Math.round((new Date() - sessionStartTime) / 1000)}s`);
+            submitFormData.append('browserName', deviceDetails.browserName);
+            submitFormData.append('osVersion', deviceDetails.osVersion);
+            submitFormData.append('manufacturer', deviceDetails.manufacturer);
+            submitFormData.append('deviceModel', deviceDetails.deviceModel);
+            submitFormData.append('userEmail', userEmail);
             
             try {
-                const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+                const response = await fetch(SCRIPT_URL, { method: 'POST', body: submitFormData });
                 if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
                 const data = await response.json();
                 if (data.result !== "success") throw new Error(data.error || 'Server error.');
@@ -720,7 +742,6 @@
                 statusMessage.textContent = 'Thank you, entry submitted!';
                 statusMessage.className = 'text-center text-base h-6 text-green-400 animate-fade-in';
                 e.target.reset();
-                document.getElementById('other-tag-input').classList.add('hidden');
                 fetchInitialData();
                 
                 trackEvent('form_submit_success', { 
