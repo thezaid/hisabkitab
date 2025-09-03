@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Hisab Kitab - Secure Access</title>
+    <title>Hisab Kitab</title>
     
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-J95YDM55T8"></script>
@@ -46,10 +46,11 @@
         }
         
         /* Custom scrollbar for webkit browsers */
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #27272a; }
         ::-webkit-scrollbar-thumb { background: #52525b; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #71717a; }
+        ::-webkit-scrollbar-corner { background: #27272a; }
         
         /* Remove number input spinners */
         input[type=number]::-webkit-inner-spin-button,
@@ -60,6 +61,23 @@
         .sortable { cursor: pointer; position: relative; padding-right: 1.5rem; }
         .sort-icon { position: absolute; right: 0.25rem; top: 50%; transform: translateY(-50%); opacity: 0.5; transition: opacity 0.2s; }
         .sortable:hover .sort-icon { opacity: 1; }
+        
+        /* ADDED: Radio button text handling - prevent wrapping */
+        .radio-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        
+        /* ADDED: Responsive radio button names */
+        .radio-full-name { display: inline; }
+        .radio-short-name { display: none; }
+        
+        @media (max-width: 320px) {
+            .radio-full-name { display: none; }
+            .radio-short-name { display: inline; }
+        }
         
         /* Animations */
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -144,7 +162,7 @@
                         <span id="login-text">Log In</span>
                         <svg id="login-spinner" class="animate-spin -mr-1 ml-3 h-5 w-5 text-zinc-800 hidden" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                     </button>
                 </form>
@@ -155,9 +173,11 @@
                     </a>
                     <button id="signup-button"
                             class="text-sm text-blue-400 font-medium hover:text-blue-300 transition duration-300 ease-in-out py-2">
-                        Sign up
+                        Create account
                     </button>
                 </div>
+                <!-- CHANGED: Updated adblocker notice with comma -->
+                <p class="text-xs text-gray-500 mt-4">If not responsive, please turn off adblocker.</p>
             </div>
             
             <!-- Password Reset UI -->
@@ -182,7 +202,9 @@
             
             <!-- CHANGED: Removed manual signup heading, simplified contact UI -->
             <div id="contact-ui" class="hidden text-center transition-opacity duration-500">
-                <p class="text-sm text-gray-400 mb-6">To create an account, please contact Zaid.</p>
+		<h1 class="text-3xl font-bold text-white mb-2">Create account</h1>
+                <p class="text-sm text-gray-400 mb-6">To create an account, please send an email to:</p>
+		<a href="mailto:me@zaid.ovh" class="text-lg font-medium text-blue-400 hover:underline">me@zaid.ovh</a>
                 <p class="mt-6 text-sm text-gray-400">Once your account is created, you will be notified.</p>
                 <button id="go-back-button" class="mt-4 text-sm text-blue-400 font-medium hover:text-blue-300 transition duration-300 ease-in-out py-2">Go Back</button>
             </div>
@@ -193,25 +215,41 @@
     <div id="app-container" class="hidden fixed inset-0 flex flex-col">
         <!-- CHANGED: Equal top spacing with bottom -->
         <div class="flex items-center p-4 pt-8 safe-top flex-shrink-0">
-            <!-- Hamburger Menu -->
-            <div class="hamburger-menu mr-4">
+            <!-- CHANGED: Hamburger Menu with conditional visibility -->
+            <div id="hamburger-container" class="hamburger-menu mr-4">
                 <button id="hamburger-btn" class="flex items-center justify-center w-12 h-12 bg-zinc-800/90 backdrop-blur rounded-lg shadow-lg hover:bg-zinc-700 transition">
                     <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
                 <div id="menu-content" class="menu-content bg-zinc-800/95 backdrop-blur border border-zinc-700 rounded-lg shadow-xl p-4">
-                    <div class="space-y-3">
-                        <div class="text-sm text-gray-300 border-b border-zinc-700 pb-2">
-                            Welcome, <span id="user-email-display" class="text-blue-400 break-all"></span>
+                    <!-- CHANGED: Reduced spacing from space-y-3 to space-y-1 -->
+                    <div class="space-y-1">
+                        <!-- User email and logout icon in same row -->
+                        <div class="flex items-center justify-between text-sm text-gray-300 border-b border-zinc-700 pb-2 mb-2">
+                            <span id="user-email-display" class="text-blue-400 break-all flex-1 mr-2"></span>
+                            <!-- Logout as simple red icon -->
+                            <button id="logout-button" class="flex items-center justify-center w-8 h-8 bg-red-300 hover:bg-red-400 text-red-800 rounded transition min-h-[32px]">
+                                <svg id="logout-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                                <svg id="logout-spinner" class="animate-spin w-4 h-4 text-red-800 hidden" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </button>
                         </div>
-                        <!-- CHANGED: Even more pastel red button -->
-                        <button id="logout-button" class="w-full text-left text-sm bg-red-300 hover:bg-red-400 text-zinc-800 px-3 py-2 rounded transition flex items-center justify-center min-h-[44px]">
-                            <span id="logout-text">Logout</span>
-                            <svg id="logout-spinner" class="animate-spin -mr-1 ml-3 h-4 w-4 text-zinc-800 hidden" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
+                        <!-- View All Entries in menu -->
+                        <button id="view-entries-btn" type="button" class="w-full text-left text-sm text-gray-300 hover:text-white px-3 py-2 rounded transition min-h-[44px]">
+                            View All Entries
+                        </button>
+                        <!-- CHANGED: Trend Chart moved above Help -->
+                        <button id="trend-chart-btn" type="button" class="w-full text-left text-sm text-gray-300 hover:text-white px-3 py-2 rounded transition min-h-[44px]">
+                            Trend Chart
+                        </button>
+                        <!-- Help button (after Trend Chart) -->
+                        <button id="help-feedback-btn" type="button" class="w-full text-left text-sm text-gray-300 hover:text-white px-3 py-2 rounded transition min-h-[44px]">
+                            Help
                         </button>
                     </div>
                 </div>
@@ -225,17 +263,24 @@
             <div class="w-full max-w-sm mx-auto">
                 <!-- CHANGED: Reduced spacing from space-y-3 to space-y-2 -->
                 <form id="data-form" class="space-y-2 mb-4" novalidate>
-                    <!-- CHANGED: Left-aligned names in same row -->
+                    <!-- FIXED: Responsive radio button layout - no text wrapping -->
                     <div class="bg-zinc-800/90 backdrop-blur p-4 rounded-lg shadow-md">
                         <fieldset><legend class="sr-only">Select Name</legend>
-                            <div class="flex gap-2">
+                            <!-- CHANGED: Responsive flex layout - stacks on small screens -->
+                            <div class="flex flex-col sm:flex-row gap-2">
                                 <label class="flex-1 flex items-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
-                                    <input type="radio" name="name" value="Gulnaz Dena" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2">
-                                    <span class="ml-3 text-gray-300 text-sm">Gulnaz dena</span>
+                                    <input type="radio" name="name" value="Gulnaz Dena" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2 flex-shrink-0">
+                                    <span class="ml-3 text-gray-300 text-sm radio-text">
+                                        <span class="radio-full-name">Gulnaz dena</span>
+                                        <span class="radio-short-name">Gulnaz</span>
+                                    </span>
                                 </label>
                                 <label class="flex-1 flex items-center p-3 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
-                                    <input type="radio" name="name" value="Ghazala Dena" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2">
-                                    <span class="ml-3 text-gray-300 text-sm">Ghazala dena</span>
+                                    <input type="radio" name="name" value="Ghazala Dena" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2 flex-shrink-0">
+                                    <span class="ml-3 text-gray-300 text-sm radio-text">
+                                        <span class="radio-full-name">Ghazala dena</span>
+                                        <span class="radio-short-name">Ghazala</span>
+                                    </span>
                                 </label>
                             </div>
                         </fieldset>
@@ -253,27 +298,27 @@
                             <div class="grid grid-cols-3 gap-2">
                                 <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
                                     <input type="radio" name="tag" value="Mutton" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2 flex-shrink-0">
-                                    <span class="ml-2 text-gray-300 text-sm">Mutton</span>
+                                    <span class="ml-2 text-gray-300 text-sm radio-text">Mutton</span>
                                 </label>
                                 <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
                                     <input type="radio" name="tag" value="Beef" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2 flex-shrink-0">
-                                    <span class="ml-2 text-gray-300 text-sm">Beef</span>
+                                    <span class="ml-2 text-gray-300 text-sm radio-text">Beef</span>
                                 </label>
                                 <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
                                     <input type="radio" name="tag" value="Chicken" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2 flex-shrink-0">
-                                    <span class="ml-2 text-gray-300 text-sm">Chicken</span>
+                                    <span class="ml-2 text-gray-300 text-sm radio-text">Chicken</span>
                                 </label>
                                 <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
                                     <input type="radio" name="tag" value="Fish" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2 flex-shrink-0">
-                                    <span class="ml-2 text-gray-300 text-sm">Fish</span>
+                                    <span class="ml-2 text-gray-300 text-sm radio-text">Fish</span>
                                 </label>
                                 <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
                                     <input type="radio" name="tag" value="Light Bill" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2 flex-shrink-0">
-                                    <span class="ml-2 text-gray-300 text-sm">Light Bill</span>
+                                    <span class="ml-2 text-gray-300 text-sm radio-text">Light Bill</span>
                                 </label>
                                 <label class="flex items-center p-2 rounded-md hover:bg-zinc-700 transition-colors cursor-pointer min-h-[44px]">
                                     <input type="radio" name="tag" value="Kirana" class="h-5 w-5 text-blue-500 bg-zinc-700 focus:ring-blue-500 focus:ring-2 flex-shrink-0">
-                                    <span class="ml-2 text-gray-300 text-sm">Kirana</span>
+                                    <span class="ml-2 text-gray-300 text-sm radio-text">Kirana</span>
                                 </label>
                             </div>
                             <!-- CHANGED: Text input always visible -->
@@ -299,14 +344,7 @@
                             </button>
                         </div>
                         
-                        <!-- CHANGED: View All Entries with bigger font -->
-                        <div class="flex justify-center py-1">
-                            <button type="button" id="view-entries-btn" class="text-gray-400 hover:text-white font-semibold py-2 px-4 rounded-lg transition-colors text-base min-h-[44px]">
-                                View All Entries
-                            </button>
-                        </div>
-                        
-                        <div id="status-message" class="text-center text-base h-6"></div>
+                        <!-- REMOVED: View All Entries moved to hamburger menu -->
                     </div>
                 </form>
                 
@@ -318,7 +356,7 @@
             </div>
         </div>
         
-        <!-- FIXED: Increased z-index for modal to be above hamburger menu -->
+        <!-- Entries Modal -->
         <div id="entries-modal" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 hidden z-80">
             <div class="bg-zinc-800/95 backdrop-blur rounded-lg shadow-xl w-full max-w-lg h-full max-h-[90vh] flex flex-col">
                 <div class="flex justify-between items-start p-4 border-b border-zinc-700 flex-shrink-0">
@@ -333,10 +371,155 @@
                 <div id="load-more-container" class="p-4 border-t border-zinc-700 text-center flex-shrink-0"></div>
             </div>
         </div>
+
+        <!-- Help Modal -->
+        <div id="help-modal" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 hidden z-80">
+            <div class="bg-zinc-800/95 backdrop-blur rounded-lg shadow-xl w-full max-w-lg h-full max-h-[90vh] flex flex-col">
+                <div class="flex justify-between items-start p-4 border-b border-zinc-700 flex-shrink-0">
+                    <h2 class="text-lg font-semibold text-white">Help</h2>
+                    <button id="close-help-modal-btn" class="text-gray-400 hover:text-white text-3xl leading-none flex-shrink-0 w-10 h-10 flex items-center justify-center">&times;</button>
+                </div>
+                <div class="p-4 overflow-y-auto flex-grow">
+                    <div class="space-y-6 text-sm text-gray-300">
+                        
+                        <!-- Bug Reports Section -->
+                        <div>
+                            <h3 class="text-white font-semibold mb-3 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Found a Bug?
+                            </h3>
+                            <ul class="space-y-2 ml-7">
+                                <li class="flex items-start">
+                                    <span class="text-blue-400 mr-2">•</span>
+                                    <span>Contact us with detailed description of the issue</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-400 mr-2">•</span>
+                                    <span>Include steps to reproduce the problem</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-400 mr-2">•</span>
+                                    <span>Mention your device details</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-400 mr-2">•</span>
+                                    <span>Share screenshot if possible</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Feature Suggestions Section -->
+                        <div>
+                            <h3 class="text-white font-semibold mb-3 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                </svg>
+                                Have Ideas?
+                            </h3>
+                            <ul class="space-y-2 ml-7">
+                                <li class="flex items-start">
+                                    <span class="text-green-400 mr-2">•</span>
+                                    <span>Share your feature suggestions with us</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-400 mr-2">•</span>
+                                    <span>Describe how the feature would help you</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-400 mr-2">•</span>
+                                    <span>All feedback is valuable and considered</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-400 mr-2">•</span>
+                                    <span>Help make Hisab Kitab App better for everyone</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Contact Details Section -->
+                        <div>
+                            <h3 class="text-white font-semibold mb-3 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                                Contact Information
+                            </h3>
+                            <ul class="space-y-2 ml-7">
+                                <li class="flex items-start">
+                                    <span class="text-blue-400 mr-2">•</span>
+                                    <span>Primary Contact: me@zaid.ovh</span>
+                                </li>
+                                
+                                <li class="flex items-start">
+                                    <span class="text-blue-400 mr-2">•</span>
+                                    <span>Response Time: Usually within 24-48 hours</span>
+                                </li>
+                                
+                            </ul>
+                        </div>
+
+                        <!-- Useful Tips Section -->
+                        <div>
+                            <h3 class="text-white font-semibold mb-3 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Useful Tips
+                            </h3>
+                            <ul class="space-y-2 ml-7">
+                                <li class="flex items-start">
+                                    <span class="text-yellow-400 mr-2">•</span>
+                                    <span>Use <strong>"Other"</strong> field for custom expense categories</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-yellow-400 mr-2">•</span>
+                                    <span>Data syncs automatically when you submit</span>
+                                </li>
+                                
+                                <li class="flex items-start">
+                                    <span class="text-yellow-400 mr-2">•</span>
+                                    <span>Turn off adblocker if app seems unresponsive</span>
+                                </li>
+                                
+                                <li class="flex items-start">
+                                    <span class="text-yellow-400 mr-2">•</span>
+                                    <span>All amounts should be whole numbers (no decimals)</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FIXED: Trend Chart Modal - Single scrollbar solution -->
+        <div id="trend-chart-modal" class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 hidden z-80">
+            <div class="bg-zinc-800/95 backdrop-blur rounded-lg shadow-xl w-full max-w-[95vw] h-full max-h-[95vh] flex flex-col">
+                <div class="flex justify-between items-start p-4 border-b border-zinc-700 flex-shrink-0">
+                    <h2 class="text-lg font-semibold text-white">Trend Chart</h2>
+                    <button id="close-trend-chart-btn" class="text-gray-400 hover:text-white text-3xl leading-none flex-shrink-0 w-10 h-10 flex items-center justify-center">&times;</button>
+                </div>
+                <!-- FIXED: Single scrollbar container -->
+                <div class="flex-grow overflow-auto p-2">
+                    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRYy1LaCl91me7-ViRJrzlJe1f9qWs3Qy1nA1sRww_RF7GObcrhgHf8y1jHffYdv0g9K6eX2IiIj65Z/pubchart?oid=1363302817&format=interactive&font=Open+Sans" 
+                            width="100%" 
+                            height="100%" 
+                            frameborder="0" 
+                            allowfullscreen 
+                            allowtransparency
+                            style="border: none; display: block;">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Message Box -->
-    <div id="message-box" class="fixed top-4 left-1/2 transform -translate-x-1/2 rounded-md shadow-lg p-4 transition-all duration-300 ease-in-out scale-0 origin-top z-90 max-w-xs">
+    <!-- CHANGED: Updated Message Box with pastel color and new position -->
+    <div id="message-box" class="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-200 text-green-900 rounded-md shadow-lg p-4 transition-all duration-300 ease-in-out scale-0 origin-center z-90 max-w-xs">
         <p id="message-text" class="font-medium text-sm text-center"></p>
     </div>
 
@@ -402,6 +585,7 @@
         // Hamburger menu elements
         const hamburgerBtn = document.getElementById('hamburger-btn');
         const menuContent = document.getElementById('menu-content');
+        const hamburgerContainer = document.getElementById('hamburger-container'); // ADDED: For hiding hamburger
 
         // Hisab Kitab app variables
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwoFc2VyGtJMtFIh2D_qf99BBFLNfQLnFO5MjFv3EtKL3AYYj0C9uNpvmAh-eYy-cisMg/exec'; 
@@ -442,6 +626,19 @@
             document.getElementById(spinnerId).classList.remove('hidden');
         };
 
+        // CHANGED: Updated for icon-only logout button
+        const showLogoutSpinner = () => {
+            logoutButton.disabled = true;
+            document.getElementById('logout-icon').classList.add('hidden');
+            document.getElementById('logout-spinner').classList.remove('hidden');
+        };
+
+        const hideLogoutSpinner = () => {
+            logoutButton.disabled = false;
+            document.getElementById('logout-icon').classList.remove('hidden');
+            document.getElementById('logout-spinner').classList.add('hidden');
+        };
+
         const hideButtonSpinner = (buttonId, textId, spinnerId, originalText) => {
             document.getElementById(buttonId).disabled = false;
             document.getElementById(textId).style.display = 'inline';
@@ -449,24 +646,30 @@
             document.getElementById(spinnerId).classList.add('hidden');
         };
 
-        // Function to show a temporary message box
+        // CHANGED: Function to show status message in popup style - UPDATED DURATION TO 6 SECONDS
         const showMessage = (message, isError = true) => {
             messageText.textContent = message;
             if (isError) {
-                messageBox.classList.remove('bg-green-600');
-                messageBox.classList.add('bg-red-600', 'text-white');
+                messageBox.classList.remove('bg-green-200', 'text-green-900');
+                messageBox.classList.add('bg-red-200', 'text-red-900');
                 trackEvent('error_message_shown', { message: message });
             } else {
-                messageBox.classList.remove('bg-red-600');
-                messageBox.classList.add('bg-green-600', 'text-white');
+                messageBox.classList.remove('bg-red-200', 'text-red-900');
+                messageBox.classList.add('bg-green-200', 'text-green-900');
                 trackEvent('success_message_shown', { message: message });
             }
             messageBox.classList.remove('scale-0');
             messageBox.classList.add('scale-100');
+            // CHANGED: Duration from 3000ms to 6000ms (6 seconds)
             setTimeout(() => {
                 messageBox.classList.remove('scale-100');
                 messageBox.classList.add('scale-0');
-            }, 3000);
+            }, 6000);
+        };
+
+        // ADDED: Function to show form status message in popup style
+        const showFormStatus = (message, isError = true) => {
+            showMessage(message, isError);
         };
 
         // Authentication event listeners
@@ -537,9 +740,10 @@
             trackEvent('reset_go_back_clicked');
         });
 
+        // CHANGED: Updated logout button event listener for icon-only button
         logoutButton.addEventListener('click', async () => {
             trackEvent('logout_attempt');
-            showButtonSpinner('logout-button', 'logout-text', 'logout-spinner');
+            showLogoutSpinner();
             
             try {
                 await signOut(auth);
@@ -550,7 +754,7 @@
                 showMessage(error.message);
                 trackEvent('logout_error', { error: error.message });
             } finally {
-                hideButtonSpinner('logout-button', 'logout-text', 'logout-spinner', 'Logout');
+                hideLogoutSpinner();
             }
         });
 
@@ -581,10 +785,15 @@
             
             const form = document.getElementById('data-form');
             const submitButton = document.getElementById('submit-button');
-            const statusMessage = document.getElementById('status-message');
             const viewEntriesBtn = document.getElementById('view-entries-btn');
+            const helpFeedbackBtn = document.getElementById('help-feedback-btn');
+            const trendChartBtn = document.getElementById('trend-chart-btn');
             const entriesModal = document.getElementById('entries-modal');
+            const helpModal = document.getElementById('help-modal');
+            const trendChartModal = document.getElementById('trend-chart-modal');
             const closeModalBtn = document.getElementById('close-modal-btn');
+            const closeHelpModalBtn = document.getElementById('close-help-modal-btn');
+            const closeTrendChartBtn = document.getElementById('close-trend-chart-btn');
             const recentEntriesContainer = document.getElementById('recent-entries');
             const summaryContainer = document.getElementById('summary-container');
             const entriesTableContainer = document.getElementById('entries-table-container');
@@ -593,8 +802,39 @@
 
             form.addEventListener('submit', handleFormSubmit);
             viewEntriesBtn.addEventListener('click', openEntriesModal);
+            
+            // ADDED: Help modal functionality
+            helpFeedbackBtn.addEventListener('click', () => {
+                helpModal.classList.remove('hidden');
+                hamburgerContainer.classList.add('hidden');
+                menuContent.classList.remove('show');
+                trackEvent('help_feedback_opened');
+            });
+            
+            closeHelpModalBtn.addEventListener('click', () => {
+                helpModal.classList.add('hidden');
+                hamburgerContainer.classList.remove('hidden');
+                trackEvent('help_modal_closed');
+            });
+
+            // ADDED: Trend Chart modal functionality
+            trendChartBtn.addEventListener('click', () => {
+                trendChartModal.classList.remove('hidden');
+                hamburgerContainer.classList.add('hidden');
+                menuContent.classList.remove('show');
+                trackEvent('trend_chart_opened');
+            });
+            
+            closeTrendChartBtn.addEventListener('click', () => {
+                trendChartModal.classList.add('hidden');
+                hamburgerContainer.classList.remove('hidden');
+                trackEvent('trend_chart_closed');
+            });
+            
             closeModalBtn.addEventListener('click', () => {
                 entriesModal.classList.add('hidden');
+                // ADDED: Show hamburger when modal closes
+                hamburgerContainer.classList.remove('hidden');
                 trackEvent('entries_modal_closed');
             });
             filterInput.addEventListener('input', handleFilter);
@@ -682,40 +922,36 @@
             // Determine tag value: radio button selection or text input
             const tag = checkedTag ? checkedTag.value : otherTagInput.value.trim();
             
-            const statusMessage = document.getElementById('status-message');
-            
             trackEvent('form_submit_attempt', { name: name, amount: amount, tag: tag });
             
-            statusMessage.className = 'text-center text-base h-6 text-yellow-400';
             if (!name) { 
-                statusMessage.textContent = 'Please select a name.'; 
+                showFormStatus('Please select a name.');
                 trackEvent('form_validation_error', { field: 'name' });
                 return; 
             }
             if (!amount) { 
-                statusMessage.textContent = 'Please enter an amount.'; 
+                showFormStatus('Please enter an amount.');
                 trackEvent('form_validation_error', { field: 'amount' });
                 return; 
             }
             if (!/^\d+$/.test(amount)) { 
-                statusMessage.textContent = 'Amount must be a whole number.'; 
+                showFormStatus('Amount must be a whole number.');
                 trackEvent('form_validation_error', { field: 'amount', error: 'not_numeric' });
                 return; 
             }
             if (!tag) { 
-                statusMessage.textContent = 'Please select a tag or specify other.'; 
+                showFormStatus('Please select a tag or specify other.');
                 trackEvent('form_validation_error', { field: 'tag' });
                 return; 
             }
             
             if (SCRIPT_URL === 'YOUR_NEW_GOOGLE_APPS_SCRIPT_URL_HERE') {
-                statusMessage.textContent = 'Please configure the Google Apps Script URL first!';
+                showFormStatus('Please configure the Google Apps Script URL first!');
                 trackEvent('configuration_error', { error: 'script_url_not_configured' });
                 return;
             }
             
             showButtonSpinner('submit-button', 'submit-text', 'submit-spinner');
-            statusMessage.textContent = '';
             
             // Get current user's email from Firebase auth
             const currentUser = auth.currentUser;
@@ -739,8 +975,8 @@
                 const data = await response.json();
                 if (data.result !== "success") throw new Error(data.error || 'Server error.');
                 
-                statusMessage.textContent = 'Thank you, entry submitted!';
-                statusMessage.className = 'text-center text-base h-6 text-green-400 animate-fade-in';
+                // CHANGED: Show success message in popup instead of div
+                showFormStatus('Thank you, entry submitted!', false);
                 e.target.reset();
                 fetchInitialData();
                 
@@ -752,8 +988,8 @@
                 });
             } catch (error) {
                 console.error('Submission Error!', error);
-                statusMessage.textContent = "Oops! Couldn't save. Please contact Zaid.";
-                statusMessage.className = 'text-center text-base h-6 text-red-400 animate-fade-in';
+                // CHANGED: Show error message in popup instead of div
+                showFormStatus("Oops! Couldn't save. Please contact us.");
                 e.target.classList.add('animate-shake');
                 e.target.addEventListener('animationend', () => e.target.classList.remove('animate-shake'), { once: true });
                 
@@ -771,6 +1007,10 @@
         function openEntriesModal() {
             const entriesModal = document.getElementById('entries-modal');
             entriesModal.classList.remove('hidden');
+            // ADDED: Hide hamburger when modal opens
+            hamburgerContainer.classList.add('hidden');
+            // ADDED: Close hamburger menu when opening modal
+            menuContent.classList.remove('show');
             filteredEntries = [...allEntries];
             visibleCount = INITIAL_LOAD_COUNT;
             sortAndRenderTable();
@@ -799,7 +1039,7 @@
                 trackEvent('data_fetch_success', { entries_count: allEntries.length });
             } catch (error) {
                 console.error('Error fetching initial data!', error);
-                recentEntriesContainer.innerHTML = `<p class="text-center text-yellow-400 text-sm p-4">Could not load entries. Please contact Zaid.</p>`;
+                recentEntriesContainer.innerHTML = `<p class="text-center text-yellow-400 text-sm p-4">Could not load entries. Please contact us.</p>`;
                 trackEvent('data_fetch_error', { error: error.message });
             }
         }
