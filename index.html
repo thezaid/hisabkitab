@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hisab Kitab</title>
     
     <!-- Google Analytics -->
@@ -16,1027 +16,473 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        gray: {
+                            50: '#F9F9FA',
+                            100: '#F2F2F7',
+                            200: '#E5E5EA',
+                            300: '#D1D1D6',
+                            400: '#C7C7CC',
+                            500: '#AEAEB2',
+                            600: '#8E8E93',
+                            700: '#636366',
+                            800: '#3A3A3C',
+                            900: '#1C1C1E',
+                        },
+                        blue: {
+                            500: '#007AFF',
+                            600: '#0056B3',
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px rgba(0, 0, 0, 0.04)',
+                        'hover': '0 8px 30px rgba(0, 0, 0, 0.08)',
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        :root { 
-            --app-font: 'Open Sans', sans-serif;
-            
-            /* Primary Colors */
-            --color-primary-50: #eff6ff;
-            --color-primary-100: #dbeafe;
-            --color-primary-200: #bfdbfe;
-            --color-primary-300: #93c5fd;
-            --color-primary-400: #60a5fa;
-            --color-primary-500: #3b82f6;
-            --color-primary-600: #2563eb;
-            --color-primary-700: #1d4ed8;
-            --color-primary-800: #1e40af;
-            --color-primary-900: #1e3a8a;
-            
-            /* Background Colors */
-            --color-bg-primary: #18181b;
-            --color-bg-secondary: #27272a;
-            --color-bg-tertiary: #3f3f46;
-            --color-bg-card: rgba(39, 39, 42, 0.9);
-            --color-bg-input: #3f3f46;
-            --color-bg-hover: #52525b;
-            
-            /* FIXED: Improved Text Color Hierarchy with WCAG AA Compliance */
-            --color-text-primary: #ffffff;       /* 17.72:1 - Excellent contrast */
-            --color-text-secondary: #e4e4e7;     /* 13.93:1 - Excellent contrast */
-            --color-text-body: #d4d4d8;          /* 11.99:1 - Excellent contrast */
-            --color-text-muted: #9ca3af;         /* 5.2:1 - WCAG AA compliant (was 3.67:1) */
-            --color-text-disabled: #71717a;      /* 3.67:1 - Only for disabled elements */
-            
-            /* Border Colors */
-            --color-border-light: #52525b;
-            --color-border-medium: #3f3f46;
-            --color-border-dark: #27272a;
-            
-            /* IMPROVED: Status Colors with Better Contrast */
-            --color-success: #22c55e;
-            --color-success-light: #dcfce7;      /* Lighter for better contrast */
-            --color-success-dark: #14532d;       /* Darker text for better contrast */
-            --color-error: #ef4444;
-            --color-error-light: #fef2f2;        /* Lighter for better contrast */
-            --color-error-dark: #7f1d1d;         /* Darker text for better contrast */
-            --color-warning: #f59e0b;
-            --color-warning-light: #fffbeb;      /* Lighter for better contrast */
-            --color-warning-dark: #78350f;       /* Darker text for better contrast */
-            
-            /* Consistent Spacing Scale */
-            --space-xs: 0.25rem;    /* 4px */
-            --space-sm: 0.5rem;     /* 8px */
-            --space-md: 0.75rem;    /* 12px */
-            --space-lg: 1rem;       /* 16px */
-            --space-xl: 1.5rem;     /* 24px */
-            --space-2xl: 2rem;      /* 32px */
-            --space-3xl: 2.5rem;    /* 40px */
-            --space-4xl: 3rem;      /* 48px */
-            --space-5xl: 4rem;      /* 64px */
-            
-            /* Typography Scale (1.333 ratio - Perfect Fourth) */
-            --text-xs: 0.75rem;      /* 12px */
-            --text-sm: 0.875rem;     /* 14px */
-            --text-base: 1rem;       /* 16px - Base size */
-            --text-lg: 1.125rem;     /* 18px */
-            --text-xl: 1.33rem;      /* 21px */
-            --text-2xl: 1.77rem;     /* 28px */
-            --text-3xl: 2.37rem;     /* 38px */
-            --text-4xl: 3.16rem;     /* 51px */
-            --text-5xl: 4.22rem;     /* 68px */
-            
-            /* Line Height Scale */
-            --line-height-none: 1;
-            --line-height-tight: 1.25;
-            --line-height-snug: 1.375; 
-            --line-height-normal: 1.5;
-            --line-height-relaxed: 1.625;
-            --line-height-loose: 2;
-            
-            /* Font Weight Hierarchy */
-            --font-light: 300;
-            --font-normal: 400;
-            --font-medium: 500;
-            --font-semibold: 600;
-            --font-bold: 700;
-            --font-extrabold: 800;
-            
-            /* Border Radius */
-            --radius-sm: 0.375rem;
-            --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
-            
-            /* Shadows */
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
-        
-        html { 
-            height: 100vh;
-            height: 100dvh;
-            overflow-x: hidden;
-        }
-        
         body {
-            font-family: var(--app-font);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            height: 100vh;
-            height: 100dvh;
-            width: 100vw;
-            overflow-x: hidden;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: var(--color-bg-primary);
-            color: var(--color-text-body);
-            font-size: var(--text-base);
-            line-height: var(--line-height-normal);
-            font-weight: var(--font-normal);
-            margin: 0;
-            padding: 0;
+            background-color: #F2F2F7;
+            color: #1C1C1E;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .modern-card {
+            background-color: #FFFFFF;
+            border-radius: 1.25rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         
-        /* Typography Classes with Proper Hierarchy */
-        .text-display {
-            font-size: var(--text-4xl);
-            font-weight: var(--font-extrabold);
-            color: var(--color-text-primary);
-            line-height: var(--line-height-tight);
-            letter-spacing: -0.025em;
-            margin: 0;
-        }
-        
-        .text-heading-1 {
-            font-size: var(--text-3xl);
-            font-weight: var(--font-bold);
-            color: var(--color-text-primary);
-            line-height: var(--line-height-tight);
-            letter-spacing: -0.025em;
-            margin: 0;
-        }
-        
-        .text-heading-2 {
-            font-size: var(--text-2xl);
-            font-weight: var(--font-bold);
-            color: var(--color-text-primary);
-            line-height: var(--line-height-snug);
-            margin: 0;
-        }
-        
-        .text-heading-3 {
-            font-size: var(--text-xl);
-            font-weight: var(--font-semibold);
-            color: var(--color-text-secondary);
-            line-height: var(--line-height-snug);
-            margin: 0;
-        }
-        
-        .text-subheading {
-            font-size: var(--text-lg);
-            font-weight: var(--font-medium);
-            color: var(--color-text-secondary);
-            line-height: var(--line-height-normal);
-            margin: 0;
-        }
-        
-        .text-body-large {
-            font-size: var(--text-lg);
-            font-weight: var(--font-normal);
-            color: var(--color-text-body);
-            line-height: var(--line-height-normal);
-            margin: 0;
-        }
-        
-        .text-body {
-            font-size: var(--text-base);
-            font-weight: var(--font-normal);
-            color: var(--color-text-body);
-            line-height: var(--line-height-normal);
-            margin: 0;
-        }
-        
-        .text-body-small {
-            font-size: var(--text-sm);
-            font-weight: var(--font-normal);
-            color: var(--color-text-muted);
-            line-height: var(--line-height-relaxed);
-            margin: 0;
-        }
-        
-        .text-caption {
-            font-size: var(--text-xs);
-            font-weight: var(--font-normal);
-            color: var(--color-text-muted);
-            line-height: var(--line-height-relaxed);
-            margin: 0;
-        }
-        
-        .text-label {
-            font-size: var(--text-sm);
-            font-weight: var(--font-medium);
-            color: var(--color-text-secondary);
-            line-height: var(--line-height-normal);
-            margin: 0;
-        }
-        
-        /* Alignment classes */
-        .text-left { text-align: left; }
-        .text-center { text-align: center; }
-        .text-right { text-align: right; }
-        
-        /* List styling */
-        ul, ol {
-            line-height: var(--line-height-normal);
-            margin: 0;
-            padding: 0;
-        }
-        
-        li {
-            line-height: var(--line-height-normal);
-            margin: var(--space-sm) 0;
-            color: var(--color-text-body);
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--color-bg-secondary); }
-        ::-webkit-scrollbar-thumb { background: var(--color-border-light); border-radius: var(--radius-sm); }
-        ::-webkit-scrollbar-thumb:hover { background: var(--color-bg-hover); }
-        ::-webkit-scrollbar-corner { background: var(--color-bg-secondary); }
-        
-        /* Remove number input spinners */
-        input[type=number]::-webkit-inner-spin-button,
+        .modern-card:active { transform: scale(0.98); }
+
+        /* Remove Spinners from Number Input */
+        input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         
-        /* Table sorting */
-        .sortable { 
-            cursor: pointer; 
-            position: relative; 
-            padding-right: var(--space-xl);
-            line-height: var(--line-height-normal);
+        input:focus, button:focus { outline: none; }
+
+        .peer:checked ~ .radio-card {
+            border-color: #007AFF;
+            background-color: #F0F8FF;
+            box-shadow: 0 0 0 2px #007AFF inset;
         }
-        .sort-icon { 
-            position: absolute; 
-            right: var(--space-xs); 
-            top: 50%; 
-            transform: translateY(-50%); 
-            opacity: 0.5; 
-            transition: opacity 0.2s; 
-        }
-        .sortable:hover .sort-icon { opacity: 1; }
+        .peer:checked ~ .radio-card .check-icon { opacity: 1; transform: scale(1); }
         
-        /* Radio button text */
-        .radio-text {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-            font-size: var(--text-sm);
-            font-weight: var(--font-normal);
-            color: var(--color-text-body);
-            line-height: var(--line-height-normal);
+        .radio-chip {
+            background-color: #FFFFFF;
+            border: 1px solid #D1D1D6;
+            color: #1C1C1E;
+        }
+        .peer:checked ~ .radio-chip {
+            border-color: transparent;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
         
-        /* Responsive radio button names */
-        .radio-full-name { display: inline; }
-        .radio-short-name { display: none; }
-        
-        @media (max-width: 320px) {
-            .radio-full-name { display: none; }
-            .radio-short-name { display: inline; }
+        input[value="Kirana"]:checked ~ .radio-chip { background-color: #34C759; }
+        input[value="Gosht"]:checked ~ .radio-chip { background-color: #FF3B30; }
+        input[value="Kheema"]:checked ~ .radio-chip { background-color: #FF9500; }
+        input[value="Gosht Kheema"]:checked ~ .radio-chip { background-color: #FF3B30; }
+        input[value="Chicken"]:checked ~ .radio-chip { background-color: #FFCC00; color: black; }
+        input[value="Mutton"]:checked ~ .radio-chip { background-color: #FF3B30; }
+        input[value="Bheja"]:checked ~ .radio-chip { background-color: #FF2D55; }
+        input[value="Fish"]:checked ~ .radio-chip { background-color: #5AC8FA; }
+        input[value="Light Bill"]:checked ~ .radio-chip { background-color: #5856D6; }
+        input[value="Society"]:checked ~ .radio-chip { background-color: #30B0C7; }
+
+        .loader {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
         }
-        
-        /* Animations */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); }
-        }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
-        .animate-shake { animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both; }
-        .animate-spin { animation: spin 1s linear infinite; }
-        .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        
-        /* Hamburger menu styles */
-        .hamburger-menu {
-            position: relative;
-            z-index: 70;
-        }
-        
-        .menu-content {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            min-width: 200px;
-            transform: translateY(-10px);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            background-color: var(--color-bg-card);
-            border: 1px solid var(--color-border-medium);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-xl);
-            padding: var(--space-lg);
-            backdrop-filter: blur(16px);
-        }
-        
-        .menu-content.show {
-            transform: translateY(0);
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        /* Mobile typography scaling */
-        @media (max-width: 640px) {
-            /* Ensure form elements are touch-friendly */
-            button, input, label {
-                min-height: 48px;
-                line-height: var(--line-height-normal);
-            }
-            
-            /* Prevent zoom on input focus */
-            input[type="email"], input[type="password"], input[type="number"], input[type="text"] {
-                font-size: var(--text-lg);
-                line-height: var(--line-height-normal);
-            }
-            
-            /* Proper mobile typography scaling */
-            .text-display {
-                font-size: var(--text-3xl);
-                line-height: var(--line-height-tight);
-            }
-            
-            .text-heading-1 {
-                font-size: var(--text-2xl);
-                line-height: var(--line-height-tight);
-            }
-            
-            .text-heading-2 {
-                font-size: var(--text-xl);
-                line-height: var(--line-height-snug);
-            }
-            
-            .text-heading-3 {
-                font-size: var(--text-lg);
-                line-height: var(--line-height-snug);
-            }
-            
-            .text-body-large { 
-                font-size: var(--text-lg); 
-                line-height: var(--line-height-relaxed);
-            }
-            
-            .text-body { 
-                font-size: var(--text-base); 
-                line-height: var(--line-height-relaxed);
-            }
-            
-            .text-body-small { 
-                font-size: var(--text-sm); 
-                line-height: var(--line-height-relaxed);
-            }
-            
-            .text-caption { 
-                font-size: var(--text-xs); 
-                line-height: var(--line-height-loose);
-            }
-            
-            /* Improved mobile list spacing */
-            li {
-                margin: var(--space-md) 0;
-                line-height: var(--line-height-relaxed);
-            }
-        }
-        
-        /* Safe area insets */
-        .safe-area-top { 
-            padding-top: calc(env(safe-area-inset-top) + var(--space-lg)); 
-        }
-        .safe-area-bottom { 
-            padding-bottom: calc(env(safe-area-inset-bottom) + var(--space-lg)); 
-        }
-        .safe-area-left { 
-            padding-left: calc(env(safe-area-inset-left) + var(--space-lg)); 
-        }
-        .safe-area-right { 
-            padding-right: calc(env(safe-area-inset-right) + var(--space-lg)); 
-        }
-        
-        /* Consistent spacing classes */
-        .margin-section { margin: var(--space-2xl) 0; }
-        .margin-large { margin: var(--space-xl) 0; }
-        .margin-element { margin: var(--space-lg) 0; }
-        .margin-small { margin: var(--space-sm) 0; }
-        .padding-container { padding: var(--space-lg); }
-        .padding-section { padding: var(--space-2xl) 0; }
-        .padding-element { padding: var(--space-lg) 0; }
-        
-        /* Card styles */
-        .card {
-            background-color: var(--color-bg-card);
-            border: 1px solid var(--color-border-medium);
-            border-radius: var(--radius-lg);
-            padding: var(--space-xl);
-            box-shadow: var(--shadow-md);
-            backdrop-filter: blur(16px);
-            margin: 0;
-            line-height: var(--line-height-normal);
-        }
-        
-        .card-small {
-            background-color: var(--color-bg-card);
-            border: 1px solid var(--color-border-medium);
-            border-radius: var(--radius-md);
-            padding: var(--space-lg);
-            box-shadow: var(--shadow-sm);
-            backdrop-filter: blur(16px);
-            margin: 0;
-            line-height: var(--line-height-normal);
-        }
-        
-        /* FIXED: Button styles with proper sizing - WCAG AA/AAA compliant */
-        .btn-primary {
-            background-color: var(--color-primary-300);
-            color: var(--color-bg-primary);
-            font-weight: var(--font-semibold);
-            font-size: var(--text-base);
-            line-height: var(--line-height-none);
-            padding: var(--space-md) var(--space-xl);
-            border-radius: var(--radius-md);
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            min-height: 48px;        /* WCAG AA compliant */
-            min-width: 48px;         /* Added for square buttons */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--color-primary-400);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-lg);
-        }
-        
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--color-text-muted);
-            font-weight: var(--font-medium);
-            font-size: var(--text-sm);
-            line-height: var(--line-height-none);
-            padding: var(--space-sm) var(--space-lg);
-            border-radius: var(--radius-md);
-            transition: all 0.3s ease;
-            border: 1px solid var(--color-border-light);
-            cursor: pointer;
-            min-height: 48px;        /* WCAG AA compliant */
-            margin: 0;
-        }
-        
-        .btn-secondary:hover {
-            color: var(--color-text-primary);
-            border-color: var(--color-primary-300);
-        }
-        
-        /* FIXED: Logout button - now WCAG AA compliant */
-        .btn-logout {
-            background-color: var(--color-error-light);
-            color: var(--color-error-dark);
-            border-radius: var(--radius-md);
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            min-height: 48px;        /* FIXED: Was 32px, now WCAG compliant */
-            min-width: 48px;         /* FIXED: Added proper width */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-        }
-        
-        .btn-logout:hover {
-            background-color: var(--color-error);
-            color: var(--color-error-light);
-        }
-        
-        /* FIXED: Close modal buttons - now WCAG AA compliant */
-        .btn-close {
-            color: var(--color-text-muted);
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            min-height: 48px;        /* FIXED: Added proper sizing */
-            min-width: 48px;         /* FIXED: Added proper sizing */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: var(--text-2xl);
-            line-height: 1;
-            border-radius: var(--radius-md);
-            transition: all 0.3s ease;
-        }
-        
-        .btn-close:hover {
-            background-color: var(--color-bg-hover);
-            color: var(--color-text-primary);
-        }
-        
-        /* Input styles */
-        .input-field {
-            background-color: var(--color-bg-input);
-            color: var(--color-text-primary);
-            font-size: var(--text-base);
-            font-weight: var(--font-normal);
-            line-height: var(--line-height-normal);
-            border: 1px solid var(--color-border-medium);
-            border-radius: var(--radius-md);
-            padding: var(--space-md) var(--space-lg);
-            transition: all 0.3s ease;
-            width: 100%;
-            min-height: 48px;
-            margin: 0;
-        }
-        
-        .input-field::placeholder {
-            color: var(--color-text-muted);
-        }
-        
-        .input-field:focus {
-            outline: none;
-            border-color: var(--color-primary-500);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        /* Table specific typography */
-        table {
-            line-height: var(--line-height-normal);
-        }
-        
-        th {
-            font-size: var(--text-xs);
-            font-weight: var(--font-semibold);
-            color: var(--color-text-secondary);
-            line-height: var(--line-height-snug);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        td {
-            font-size: var(--text-xs);
-            font-weight: var(--font-normal);
-            line-height: var(--line-height-relaxed);
-        }
-        
-        /* Form specific improvements */
-        fieldset {
-            line-height: var(--line-height-normal);
-        }
-        
-        legend {
-            line-height: var(--line-height-normal);
-        }
-        
-        /* Link styles */
-        a {
-            color: var(--color-primary-400);
-            text-decoration: none;
-            font-weight: var(--font-medium);
-            transition: color 0.3s ease;
-        }
-        
-        a:hover {
-            color: var(--color-primary-300);
-        }
-        
-        /* Modal content typography */
-        .modal-content {
-            line-height: var(--line-height-normal);
-        }
-        
-        /* Proper emphasis styles */
-        strong, b {
-            font-weight: var(--font-semibold);
-            color: var(--color-text-primary);
-        }
-        
-        em, i {
-            font-style: italic;
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
-<body>
-    
-    <!-- Authentication Container -->
-    <div id="auth-container" class="fixed inset-0 flex items-center justify-center padding-container">
-        <div class="w-full max-w-sm card animate-fade-in">
-            <!-- Login UI -->
-            <div id="auth-ui" class="text-center transition-opacity duration-500">
-                <h1 class="text-heading-2 text-center margin-small">Hisab Kitab</h1>
-                <p class="text-body-small text-center margin-element">Personal accounting for busy people.</p>
-                
-                <!-- Login Form -->
-                <form id="login-form" class="margin-element text-left">
-                    <div class="margin-element">
-                        <input type="email" id="email" placeholder="Email" required class="input-field">
-                    </div>
-                    <div class="margin-element">
-                        <input type="password" id="password" placeholder="Password" required class="input-field">
-                    </div>
-                    
-                    <!-- Better checkbox alignment -->
-                    <div class="flex items-center justify-start w-full margin-element">
-                        <input id="remember-me" type="checkbox" checked
-                               class="h-5 w-5 flex-shrink-0" style="accent-color: var(--color-primary-500);">
-                        <label for="remember-me" class="text-label" style="margin-left: var(--space-md);">Remember Me</label>
-                    </div>
-                    
-                    <!-- Primary button -->
-                    <button type="submit" id="login-btn" class="btn-primary w-full">
-                        <span id="login-text">Log In</span>
-                        <svg id="login-spinner" class="animate-spin h-5 w-5 hidden" style="margin-left: var(--space-md);" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                    </button>
-                </form>
-                
-                <div class="flex items-center justify-between margin-element">
-                    <a href="#" id="forgot-password-link" class="text-body-small">Forgot Password?</a>
-                    <button id="signup-button" class="text-body-small" style="background: none; border: none; cursor: pointer; color: var(--color-primary-400); font-weight: var(--font-medium);">Create account</button>
-                </div>
-                
-                <p class="text-caption text-center">If not responsive, please turn off adblocker.</p>
-            </div>
-            
-            <!-- Password Reset UI -->
-            <div id="password-reset-ui" class="hidden text-center transition-opacity duration-500">
-                <h1 class="text-heading-2 text-center margin-small">Password Reset</h1>
-                <p class="text-body-small text-center margin-element">Enter your email to receive a password reset link.</p>
-                
-                <form id="password-reset-form" class="margin-element text-left">
-                    <div class="margin-element">
-                        <input type="email" id="reset-email" placeholder="Email" required class="input-field">
-                    </div>
-                    <button type="submit" id="reset-btn" class="btn-primary w-full">
-                        <span id="reset-text">Send Reset Email</span>
-                        <svg id="reset-spinner" class="animate-spin h-5 w-5 hidden" style="margin-left: var(--space-md);" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                    </button>
-                </form>
-                
-                <button id="reset-go-back-button" class="btn-secondary margin-small">Go Back to Login</button>
-            </div>
-            
-            <!-- Contact UI -->
-            <div id="contact-ui" class="hidden text-center transition-opacity duration-500">
-                <h1 class="text-heading-1 text-center margin-small">Create account</h1>
-                <p class="text-body-small text-center margin-element">To create an account, please send an email to:</p>
-                <a href="mailto:me@zaid.ovh" class="text-body-large text-center margin-element" style="display: block;">me@zaid.ovh</a>
-                <p class="text-body-small text-center margin-element">Once your account is created, you will be notified.</p>
-                <button id="go-back-button" class="btn-secondary">Go Back</button>
-            </div>
-        </div>
-    </div>
+<body class="h-[100dvh] w-full overflow-hidden text-sm sm:text-base font-sans antialiased selection:bg-blue-500 selection:text-white">
 
-    <!-- Hisab Kitab App Container (Hidden by default) -->
-    <div id="app-container" class="hidden fixed inset-0 flex flex-col">
-        <!-- Header with proper typography -->
-        <div class="flex items-center safe-area-top flex-shrink-0 padding-container">
-            <!-- Hamburger Menu -->
-            <div id="hamburger-container" class="hamburger-menu" style="margin-right: var(--space-lg);">
-                <button id="hamburger-btn" class="flex items-center justify-center card-small" style="width: 48px; height: 48px; transition: background-color 0.3s ease;">
-                    <svg class="w-6 h-6" style="color: var(--color-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-                <div id="menu-content" class="menu-content">
+    <!-- Auth Container -->
+    <div id="auth-container" class="fixed inset-0 flex items-center justify-center p-6 z-50 bg-[#F2F2F7]">
+        <div class="w-full max-w-sm modern-card p-8 animate-slide-up">
+            <div id="auth-ui" class="text-center transition-all duration-300">
+                <div class="mb-6 flex justify-center">
+                    <div class="h-16 w-16 rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                        <svg class="w-9 h-9 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2 tracking-tight">Hisab Kitab</h1>
+                <p class="text-gray-500 mb-8 font-medium text-base">Sign in to manage your expenses.</p>
+                <form id="login-form" class="space-y-5 text-left">
                     <div>
-                        <!-- User email and FIXED logout button -->
-                        <div class="flex items-center justify-between text-body-small margin-small" style="padding-bottom: var(--space-sm); border-bottom: 1px solid var(--color-border-medium);">
-                            <span id="user-email-display" class="flex-1" style="color: var(--color-primary-400); word-break: break-all; margin-right: var(--space-sm);"></span>
-                            <!-- FIXED: Logout button now 48x48px WCAG compliant -->
-                            <button id="logout-button" class="btn-logout">
-                                <svg id="logout-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                                </svg>
-                                <svg id="logout-spinner" class="animate-spin w-4 h-4 hidden" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        
-                        <!-- Menu buttons with proper typography -->
-                        <div class="margin-small">
-                            <button id="view-entries-btn" type="button" class="w-full text-left text-label rounded transition margin-small" style="padding: var(--space-sm) var(--space-md); min-height: 48px;">
-                                View All Entries
-                            </button>
-                            <button id="trend-chart-btn" type="button" class="w-full text-left text-label rounded transition margin-small" style="padding: var(--space-sm) var(--space-md); min-height: 48px;">
-                                Trend Chart
-                            </button>
-                            <button id="help-feedback-btn" type="button" class="w-full text-left text-label rounded transition margin-small" style="padding: var(--space-sm) var(--space-md); min-height: 48px;">
-                                Help
-                            </button>
-                        </div>
+                        <input type="email" id="email" placeholder="Email" required 
+                            class="w-full bg-gray-100 border-none text-gray-900 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-blue-500/50 transition-all placeholder-gray-400 font-medium text-lg">
+                    </div>
+                    <div>
+                        <input type="password" id="password" placeholder="Password" required 
+                            class="w-full bg-gray-100 border-none text-gray-900 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-blue-500/50 transition-all placeholder-gray-400 font-medium text-lg">
+                    </div>
+                    <div class="flex items-center justify-between py-2 px-1">
+                        <label class="flex items-center cursor-pointer group">
+                            <input id="remember-me" type="checkbox" checked class="rounded-md border-gray-300 text-blue-600 focus:ring-blue-500 w-5 h-5">
+                            <span class="ml-3 text-base text-gray-500 font-medium">Remember me</span>
+                        </label>
+                        <a href="#" id="forgot-password-link" class="text-base text-blue-600 font-semibold hover:text-blue-700">Reset password?</a>
+                    </div>
+                    <button type="submit" id="login-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-2xl py-4 transition-all transform active:scale-[0.98] shadow-lg shadow-blue-500/20 flex items-center justify-center tracking-wide text-lg">
+                        <span id="login-text">Sign In</span>
+                        <div id="login-spinner" class="loader hidden ml-2"></div>
+                    </button>
+                </form>
+                <div class="mt-8 pt-6 border-t border-gray-100">
+                    <button id="signup-button" class="text-base text-gray-500 hover:text-gray-800 transition-colors font-medium">Don't have an account? <span class="text-blue-600 font-semibold">Request access</span></button>
+                </div>
+            </div>
+            
+            <div id="password-reset-ui" class="hidden text-center">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Reset Password</h2>
+                <p class="text-gray-500 text-base mb-6 font-medium">Enter your email for a recovery link.</p>
+                <form id="password-reset-form" class="space-y-4">
+                    <input type="email" id="reset-email" placeholder="Email Address" required class="w-full bg-gray-100 border-none text-gray-900 rounded-2xl px-5 py-4 focus:ring-2 focus:ring-blue-500/50 transition-all font-medium text-lg">
+                    <button type="submit" id="reset-btn" class="w-full bg-black text-white font-bold rounded-2xl py-4 hover:bg-gray-800 transition-colors flex justify-center items-center shadow-lg text-lg">
+                        <span id="reset-text">Send Link</span>
+                        <div id="reset-spinner" class="loader border-gray-400 border-t-transparent hidden ml-2"></div>
+                    </button>
+                </form>
+                <button id="reset-go-back-button" class="mt-6 text-gray-500 hover:text-black text-base font-semibold">Back to Login</button>
+            </div>
+            
+            <div id="contact-ui" class="hidden text-center">
+                <div class="h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Request Access</h2>
+                <p class="text-gray-500 text-base mb-6 font-medium">Please contact the administrator:</p>
+                <a href="mailto:me@zaid.ovh" class="block bg-gray-50 border border-gray-200 rounded-2xl p-5 text-blue-600 font-mono text-base mb-8 hover:bg-white hover:shadow-sm transition-all font-medium">me@zaid.ovh</a>
+                <button id="go-back-button" class="text-gray-500 hover:text-black text-base font-semibold">Back to Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Container -->
+    <div id="app-container" class="hidden fixed inset-0 flex flex-col bg-[#F2F2F7]">
+        <header class="flex-none pt-safe-top z-40 bg-[#F2F2F7]/80 backdrop-blur-xl border-b border-gray-200 sticky top-0">
+            <div class="px-5 py-4 flex items-center justify-between max-w-md mx-auto w-full">
+                <h1 class="text-2xl font-bold tracking-tight text-gray-900">Hisab Kitab</h1>
+                
+                <!-- User Menu -->
+                <div class="relative">
+                    <button id="user-menu-btn" class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-gray-200 shadow-sm transition-all active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                        <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                        <span id="user-email-display-header" class="text-xs text-gray-600 font-medium truncate max-w-[120px]"></span>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                    
+                    <!-- Dropdown -->
+                    <div id="user-menu-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 origin-top-right transform transition-all">
+                        <button id="menu-help-btn" class="w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3 font-medium transition-colors">
+                            <svg class="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                            Help & Support
+                        </button>
+                        <div class="h-px bg-gray-50 my-1"></div>
+                        <button id="menu-logout-btn" class="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 font-medium transition-colors">
+                            <!-- Spinner Container -->
+                            <div id="menu-logout-spinner" class="loader border-red-500 border-t-transparent hidden h-4 w-4"></div>
+                            <svg id="menu-logout-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                            Sign Out
+                        </button>
                     </div>
                 </div>
             </div>
-            <!-- Title with proper typography -->
-            <h1 class="text-heading-2">Hisab Kitab</h1>
-        </div>
+        </header>
 
-        <!-- Main content with proper hierarchy -->
-        <div class="flex-1 overflow-y-auto safe-area-bottom padding-container">
-            <div class="w-full max-w-sm mx-auto">
-                <!-- Form with proper spacing and typography -->
-                <form id="data-form" class="margin-section" novalidate>
-                    <!-- Name selection -->
-                    <div class="card margin-element">
-                        <fieldset><legend class="sr-only">Select Name</legend>
-                            <div class="flex flex-col sm:flex-row" style="gap: var(--space-sm);">
-                                <label class="flex-1 flex items-center rounded-md transition-colors cursor-pointer" style="padding: var(--space-md); min-height: 48px; background: transparent;">
-                                    <input type="radio" name="name" value="Gulnaz Dena" class="h-5 w-5 flex-shrink-0" style="accent-color: var(--color-primary-500);">
-                                    <span class="radio-text" style="margin-left: var(--space-md);">
-                                        <span class="radio-full-name">Gulnaz dena</span>
-                                        <span class="radio-short-name">Gulnaz</span>
-                                    </span>
-                                </label>
-                                <label class="flex-1 flex items-center rounded-md transition-colors cursor-pointer" style="padding: var(--space-md); min-height: 48px; background: transparent;">
-                                    <input type="radio" name="name" value="Ghazala Dena" class="h-5 w-5 flex-shrink-0" style="accent-color: var(--color-primary-500);">
-                                    <span class="radio-text" style="margin-left: var(--space-md);">
-                                        <span class="radio-full-name">Ghazala dena</span>
-                                        <span class="radio-short-name">Ghazala</span>
-                                    </span>
-                                </label>
-                            </div>
-                        </fieldset>
-                    </div>
-                    
-                    <!-- Amount input -->
-                    <div class="card margin-element">
-                        <label for="amount" class="sr-only">Amount</label>
-                        <input type="number" id="amount" name="amount" placeholder="Amount ₹" pattern="[0-9]*" inputmode="numeric" 
-                               class="input-field">
-                    </div>
-                    
-                    <!-- Tag selection -->
-                    <div class="card margin-element">
-                        <fieldset><legend class="sr-only">Tag</legend>
-                            <div class="grid grid-cols-3" style="gap: var(--space-sm); margin-bottom: var(--space-md);">
-                                <label class="flex items-center rounded-md transition-colors cursor-pointer" style="padding: var(--space-sm); min-height: 48px;">
-                                    <input type="radio" name="tag" value="Mutton" class="h-5 w-5 flex-shrink-0" style="accent-color: var(--color-primary-500);">
-                                    <span class="radio-text" style="margin-left: var(--space-sm);">Mutton</span>
-                                </label>
-                                <label class="flex items-center rounded-md transition-colors cursor-pointer" style="padding: var(--space-sm); min-height: 48px;">
-                                    <input type="radio" name="tag" value="Beef" class="h-5 w-5 flex-shrink-0" style="accent-color: var(--color-primary-500);">
-                                    <span class="radio-text" style="margin-left: var(--space-sm);">Beef</span>
-                                </label>
-                                <label class="flex items-center rounded-md transition-colors cursor-pointer" style="padding: var(--space-sm); min-height: 48px;">
-                                    <input type="radio" name="tag" value="Chicken" class="h-5 w-5 flex-shrink-0" style="accent-color: var(--color-primary-500);">
-                                    <span class="radio-text" style="margin-left: var(--space-sm);">Chicken</span>
-                                </label>
-                                <label class="flex items-center rounded-md transition-colors cursor-pointer" style="padding: var(--space-sm); min-height: 48px;">
-                                    <input type="radio" name="tag" value="Fish" class="h-5 w-5 flex-shrink-0" style="accent-color: var(--color-primary-500);">
-                                    <span class="radio-text" style="margin-left: var(--space-sm);">Fish</span>
-                                </label>
-                                <label class="flex items-center rounded-md transition-colors cursor-pointer" style="padding: var(--space-sm); min-height: 48px;">
-                                    <input type="radio" name="tag" value="Light Bill" class="h-5 w-5 flex-shrink-0" style="accent-color: var(--color-primary-500);">
-                                    <span class="radio-text" style="margin-left: var(--space-sm);">Light Bill</span>
-                                </label>
-                                <label class="flex items-center rounded-md transition-colors cursor-pointer" style="padding: var(--space-sm); min-height: 48px;">
-                                    <input type="radio" name="tag" value="Kirana" class="h-5 w-5 flex-shrink-0" style="accent-color: var(--color-primary-500);">
-                                    <span class="radio-text" style="margin-left: var(--space-sm);">Kirana</span>
-                                </label>
-                            </div>
-                            <input type="text" id="other-tag-input" name="other-tag" placeholder="Other (specify)" 
-                                   class="input-field">
-                        </fieldset>
-                    </div>
-                    
-                    <!-- Form actions -->
-                    <div class="margin-element">
-                        <div class="flex items-center" style="gap: var(--space-md);">
-                            <button type="submit" id="submit-button" class="btn-primary flex-1" style="padding: var(--space-lg) var(--space-xl); font-weight: var(--font-bold); min-height: 52px;">
-                                <span id="submit-text">Submit</span>
-                                <svg id="submit-spinner" class="animate-spin h-5 w-5 hidden" style="margin-left: var(--space-md);" fill="none" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 718-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 714 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                            </button>
-                            <button type="reset" class="btn-secondary">Clear Form</button>
+        <main class="flex-1 overflow-y-auto px-4 pb-safe-bottom scroll-smooth">
+            <div class="max-w-md mx-auto w-full pt-6 pb-12">
+                
+                <form id="data-form" class="space-y-8" novalidate>
+                    <div class="space-y-3">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Payer</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="cursor-pointer relative group">
+                                <input type="radio" name="name" value="Gulnaz Dena" class="peer sr-only">
+                                <div class="radio-card h-28 rounded-2xl bg-white border border-gray-200 flex flex-col items-center justify-center transition-all duration-200 hover:shadow-md">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-100 to-purple-200 flex items-center justify-center text-purple-600 font-bold text-sm mb-3">GUL</div>
+                                    <span class="text-base font-semibold text-gray-700">Gulnaz Dena</span>
+                                    <div class="check-icon absolute top-3 right-3 opacity-0 transform scale-50 transition-all duration-200">
+                                        <div class="bg-blue-500 rounded-full p-1"><svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative group">
+                                <input type="radio" name="name" value="Ghazala Dena" class="peer sr-only">
+                                <div class="radio-card h-28 rounded-2xl bg-white border border-gray-200 flex flex-col items-center justify-center transition-all duration-200 hover:shadow-md">
+                                    <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-teal-100 to-teal-200 flex items-center justify-center text-teal-700 font-bold text-sm mb-3">GAZ</div>
+                                    <span class="text-base font-semibold text-gray-700">Ghazala Dena</span>
+                                    <div class="check-icon absolute top-3 right-3 opacity-0 transform scale-50 transition-all duration-200">
+                                        <div class="bg-blue-500 rounded-full p-1"><svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+                                    </div>
+                                </div>
+                            </label>
                         </div>
+                    </div>
+
+                    <div class="space-y-3">
+                         <label for="amount" class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Amount</label>
+                        <div class="relative modern-card overflow-hidden">
+                            <div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                                <span class="text-gray-300 text-2xl font-light">₹</span>
+                            </div>
+                            <!-- Modified Input: Strict Positive Integer Validation -->
+                            <input type="number" id="amount" name="amount" placeholder="0" inputmode="numeric" 
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                class="block w-full bg-transparent border-none py-6 pl-12 pr-6 text-4xl font-bold text-gray-900 placeholder-gray-300 focus:ring-0 text-center tracking-tight">
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Category</label>
+                        <div class="flex flex-wrap gap-2.5">
+                            <label class="cursor-pointer"><input type="radio" name="tag" value="Kirana" class="peer sr-only"><span class="radio-chip inline-block px-5 py-3 rounded-full text-sm font-semibold transition-all">Kirana</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="tag" value="Gosht" class="peer sr-only"><span class="radio-chip inline-block px-5 py-3 rounded-full text-sm font-semibold transition-all">Gosht</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="tag" value="Kheema" class="peer sr-only"><span class="radio-chip inline-block px-5 py-3 rounded-full text-sm font-semibold transition-all">Kheema</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="tag" value="Gosht Kheema" class="peer sr-only"><span class="radio-chip inline-block px-5 py-3 rounded-full text-sm font-semibold transition-all">Gosht Kheema</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="tag" value="Chicken" class="peer sr-only"><span class="radio-chip inline-block px-5 py-3 rounded-full text-sm font-semibold transition-all">Chicken</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="tag" value="Mutton" class="peer sr-only"><span class="radio-chip inline-block px-5 py-3 rounded-full text-sm font-semibold transition-all">Mutton</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="tag" value="Bheja" class="peer sr-only"><span class="radio-chip inline-block px-5 py-3 rounded-full text-sm font-semibold transition-all">Bheja</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="tag" value="Fish" class="peer sr-only"><span class="radio-chip inline-block px-5 py-3 rounded-full text-sm font-semibold transition-all">Fish</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="tag" value="Light Bill" class="peer sr-only"><span class="radio-chip inline-block px-5 py-3 rounded-full text-sm font-semibold transition-all">Light Bill</span></label>
+                            <label class="cursor-pointer"><input type="radio" name="tag" value="Society" class="peer sr-only"><span class="radio-chip inline-block px-5 py-3 rounded-full text-sm font-semibold transition-all">Society</span></label>
+                        </div>
+                        <div class="relative mt-2">
+                            <input type="text" id="other-tag-input" name="other-tag" placeholder="Or type something else..." 
+                                class="w-full px-5 py-4 rounded-xl bg-white border border-gray-200 text-gray-900 text-base font-medium focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none transition-all placeholder-gray-400 shadow-sm">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex gap-4">
+                        <button type="reset" class="px-6 py-4 rounded-2xl bg-white border border-gray-200 text-gray-500 font-semibold hover:bg-gray-50 transition-colors active:scale-95 shadow-sm text-base">Clear</button>
+                        <button type="submit" id="submit-button" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-bold text-lg rounded-2xl py-4 shadow-lg shadow-blue-500/30 transition-all transform active:scale-[0.98] flex items-center justify-center tracking-wide">
+                            <span id="submit-text">Save Entry</span>
+                            <div id="submit-spinner" class="loader ml-3 hidden"></div>
+                        </button>
                     </div>
                 </form>
-                
-                <!-- Recent entries with proper typography -->
-                <div id="recent-entries-wrapper" class="margin-element" style="border-top: 1px solid var(--color-border-medium); padding-top: var(--space-lg);">
-                    <h3 class="text-subheading text-center margin-small">Recent Entries</h3>
-                    <div id="recent-entries"></div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Entries Modal -->
-        <div id="entries-modal" class="fixed inset-0 flex justify-center items-center hidden padding-container" style="background-color: rgba(0, 0, 0, 0.75); z-index: 80;">
-            <div class="w-full max-w-lg h-full max-h-[90vh] flex flex-col card modal-content">
-                <div class="flex justify-between items-start flex-shrink-0 margin-element" style="border-bottom: 1px solid var(--color-border-medium); padding-bottom: var(--space-lg);">
-                    <div id="summary-container" class="text-body-small flex-grow" style="margin-right: var(--space-lg);"></div>
-                    <!-- FIXED: Close button now 48x48px WCAG compliant -->
-                    <button id="close-modal-btn" class="btn-close">&times;</button>
-                </div>
-                <div class="flex-shrink-0 margin-element" style="border-bottom: 1px solid var(--color-border-medium); padding-bottom: var(--space-lg);">
-                    <input type="text" id="filter-input" placeholder="Type to filter entries..." class="input-field">
-                </div>
-                <div id="entries-table-container" class="overflow-y-auto flex-grow"></div>
-                <div id="load-more-container" class="text-center flex-shrink-0 margin-element" style="border-top: 1px solid var(--color-border-medium); padding-top: var(--space-lg);"></div>
-            </div>
-        </div>
 
-        <!-- Help Modal -->
-        <div id="help-modal" class="fixed inset-0 flex justify-center items-center hidden padding-container" style="background-color: rgba(0, 0, 0, 0.75); z-index: 80;">
-            <div class="w-full max-w-lg h-full max-h-[90vh] flex flex-col card modal-content">
-                <div class="flex justify-between items-start flex-shrink-0 margin-element" style="border-bottom: 1px solid var(--color-border-medium); padding-bottom: var(--space-lg);">
-                    <h2 class="text-heading-3">Help</h2>
-                    <!-- FIXED: Close button now 48x48px WCAG compliant -->
-                    <button id="close-help-modal-btn" class="btn-close">&times;</button>
+                <div id="recent-entries-wrapper" class="mt-12 mb-8 animate-slide-up" style="animation-delay: 0.1s;">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 ml-1">Recent Activity</h3>
+                    <div id="recent-entries" class="space-y-3"></div>
                 </div>
-                <div class="overflow-y-auto flex-grow padding-element">
-                    <div class="text-body-small">
+
+                <div class="mb-8 animate-slide-up" style="animation-delay: 0.15s;">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 ml-1">Net Balance</h3>
+                    <div id="homepage-summary" class="modern-card p-5 flex flex-col justify-between hidden">
+                        <!-- Loading Skeleton for Summary -->
+                    </div>
+                </div>
+
+                <div class="animate-slide-up" style="animation-delay: 0.2s;">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 ml-1">Quick Actions</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Feed View -->
+                        <button id="open-feed-btn" class="modern-card p-5 flex flex-col items-center justify-center gap-3 hover:bg-gray-50 transition-colors group h-28">
+                            <div class="p-3 rounded-full bg-blue-50 group-hover:bg-blue-100 transition-colors"><svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" /></svg></div>
+                            <span class="text-base font-semibold text-gray-700">Feed</span>
+                        </button>
                         
-                        <!-- Bug Reports Section -->
-                        <div class="margin-section">
-                            <h3 class="text-subheading flex items-center margin-element">
-                                <svg class="w-5 h-5" style="color: var(--color-error); margin-right: var(--space-sm);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                Found a Bug?
-                            </h3>
-                            <ul style="margin-left: var(--space-2xl);">
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-primary-400); margin-right: var(--space-sm);">•</span>
-                                    <span>Contact us with detailed description of the issue</span>
-                                </li>
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-primary-400); margin-right: var(--space-sm);">•</span>
-                                    <span>Include steps to reproduce the problem</span>
-                                </li>
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-primary-400); margin-right: var(--space-sm);">•</span>
-                                    <span>Mention your device details</span>
-                                </li>
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-primary-400); margin-right: var(--space-sm);">•</span>
-                                    <span>Share screenshot if possible</span>
-                                </li>
-                            </ul>
-                        </div>
+                        <!-- Ledger View -->
+                        <button id="open-ledger-btn" class="modern-card p-5 flex flex-col items-center justify-center gap-3 hover:bg-gray-50 transition-colors group h-28">
+                            <div class="p-3 rounded-full bg-indigo-50 group-hover:bg-indigo-100 transition-colors"><svg class="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7-4h14m-7-4v8m-9-4h14" /></svg></div>
+                            <span class="text-base font-semibold text-gray-700">Ledger</span>
+                        </button>
+                        
+                        <!-- Calendar View -->
+                        <button id="open-calendar-btn" class="modern-card p-5 flex flex-col items-center justify-center gap-3 hover:bg-gray-50 transition-colors group h-28">
+                            <div class="p-3 rounded-full bg-purple-50 group-hover:bg-purple-100 transition-colors"><svg class="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg></div>
+                            <span class="text-base font-semibold text-gray-700">Calendar</span>
+                        </button>
+                        
+                        <!-- Split View -->
+                        <button id="open-split-btn" class="modern-card p-5 flex flex-col items-center justify-center gap-3 hover:bg-gray-50 transition-colors group h-28">
+                            <div class="p-3 rounded-full bg-teal-50 group-hover:bg-teal-100 transition-colors"><svg class="w-6 h-6 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg></div>
+                            <span class="text-base font-semibold text-gray-700">Split</span>
+                        </button>
 
-                        <!-- Feature Suggestions Section -->
-                        <div class="margin-section">
-                            <h3 class="text-subheading flex items-center margin-element">
-                                <svg class="w-5 h-5" style="color: var(--color-success); margin-right: var(--space-sm);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
-                                </svg>
-                                Have Ideas?
-                            </h3>
-                            <ul style="margin-left: var(--space-2xl);">
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-success); margin-right: var(--space-sm);">•</span>
-                                    <span>Share your feature suggestions with us</span>
-                                </li>
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-success); margin-right: var(--space-sm);">•</span>
-                                    <span>Describe how the feature would help you</span>
-                                </li>
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-success); margin-right: var(--space-sm);">•</span>
-                                    <span>All feedback is valuable and considered</span>
-                                </li>
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-success); margin-right: var(--space-sm);">•</span>
-                                    <span>Help make Hisab Kitab App better for everyone</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Contact Details Section -->
-                        <div class="margin-section">
-                            <h3 class="text-subheading flex items-center margin-element">
-                                <svg class="w-5 h-5" style="color: var(--color-primary-400); margin-right: var(--space-sm);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                </svg>
-                                Contact Information
-                            </h3>
-                            <ul style="margin-left: var(--space-2xl);">
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-primary-400); margin-right: var(--space-sm);">•</span>
-                                    <span>Primary Contact: me@zaid.ovh</span>
-                                </li>
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-primary-400); margin-right: var(--space-sm);">•</span>
-                                    <span>Response Time: Usually within 24-48 hours</span>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <!-- Useful Tips Section -->
-                        <div class="margin-section">
-                            <h3 class="text-subheading flex items-center margin-element">
-                                <svg class="w-5 h-5" style="color: var(--color-warning); margin-right: var(--space-sm);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                Useful Tips
-                            </h3>
-                            <ul style="margin-left: var(--space-2xl);">
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-warning); margin-right: var(--space-sm);">•</span>
-                                    <span>Use <strong>"Other"</strong> field for custom expense categories</span>
-                                </li>
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-warning); margin-right: var(--space-sm);">•</span>
-                                    <span>Data syncs automatically when you submit</span>
-                                </li>
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-warning); margin-right: var(--space-sm);">•</span>
-                                    <span>Turn off adblocker if app seems unresponsive</span>
-                                </li>
-                                <li class="flex items-start margin-small">
-                                    <span style="color: var(--color-warning); margin-right: var(--space-sm);">•</span>
-                                    <span>All amounts should be whole numbers (no decimals)</span>
-                                </li>
-                            </ul>
-                        </div>
-
+                        <!-- Analytics Full Width -->
+                        <button id="trend-chart-btn" class="modern-card p-5 flex flex-col items-center justify-center gap-3 hover:bg-gray-50 transition-colors group h-28 col-span-2">
+                            <div class="p-3 rounded-full bg-pink-50 group-hover:bg-pink-100 transition-colors"><svg class="w-6 h-6 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg></div>
+                            <span class="text-base font-semibold text-gray-700">Analytics</span>
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
+    </div>
 
-        <!-- Trend Chart Modal -->
-        <div id="trend-chart-modal" class="fixed inset-0 flex justify-center items-center hidden padding-container" style="background-color: rgba(0, 0, 0, 0.75); z-index: 80;">
-            <div class="w-full max-w-[95vw] h-full max-h-[95vh] flex flex-col card modal-content">
-                <div class="flex justify-between items-start flex-shrink-0 margin-element" style="border-bottom: 1px solid var(--color-border-medium); padding-bottom: var(--space-lg);">
-                    <h2 class="text-heading-3">Trend Chart</h2>
-                    <!-- FIXED: Close button now 48x48px WCAG compliant -->
-                    <button id="close-trend-chart-btn" class="btn-close">&times;</button>
-                </div>
-                <div class="flex-grow overflow-auto" style="padding: var(--space-sm);">
-                    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRYy1LaCl91me7-ViRJrzlJe1f9qWs3Qy1nA1sRww_RF7GObcrhgHf8y1jHffYdv0g9K6eX2IiIj65Z/pubchart?oid=1363302817&format=interactive&font=Open+Sans" 
-                            width="100%" 
-                            height="100%" 
-                            frameborder="0" 
-                            allowfullscreen 
-                            allowtransparency
-                            style="border: none; display: block;">
-                    </iframe>
+    <!-- View Entries Modal -->
+    <div id="entries-modal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" id="modal-backdrop"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center sm:items-center p-0 sm:p-4 text-center">
+                <div class="relative transform overflow-hidden bg-white text-left shadow-2xl transition-all w-full sm:max-w-lg sm:rounded-2xl h-[92vh] sm:h-auto flex flex-col rounded-t-2xl">
+                    
+                    <!-- Modal Header -->
+                    <div class="bg-white px-4 py-4 sm:px-6 flex justify-between items-center border-b border-gray-100">
+                        <h3 class="text-lg font-bold text-gray-900" id="modal-title">Transaction Feed</h3>
+                        <button id="close-modal-btn" class="bg-gray-100 rounded-full p-2 text-gray-500 hover:bg-gray-200 transition-colors"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+                    </div>
+
+                    <!-- Controls: Filters, Sort (Selector Removed) -->
+                    <div id="modal-controls" class="bg-gray-50 px-4 py-4 border-b border-gray-100 space-y-3">
+                        
+                        <!-- Search -->
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                            </div>
+                            <input type="text" id="filter-input" placeholder="Search..." class="block w-full rounded-xl bg-white border border-gray-200 py-2.5 pl-10 pr-3 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500/20 sm:text-sm font-medium outline-none">
+                        </div>
+
+                        <!-- Filters Row -->
+                        <div class="flex gap-2">
+                            <!-- Time Filter Container -->
+                            <div class="relative flex-1 group" id="time-filter-container">
+                                <!-- Standard Dropdown -->
+                                <select id="time-filter" class="w-full appearance-none bg-white border border-gray-200 text-gray-700 py-2.5 px-3 pr-8 rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500 transition-all">
+                                    <option value="all">All Time</option>
+                                    <option value="this_month">This Month</option>
+                                    <option value="last_month">Last Month</option>
+                                    <option value="last_30">Last 30 Days</option>
+                                    <option disabled>──────────</option>
+                                    <option value="custom_date">Specific Date...</option>
+                                    <option value="custom_month">Specific Month...</option>
+                                    <option value="custom_year">Specific Year...</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500" id="time-filter-icon"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
+
+                                <!-- Hidden Custom Inputs -->
+                                <div id="custom-input-wrapper" class="hidden absolute inset-0 bg-white rounded-xl border border-gray-200 flex items-center px-2 shadow-sm z-10">
+                                    <input type="date" id="custom-date-input" class="hidden w-full text-xs font-semibold text-gray-900 focus:outline-none bg-transparent">
+                                    <input type="month" id="custom-month-input" class="hidden w-full text-xs font-semibold text-gray-900 focus:outline-none bg-transparent">
+                                    <select id="custom-year-input" class="hidden w-full text-xs font-semibold text-gray-900 focus:outline-none bg-transparent appearance-none"></select>
+                                    <button id="clear-custom-filter" class="ml-2 text-gray-400 hover:text-red-500 p-1"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>
+                                </div>
+                            </div>
+
+                            <!-- Sort Filter -->
+                            <div class="relative flex-1">
+                                <select id="sort-filter" class="w-full appearance-none bg-white border border-gray-200 text-gray-700 py-2.5 px-3 pr-8 rounded-xl text-xs font-semibold focus:outline-none focus:border-blue-500 transition-all">
+                                    <option value="newest">Newest First</option>
+                                    <option value="oldest">Oldest First</option>
+                                    <option value="high_low">Amount: High-Low</option>
+                                    <option value="low_high">Amount: Low-High</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500"><svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Widget -->
+                    <div id="summary-container" class="bg-white px-6 py-4 border-b border-gray-100">
+                        <!-- JS Injected -->
+                    </div>
+
+                    <!-- Content Area -->
+                    <div id="entries-content-area" class="flex-1 overflow-y-auto p-0 bg-gray-50">
+                        <!-- JS Injected Table/Feed -->
+                    </div>
+
+                    <!-- Footer -->
+                    <div id="load-more-container" class="bg-white px-4 py-4 border-t border-gray-100 text-center"></div>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- IMPROVED: Message Box with better contrast -->
-    <div id="message-box" class="fixed top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-md shadow-lg transition-all duration-300 ease-in-out scale-0 origin-center max-w-xs" style="background-color: var(--color-success-light); color: var(--color-success-dark); padding: var(--space-lg); z-index: 90;">
-        <p id="message-text" class="text-body-small text-center" style="font-weight: var(--font-medium);"></p>
+    <div id="trend-chart-modal" class="fixed inset-0 z-50 hidden">
+        <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto p-4 flex items-center justify-center">
+            <div class="bg-white w-full max-w-4xl h-[80vh] rounded-2xl shadow-2xl flex flex-col">
+                 <div class="flex justify-between items-center p-4 border-b border-gray-100">
+                    <h2 class="text-gray-900 font-bold text-lg">Analytics</h2>
+                    <button id="close-trend-chart-btn" class="text-gray-400 hover:text-gray-600 p-2"><svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+                <div class="flex-1 overflow-hidden bg-gray-50 p-2 rounded-b-2xl">
+                    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRYy1LaCl91me7-ViRJrzlJe1f9qWs3Qy1nA1sRww_RF7GObcrhgHf8y1jHffYdv0g9K6eX2IiIj65Z/pubchart?oid=1363302817&format=interactive" width="100%" height="100%" frameborder="0" style="border:0"></iframe>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Firebase Analytics Script -->
+    <div id="help-modal" class="fixed inset-0 z-50 hidden">
+        <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm"></div>
+        <div class="fixed inset-0 z-10 flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6">
+                <div class="flex justify-between items-start mb-6">
+                    <h2 class="text-xl font-bold text-gray-900">Help & Support</h2>
+                    <button id="close-help-modal-btn" class="text-gray-400 hover:text-gray-600"><svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                </div>
+                <div class="space-y-4 text-base text-gray-600">
+                    <div class="p-4 bg-red-50 border border-red-100 rounded-xl"><h3 class="text-red-600 font-bold mb-1 flex items-center"><svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Reporting Bugs</h3><p class="text-gray-600 font-medium">Please screenshot the error and email us with your device details.</p></div>
+                    <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl"><h3 class="text-blue-600 font-bold mb-1">Contact</h3><p class="font-medium">Email: <a href="mailto:me@zaid.ovh" class="text-blue-600 hover:underline">me@zaid.ovh</a></p></div>
+                    <div class="p-4 bg-gray-50 border border-gray-100 rounded-xl"><h3 class="text-yellow-600 font-bold mb-1">Tips</h3><ul class="list-disc list-inside text-gray-500 space-y-1 font-medium"><li>Use whole numbers only.</li><li>If the app freezes, disable AdBlock.</li><li>Tap "Other" to type a custom tag.</li></ul></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="message-box" class="fixed top-6 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 text-gray-900 px-6 py-4 rounded-full shadow-xl z-[100] transition-all duration-300 scale-0 flex items-center">
+        <div id="msg-indicator" class="w-2 h-2 rounded-full bg-green-500 mr-3"></div>
+        <p id="message-text" class="text-sm font-bold"></p>
+    </div>
+
     <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
-        
-        // Firebase configuration for analytics
-        const firebaseAnalyticsConfig = {
-            apiKey: "AIzaSyA5bKSAZN0JHAK_atwbSRz4dCTJ8NaH4vI",
-            authDomain: "auth-demo-9a4bc.firebaseapp.com",
-            projectId: "auth-demo-9a4bc",
-            storageBucket: "auth-demo-9a4bc.firebasestorage.app",
-            messagingSenderId: "554871726025",
-            appId: "1:554871726025:web:ec8d1171f6a85b13c65218",
-            measurementId: "G-J95YDM55T8"
-        };
-        
-        // Initialize Firebase Analytics
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+        const firebaseAnalyticsConfig = { apiKey: "AIzaSyA5bKSAZN0JHAK_atwbSRz4dCTJ8NaH4vI", authDomain: "auth-demo-9a4bc.firebaseapp.com", projectId: "auth-demo-9a4bc", storageBucket: "auth-demo-9a4bc.firebasestorage.app", messagingSenderId: "554871726025", appId: "1:554871726025:web:ec8d1171f6a85b13c65218", measurementId: "G-J95YDM55T8" };
         const analyticsApp = initializeApp(firebaseAnalyticsConfig, 'analytics');
         const analytics = getAnalytics(analyticsApp);
     </script>
 
     <script type="module">
-        // [All JavaScript remains exactly the same - no changes needed to preserve functionality]
-        // Import Firebase modules from CDN
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyA5bKSAZN0JHAK_atwbSRz4dCTJ8NaH4vI",
-            authDomain: "auth-demo-9a4bc.firebaseapp.com",
-            projectId: "auth-demo-9a4bc",
-            storageBucket: "auth-demo-9a4bc.firebasestorage.app",
-            messagingSenderId: "554871726025",
-            appId: "1:554871726025:web:ec8d1171f6a85b13c65218"
-        };
-        
-        // Initialize Firebase
+        const firebaseConfig = { apiKey: "AIzaSyA5bKSAZN0JHAK_atwbSRz4dCTJ8NaH4vI", authDomain: "auth-demo-9a4bc.firebaseapp.com", projectId: "auth-demo-9a4bc", storageBucket: "auth-demo-9a4bc.firebasestorage.app", messagingSenderId: "554871726025", appId: "1:554871726025:web:ec8d1171f6a85b13c65218" };
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         
-        // UI elements for authentication
         const authContainer = document.getElementById('auth-container');
         const authUi = document.getElementById('auth-ui');
         const contactUi = document.getElementById('contact-ui');
@@ -1045,8 +491,8 @@
         const loginForm = document.getElementById('login-form');
         const signupButton = document.getElementById('signup-button');
         const goBackButton = document.getElementById('go-back-button');
-        const logoutButton = document.getElementById('logout-button');
-        const userEmailDisplay = document.getElementById('user-email-display');
+        // const logoutButton = document.getElementById('logout-button'); // Removed direct ref
+        const userEmailDisplay = document.getElementById('user-email-display-header');
         const rememberMeCheckbox = document.getElementById('remember-me');
         const forgotPasswordLink = document.getElementById('forgot-password-link');
         const passwordResetForm = document.getElementById('password-reset-form');
@@ -1054,12 +500,6 @@
         const messageBox = document.getElementById('message-box');
         const messageText = document.getElementById('message-text');
         
-        // Hamburger menu elements
-        const hamburgerBtn = document.getElementById('hamburger-btn');
-        const menuContent = document.getElementById('menu-content');
-        const hamburgerContainer = document.getElementById('hamburger-container');
-
-        // Hisab Kitab app variables
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwoFc2VyGtJMtFIh2D_qf99BBFLNfQLnFO5MjFv3EtKL3AYYj0C9uNpvmAh-eYy-cisMg/exec'; 
         const INITIAL_LOAD_COUNT = 50;
         
@@ -1067,190 +507,56 @@
         let allEntries = [];
         let filteredEntries = [];
         let visibleCount = INITIAL_LOAD_COUNT;
-        let sortState = { column: 3, direction: 'desc' };
         let deviceDetails = {};
+        
+        // Modal State
+        let currentView = 'feed'; 
+        let currentFilter = 'all'; 
+        let currentSort = 'newest';
+        
+        // Custom Filter Values
+        let customDateVal = '';
+        let customMonthVal = '';
+        let customYearVal = '';
+        
+        // Calendar Navigation State
+        let calendarViewDate = new Date();
 
-        // Analytics helper function
-        const trackEvent = (eventName, parameters = {}) => {
-            if (typeof gtag !== 'undefined') {
-                gtag('event', eventName, parameters);
-            }
+        const trackEvent = (eventName, parameters = {}) => { if (typeof gtag !== 'undefined') gtag('event', eventName, parameters); };
+
+        const showButtonSpinner = (buttonId, textId, spinnerId) => { document.getElementById(buttonId).disabled = true; document.getElementById(textId).style.display = 'none'; document.getElementById(spinnerId).classList.remove('hidden'); };
+        // Updated Logout Spinner Logic for Menu Item
+        const showLogoutSpinner = () => { 
+            const btn = document.getElementById('menu-logout-btn');
+            btn.disabled = true; 
+            document.getElementById('menu-logout-icon').classList.add('hidden'); 
+            document.getElementById('menu-logout-spinner').classList.remove('hidden'); 
         };
-
-        // Hamburger menu functionality
-        hamburgerBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            menuContent.classList.toggle('show');
-            trackEvent('hamburger_menu_toggle');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!hamburgerBtn.contains(e.target) && !menuContent.contains(e.target)) {
-                menuContent.classList.remove('show');
-            }
-        });
-
-        // Button animation helpers
-        const showButtonSpinner = (buttonId, textId, spinnerId) => {
-            document.getElementById(buttonId).disabled = true;
-            document.getElementById(textId).style.display = 'none';
-            document.getElementById(spinnerId).classList.remove('hidden');
+        const hideLogoutSpinner = () => { 
+            const btn = document.getElementById('menu-logout-btn');
+            btn.disabled = false; 
+            document.getElementById('menu-logout-icon').classList.remove('hidden'); 
+            document.getElementById('menu-logout-spinner').classList.add('hidden'); 
         };
+        const hideButtonSpinner = (buttonId, textId, spinnerId, originalText) => { document.getElementById(buttonId).disabled = false; document.getElementById(textId).style.display = 'inline'; document.getElementById(textId).textContent = originalText; document.getElementById(spinnerId).classList.add('hidden'); };
+        const showMessage = (message, isError = true) => { messageText.textContent = message; const indicator = document.getElementById('msg-indicator'); if (isError) { indicator.classList.remove('bg-green-500'); indicator.classList.add('bg-red-500'); trackEvent('error_message_shown', { message: message }); } else { indicator.classList.remove('bg-red-500'); indicator.classList.add('bg-green-500'); trackEvent('success_message_shown', { message: message }); } messageBox.classList.remove('scale-0'); messageBox.classList.add('scale-100'); setTimeout(() => { messageBox.classList.remove('scale-100'); messageBox.classList.add('scale-0'); }, 5000); };
 
-        const showLogoutSpinner = () => {
-            logoutButton.disabled = true;
-            document.getElementById('logout-icon').classList.add('hidden');
-            document.getElementById('logout-spinner').classList.remove('hidden');
-        };
+        loginForm.addEventListener('submit', async (e) => { e.preventDefault(); const email = e.target.email.value; const password = e.target.password.value; const rememberMe = rememberMeCheckbox.checked; trackEvent('login_attempt', { email: email }); showButtonSpinner('login-btn', 'login-text', 'login-spinner'); try { await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence); await signInWithEmailAndPassword(auth, email, password); showMessage("Signed in successfully", false); trackEvent('login_success', { email: email, remember_me: rememberMe }); } catch (error) { showMessage("Incorrect password or email"); trackEvent('login_error', { error: error.message }); } finally { hideButtonSpinner('login-btn', 'login-text', 'login-spinner', 'Sign In'); } });
+        forgotPasswordLink.addEventListener('click', (e) => { e.preventDefault(); authUi.classList.add('hidden'); passwordResetUi.classList.remove('hidden'); trackEvent('forgot_password_clicked'); });
+        passwordResetForm.addEventListener('submit', async (e) => { e.preventDefault(); const email = e.target['reset-email'].value; trackEvent('password_reset_attempt', { email: email }); showButtonSpinner('reset-btn', 'reset-text', 'reset-spinner'); try { await sendPasswordResetEmail(auth, email); showMessage("Reset link sent to your email", false); passwordResetForm.reset(); trackEvent('password_reset_success', { email: email }); } catch (error) { showMessage(error.message); trackEvent('password_reset_error', { error: error.message }); } finally { hideButtonSpinner('reset-btn', 'reset-text', 'reset-spinner', 'Send Link'); } });
+        signupButton.addEventListener('click', () => { authUi.classList.add('hidden'); contactUi.classList.remove('hidden'); trackEvent('signup_button_clicked'); });
+        goBackButton.addEventListener('click', () => { contactUi.classList.add('hidden'); authUi.classList.remove('hidden'); trackEvent('go_back_clicked'); });
+        resetGoBackButton.addEventListener('click', () => { passwordResetUi.classList.add('hidden'); authUi.classList.remove('hidden'); trackEvent('reset_go_back_clicked'); });
+        
+        onAuthStateChanged(auth, (user) => { if (user) { authContainer.classList.add('hidden'); appContainer.classList.remove('hidden'); userEmailDisplay.textContent = user.email; trackEvent('user_authenticated', { email: user.email }); initializeHisabKitabApp(); } else { authContainer.classList.remove('hidden'); appContainer.classList.add('hidden'); authUi.classList.remove('hidden'); contactUi.classList.add('hidden'); passwordResetUi.classList.add('hidden'); trackEvent('user_signed_out'); } });
 
-        const hideLogoutSpinner = () => {
-            logoutButton.disabled = false;
-            document.getElementById('logout-icon').classList.remove('hidden');
-            document.getElementById('logout-spinner').classList.add('hidden');
-        };
-
-        const hideButtonSpinner = (buttonId, textId, spinnerId, originalText) => {
-            document.getElementById(buttonId).disabled = false;
-            document.getElementById(textId).style.display = 'inline';
-            document.getElementById(textId).textContent = originalText;
-            document.getElementById(spinnerId).classList.add('hidden');
-        };
-
-        const showMessage = (message, isError = true) => {
-            messageText.textContent = message;
-            if (isError) {
-                messageBox.style.backgroundColor = 'var(--color-error-light)';
-                messageBox.style.color = 'var(--color-error-dark)';
-                trackEvent('error_message_shown', { message: message });
-            } else {
-                messageBox.style.backgroundColor = 'var(--color-success-light)';
-                messageBox.style.color = 'var(--color-success-dark)';
-                trackEvent('success_message_shown', { message: message });
-            }
-            messageBox.classList.remove('scale-0');
-            messageBox.classList.add('scale-100');
-            setTimeout(() => {
-                messageBox.classList.remove('scale-100');
-                messageBox.classList.add('scale-0');
-            }, 6000);
-        };
-
-        const showFormStatus = (message, isError = true) => {
-            showMessage(message, isError);
-        };
-
-        // Authentication event listeners
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = e.target.email.value;
-            const password = e.target.password.value;
-            const rememberMe = rememberMeCheckbox.checked;
-            
-            trackEvent('login_attempt', { email: email });
-            showButtonSpinner('login-btn', 'login-text', 'login-spinner');
-            
-            try {
-                await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
-                await signInWithEmailAndPassword(auth, email, password);
-                showMessage("Login successful!", false);
-                trackEvent('login_success', { email: email, remember_me: rememberMe });
-            } catch (error) {
-                showMessage("Oops! Check your password");
-                trackEvent('login_error', { error: error.message });
-            } finally {
-                hideButtonSpinner('login-btn', 'login-text', 'login-spinner', 'Log In');
-            }
-        });
-
-        forgotPasswordLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            authUi.classList.add('hidden');
-            passwordResetUi.classList.remove('hidden');
-            trackEvent('forgot_password_clicked');
-        });
-
-        passwordResetForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = e.target['reset-email'].value;
-            
-            trackEvent('password_reset_attempt', { email: email });
-            showButtonSpinner('reset-btn', 'reset-text', 'reset-spinner');
-            
-            try {
-                await sendPasswordResetEmail(auth, email);
-                showMessage("Password reset email sent. Check your inbox. Don't forget to check your spam folder", false);
-                passwordResetForm.reset();
-                trackEvent('password_reset_success', { email: email });
-            } catch (error) {
-                showMessage(error.message);
-                trackEvent('password_reset_error', { error: error.message });
-            } finally {
-                hideButtonSpinner('reset-btn', 'reset-text', 'reset-spinner', 'Send Reset Email');
-            }
-        });
-
-        signupButton.addEventListener('click', () => {
-            authUi.classList.add('hidden');
-            contactUi.classList.remove('hidden');
-            trackEvent('signup_button_clicked');
-        });
-
-        goBackButton.addEventListener('click', () => {
-            contactUi.classList.add('hidden');
-            authUi.classList.remove('hidden');
-            trackEvent('go_back_clicked');
-        });
-
-        resetGoBackButton.addEventListener('click', () => {
-            passwordResetUi.classList.add('hidden');
-            authUi.classList.remove('hidden');
-            trackEvent('reset_go_back_clicked');
-        });
-
-        logoutButton.addEventListener('click', async () => {
-            trackEvent('logout_attempt');
-            showLogoutSpinner();
-            
-            try {
-                await signOut(auth);
-                showMessage("Logged out successfully!", false);
-                menuContent.classList.remove('show');
-                trackEvent('logout_success');
-            } catch (error) {
-                showMessage(error.message);
-                trackEvent('logout_error', { error: error.message });
-            } finally {
-                hideLogoutSpinner();
-            }
-        });
-
-        // Listen for authentication state changes
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                authContainer.classList.add('hidden');
-                appContainer.classList.remove('hidden');
-                userEmailDisplay.textContent = user.email;
-                trackEvent('user_authenticated', { email: user.email });
-                initializeHisabKitabApp();
-            } else {
-                authContainer.classList.remove('hidden');
-                appContainer.classList.add('hidden');
-                authUi.classList.remove('hidden');
-                contactUi.classList.add('hidden');
-                passwordResetUi.classList.add('hidden');
-                trackEvent('user_signed_out');
-            }
-        });
-
-        // Hisab Kitab App Functions
         function initializeHisabKitabApp() {
             sessionStartTime = new Date();
             trackEvent('app_initialized');
             
             const form = document.getElementById('data-form');
-            const submitButton = document.getElementById('submit-button');
-            const viewEntriesBtn = document.getElementById('view-entries-btn');
-            const helpFeedbackBtn = document.getElementById('help-feedback-btn');
+            // const viewEntriesBtn = document.getElementById('view-entries-btn'); // Removed old btn
+            // const helpFeedbackBtn = document.getElementById('help-feedback-btn'); // Moved to menu
             const trendChartBtn = document.getElementById('trend-chart-btn');
             const entriesModal = document.getElementById('entries-modal');
             const helpModal = document.getElementById('help-modal');
@@ -1258,116 +564,159 @@
             const closeModalBtn = document.getElementById('close-modal-btn');
             const closeHelpModalBtn = document.getElementById('close-help-modal-btn');
             const closeTrendChartBtn = document.getElementById('close-trend-chart-btn');
-            const recentEntriesContainer = document.getElementById('recent-entries');
-            const summaryContainer = document.getElementById('summary-container');
-            const entriesTableContainer = document.getElementById('entries-table-container');
+            
+            // Header Menu Elements
+            const userMenuBtn = document.getElementById('user-menu-btn');
+            const userMenuDropdown = document.getElementById('user-menu-dropdown');
+            const menuHelpBtn = document.getElementById('menu-help-btn');
+            const menuLogoutBtn = document.getElementById('menu-logout-btn');
+
+            // Modal Logic Controls
+            // Removed view toggles
             const filterInput = document.getElementById('filter-input');
-            const loadMoreContainer = document.getElementById('load-more-container');
+            
+            // New Home Action Buttons
+            const openFeedBtn = document.getElementById('open-feed-btn');
+            const openLedgerBtn = document.getElementById('open-ledger-btn');
+            const openCalendarBtn = document.getElementById('open-calendar-btn');
+            const openSplitBtn = document.getElementById('open-split-btn');
+
+            // New Filter Controls
+            const timeFilterSelect = document.getElementById('time-filter');
+            const customInputWrapper = document.getElementById('custom-input-wrapper');
+            const customDateInput = document.getElementById('custom-date-input');
+            const customMonthInput = document.getElementById('custom-month-input');
+            const customYearInput = document.getElementById('custom-year-input');
+            const clearCustomFilterBtn = document.getElementById('clear-custom-filter');
+            const sortFilterSelect = document.getElementById('sort-filter');
 
             form.addEventListener('submit', handleFormSubmit);
-            viewEntriesBtn.addEventListener('click', openEntriesModal);
             
-            helpFeedbackBtn.addEventListener('click', () => {
-                helpModal.classList.remove('hidden');
-                hamburgerContainer.classList.add('hidden');
-                menuContent.classList.remove('show');
-                trackEvent('help_feedback_opened');
+            // New Home Button Listeners
+            openFeedBtn.addEventListener('click', () => openEntriesModal('feed'));
+            openLedgerBtn.addEventListener('click', () => openEntriesModal('ledger'));
+            openCalendarBtn.addEventListener('click', () => openEntriesModal('calendar'));
+            openSplitBtn.addEventListener('click', () => openEntriesModal('split'));
+
+            // Header Menu Logic
+            userMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userMenuDropdown.classList.toggle('hidden');
             });
-            
-            closeHelpModalBtn.addEventListener('click', () => {
-                helpModal.classList.add('hidden');
-                hamburgerContainer.classList.remove('hidden');
-                trackEvent('help_modal_closed');
+            document.addEventListener('click', (e) => {
+                if (!userMenuDropdown.contains(e.target) && !userMenuBtn.contains(e.target)) {
+                    userMenuDropdown.classList.add('hidden');
+                }
             });
 
-            trendChartBtn.addEventListener('click', () => {
-                trendChartModal.classList.remove('hidden');
-                hamburgerContainer.classList.add('hidden');
-                menuContent.classList.remove('show');
-                trackEvent('trend_chart_opened');
+            // Menu Item Listeners
+            menuHelpBtn.addEventListener('click', () => { 
+                helpModal.classList.remove('hidden'); 
+                userMenuDropdown.classList.add('hidden');
+                trackEvent('help_feedback_opened'); 
             });
             
-            closeTrendChartBtn.addEventListener('click', () => {
-                trendChartModal.classList.add('hidden');
-                hamburgerContainer.classList.remove('hidden');
-                trackEvent('trend_chart_closed');
+            menuLogoutBtn.addEventListener('click', async () => { 
+                trackEvent('logout_attempt'); 
+                showLogoutSpinner(); 
+                try { 
+                    await signOut(auth); 
+                    showMessage("Signed out", false); 
+                    trackEvent('logout_success'); 
+                } catch (error) { 
+                    showMessage(error.message); 
+                    trackEvent('logout_error', { error: error.message }); 
+                } finally { 
+                    hideLogoutSpinner(); 
+                } 
             });
+
+            // Filter Logic - Main Search
+            filterInput.addEventListener('input', applyFilters);
             
-            closeModalBtn.addEventListener('click', () => {
-                entriesModal.classList.add('hidden');
-                hamburgerContainer.classList.remove('hidden');
-                trackEvent('entries_modal_closed');
-            });
-            filterInput.addEventListener('input', handleFilter);
-            document.querySelectorAll('input[name="tag"]').forEach(r => r.addEventListener('change', handleTagChange));
-            
-            document.getElementById('other-tag-input').addEventListener('input', (e) => {
-                if (e.target.value.trim()) {
-                    document.querySelectorAll('input[name="tag"]').forEach(radio => {
-                        radio.checked = false;
-                    });
+            // Filter Logic - Time Dropdown
+            timeFilterSelect.addEventListener('change', (e) => {
+                const val = e.target.value;
+                if (val === 'custom_date' || val === 'custom_month' || val === 'custom_year') {
+                    // Switch UI to custom input mode
+                    customInputWrapper.classList.remove('hidden');
+                    customDateInput.classList.add('hidden');
+                    customMonthInput.classList.add('hidden');
+                    customYearInput.classList.add('hidden');
+                    
+                    if (val === 'custom_date') {
+                        customDateInput.classList.remove('hidden');
+                        customDateInput.focus();
+                        if(customDateInput.showPicker) customDateInput.showPicker(); 
+                    } else if (val === 'custom_month') {
+                        customMonthInput.classList.remove('hidden');
+                        customMonthInput.focus();
+                        if(customMonthInput.showPicker) customMonthInput.showPicker();
+                    } else if (val === 'custom_year') {
+                        customYearInput.classList.remove('hidden');
+                        populateYearOptions();
+                        customYearInput.focus();
+                    }
+                    currentFilter = val; // Set filter type
+                } else {
+                    currentFilter = val;
+                    applyFilters();
                 }
-                trackEvent('other_tag_input_used', { value_length: e.target.value.length });
             });
+
+            // Filter Logic - Custom Inputs
+            customDateInput.addEventListener('change', (e) => { customDateVal = e.target.value; applyFilters(); });
+            customMonthInput.addEventListener('change', (e) => { customMonthVal = e.target.value; applyFilters(); });
+            customYearInput.addEventListener('change', (e) => { customYearVal = e.target.value; applyFilters(); });
+
+            // Clear Custom Filter Button
+            clearCustomFilterBtn.addEventListener('click', () => {
+                customInputWrapper.classList.add('hidden');
+                timeFilterSelect.value = 'all';
+                currentFilter = 'all';
+                customDateVal = '';
+                customMonthVal = '';
+                customYearVal = '';
+                customDateInput.value = '';
+                customMonthInput.value = '';
+                applyFilters();
+            });
+
+            sortFilterSelect.addEventListener('change', (e) => { currentSort = e.target.value; applyFilters(); });
+
+            // helpFeedbackBtn.addEventListener('click', () => { helpModal.classList.remove('hidden'); trackEvent('help_feedback_opened'); }); // Moved
+            closeHelpModalBtn.addEventListener('click', () => { helpModal.classList.add('hidden'); trackEvent('help_modal_closed'); });
+            trendChartBtn.addEventListener('click', () => { trendChartModal.classList.remove('hidden'); trackEvent('trend_chart_opened'); });
+            closeTrendChartBtn.addEventListener('click', () => { trendChartModal.classList.add('hidden'); trackEvent('trend_chart_closed'); });
+            closeModalBtn.addEventListener('click', () => { entriesModal.classList.add('hidden'); trackEvent('entries_modal_closed'); });
+            
+            document.querySelectorAll('input[name="tag"]').forEach(r => r.addEventListener('change', handleTagChange));
+            document.getElementById('other-tag-input').addEventListener('input', (e) => { if (e.target.value.trim()) { document.querySelectorAll('input[name="tag"]').forEach(radio => radio.checked = false); } trackEvent('other_tag_input_used', { value_length: e.target.value.length }); });
             
             fetchInitialData();
             getDeviceDetails();
         }
 
+        // Removed updateToggleUI() as it's no longer needed
+
         const formatAmount = (num) => num ? Number(num).toLocaleString('en-IN') : '';
         
-        function handleTagChange() {
-            const otherInput = document.getElementById('other-tag-input');
-            const checkedTag = document.querySelector('input[name="tag"]:checked');
-            
-            if (checkedTag) {
-                otherInput.value = '';
-            }
-            
-            trackEvent('tag_changed', { tag_selected: checkedTag ? checkedTag.value : 'other_input' });
+        const formatTimestamp = (dateStr) => {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return dateStr;
+            return date.toLocaleString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric', 
+                hour: 'numeric', 
+                minute: '2-digit', 
+                hour12: true 
+            });
         }
-
-        async function getDeviceDetails() {
-            deviceDetails = {
-                browserName: 'Unknown',
-                osVersion: 'Unknown',
-                manufacturer: 'Unknown',
-                deviceModel: 'Unknown'
-            };
-            const ua = navigator.userAgent;
-            const platform = navigator.platform;
-            
-            if (/Win/.test(platform)) deviceDetails.osVersion = "Windows";
-            else if (/Mac/.test(platform)) deviceDetails.osVersion = "MacOS";
-            else if (/Linux/.test(platform)) deviceDetails.osVersion = "Linux";
-            else if (/iPhone|iPad|iPod/.test(ua)) deviceDetails.osVersion = "iOS";
-            else if (/Android/.test(ua)) deviceDetails.osVersion = "Android";
-            
-            if (ua.includes("Firefox")) deviceDetails.browserName = "Firefox";
-            else if (ua.includes("SamsungBrowser")) deviceDetails.browserName = "Samsung Internet";
-            else if (ua.includes("Opera") || ua.includes("OPR")) deviceDetails.browserName = "Opera";
-            else if (ua.includes("Edge")) deviceDetails.browserName = "Edge";
-            else if (ua.includes("Chrome")) deviceDetails.browserName = "Chrome";
-            else if (ua.includes("Safari")) deviceDetails.browserName = "Safari";
-            
-            if (navigator.userAgentData) {
-                try {
-                    const uaData = await navigator.userAgentData.getHighEntropyValues([
-                        "platform", "platformVersion", "architecture", "model", "uaFullVersion", "brand"
-                    ]);
-                    deviceDetails.osVersion = `${uaData.platform} ${uaData.platformVersion}`;
-                    deviceDetails.deviceModel = uaData.model || 'N/A';
-                    if (uaData.brands && uaData.brands.length) {
-                        deviceDetails.manufacturer = uaData.brands.brand.replace(/Not A;Brand/g, '').trim() || 'N/A';
-                        deviceDetails.browserName = uaData.brands.find(b => !b.brand.includes('Not')).brand || deviceDetails.browserName;
-                    }
-                } catch(e) {
-                    console.warn("Could not get high-entropy user agent values.", e);
-                }
-            }
-            
-            trackEvent('device_details_collected', deviceDetails);
-        }
+        
+        function handleTagChange() { const otherInput = document.getElementById('other-tag-input'); const checkedTag = document.querySelector('input[name="tag"]:checked'); if (checkedTag) otherInput.value = ''; trackEvent('tag_changed', { tag_selected: checkedTag ? checkedTag.value : 'other_input' }); }
+        async function getDeviceDetails() { deviceDetails = { browserName: 'Unknown', osVersion: 'Unknown', manufacturer: 'Unknown', deviceModel: 'Unknown' }; const ua = navigator.userAgent; const platform = navigator.platform; if (/Win/.test(platform)) deviceDetails.osVersion = "Windows"; else if (/Mac/.test(platform)) deviceDetails.osVersion = "MacOS"; else if (/Linux/.test(platform)) deviceDetails.osVersion = "Linux"; else if (/iPhone|iPad|iPod/.test(ua)) deviceDetails.osVersion = "iOS"; else if (/Android/.test(ua)) deviceDetails.osVersion = "Android"; if (ua.includes("Firefox")) deviceDetails.browserName = "Firefox"; else if (ua.includes("Chrome")) deviceDetails.browserName = "Chrome"; else if (ua.includes("Safari")) deviceDetails.browserName = "Safari"; trackEvent('device_details_collected', deviceDetails); }
 
         async function handleFormSubmit(e) {
             e.preventDefault();
@@ -1376,230 +725,583 @@
             const amount = formData.get('amount');
             const checkedTag = document.querySelector('input[name="tag"]:checked');
             const otherTagInput = document.getElementById('other-tag-input');
-            
             const tag = checkedTag ? checkedTag.value : otherTagInput.value.trim();
             
             trackEvent('form_submit_attempt', { name: name, amount: amount, tag: tag });
-            
-            if (!name) { 
-                showFormStatus('Please select a name.');
-                trackEvent('form_validation_error', { field: 'name' });
-                return; 
-            }
-            if (!amount) { 
-                showFormStatus('Please enter an amount.');
-                trackEvent('form_validation_error', { field: 'amount' });
-                return; 
-            }
-            if (!/^\d+$/.test(amount)) { 
-                showFormStatus('Amount must be a whole number.');
-                trackEvent('form_validation_error', { field: 'amount', error: 'not_numeric' });
-                return; 
-            }
-            if (!tag) { 
-                showFormStatus('Please select a tag or specify other.');
-                trackEvent('form_validation_error', { field: 'tag' });
-                return; 
-            }
-            
-            if (SCRIPT_URL === 'YOUR_NEW_GOOGLE_APPS_SCRIPT_URL_HERE') {
-                showFormStatus('Please configure the Google Apps Script URL first!');
-                trackEvent('configuration_error', { error: 'script_url_not_configured' });
-                return;
-            }
-            
+            if (!name) return showMessage('Select who paid');
+            if (!amount) return showMessage('Enter an amount');
+            if (!/^\d+$/.test(amount)) return showMessage('Whole numbers only');
+            if (!tag) return showMessage('Select a category');
             showButtonSpinner('submit-button', 'submit-text', 'submit-spinner');
-            
-            const currentUser = auth.currentUser;
-            const userEmail = currentUser ? currentUser.email : 'Unknown';
-            
-            const submitFormData = new FormData();
-            submitFormData.append('name', name);
-            submitFormData.append('amount', amount);
-            submitFormData.append('tag', tag);
-            submitFormData.append('sessionDuration', `${Math.round((new Date() - sessionStartTime) / 1000)}s`);
-            submitFormData.append('browserName', deviceDetails.browserName);
-            submitFormData.append('osVersion', deviceDetails.osVersion);
-            submitFormData.append('manufacturer', deviceDetails.manufacturer);
-            submitFormData.append('deviceModel', deviceDetails.deviceModel);
-            submitFormData.append('userEmail', userEmail);
-            
-            try {
-                const response = await fetch(SCRIPT_URL, { method: 'POST', body: submitFormData });
-                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-                const data = await response.json();
-                if (data.result !== "success") throw new Error(data.error || 'Server error.');
-                
-                showFormStatus('Entry submitted, please check below.', false);
-                e.target.reset();
-                fetchInitialData();
-                
-                trackEvent('form_submit_success', { 
-                    name: name, 
-                    amount: amount, 
-                    tag: tag, 
-                    user_email: userEmail 
-                });
-            } catch (error) {
-                console.error('Submission Error!', error);
-                showFormStatus("Oops! Couldn't save. Please contact us.");
-                e.target.classList.add('animate-shake');
-                e.target.addEventListener('animationend', () => e.target.classList.remove('animate-shake'), { once: true });
-                
-                trackEvent('form_submit_error', { 
-                    error: error.message,
-                    name: name,
-                    amount: amount,
-                    tag: tag
-                });
-            } finally {
-                hideButtonSpinner('submit-button', 'submit-text', 'submit-spinner', 'Submit');
-            }
+            const currentUser = auth.currentUser; const userEmail = currentUser ? currentUser.email : 'Unknown';
+            const submitFormData = new FormData(); submitFormData.append('name', name); submitFormData.append('amount', amount); submitFormData.append('tag', tag); submitFormData.append('sessionDuration', `${Math.round((new Date() - sessionStartTime) / 1000)}s`); submitFormData.append('browserName', deviceDetails.browserName); submitFormData.append('osVersion', deviceDetails.osVersion); submitFormData.append('manufacturer', deviceDetails.manufacturer); submitFormData.append('deviceModel', deviceDetails.deviceModel); submitFormData.append('userEmail', userEmail);
+            try { const response = await fetch(SCRIPT_URL, { method: 'POST', body: submitFormData }); if (!response.ok) throw new Error(`Network response was not ok`); const data = await response.json(); if (data.result !== "success") throw new Error(data.error || 'Server error.'); showMessage('Entry Saved!', false); e.target.reset(); fetchInitialData(); trackEvent('form_submit_success', { name: name, amount: amount, tag: tag, user_email: userEmail }); } catch (error) { console.error('Submission Error!', error); showMessage("Couldn't save. Try again."); trackEvent('form_submit_error', { error: error.message }); } finally { hideButtonSpinner('submit-button', 'submit-text', 'submit-spinner', 'Save Entry'); }
         }
 
-        function openEntriesModal() {
-            const entriesModal = document.getElementById('entries-modal');
-            entriesModal.classList.remove('hidden');
-            hamburgerContainer.classList.add('hidden');
-            menuContent.classList.remove('show');
-            filteredEntries = [...allEntries];
-            visibleCount = INITIAL_LOAD_COUNT;
-            sortAndRenderTable();
-            trackEvent('entries_modal_opened');
+        function openEntriesModal(initialView = 'feed') {
+            document.getElementById('entries-modal').classList.remove('hidden');
+            currentView = initialView;
+            
+            // Set Modal Title based on view
+            const modalTitle = document.getElementById('modal-title');
+            if (initialView === 'feed') modalTitle.textContent = 'Transaction Feed';
+            else if (initialView === 'ledger') modalTitle.textContent = 'Transaction Ledger';
+            else if (initialView === 'calendar') modalTitle.textContent = 'Expense Calendar';
+            else if (initialView === 'split') modalTitle.textContent = 'Split Analysis';
+
+            // Toggle Search/Filter Controls
+            const modalControls = document.getElementById('modal-controls');
+            if (initialView === 'calendar') {
+                modalControls.classList.add('hidden');
+            } else {
+                modalControls.classList.remove('hidden');
+            }
+
+            if (initialView === 'calendar') {
+                // Initialize calendar date
+                if (currentFilter === 'custom_month' && customMonthVal) {
+                    const parts = customMonthVal.split('-');
+                    calendarViewDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, 1);
+                } else if (currentFilter === 'custom_date' && customDateVal) {
+                    calendarViewDate = new Date(customDateVal);
+                } else {
+                    calendarViewDate = new Date();
+                }
+                selectedCalendarDay = null;
+            }
+            
+            applyFilters(); // This triggers renderEntries
+            trackEvent('entries_modal_opened', { view: initialView });
         }
 
         async function fetchInitialData() {
             const recentEntriesContainer = document.getElementById('recent-entries');
-            recentEntriesContainer.innerHTML = `<div class="card-small animate-pulse margin-small"><div style="height: var(--space-lg); background-color: var(--color-bg-tertiary); border-radius: var(--radius-sm); width: 75%; margin-bottom: var(--space-sm);"></div><div style="height: var(--space-md); background-color: var(--color-bg-tertiary); border-radius: var(--radius-sm); width: 25%; margin-bottom: var(--space-md);"></div><hr style="border-color: var(--color-border-medium); margin: var(--space-sm) 0;"><div style="height: var(--space-lg); background-color: var(--color-bg-tertiary); border-radius: var(--radius-sm); width: 66%; margin-bottom: var(--space-sm);"></div><div style="height: var(--space-md); background-color: var(--color-bg-tertiary); border-radius: var(--radius-sm); width: 33%; margin-bottom: var(--space-md);"></div><hr style="border-color: var(--color-border-medium); margin: var(--space-sm) 0;"><div style="height: var(--space-lg); background-color: var(--color-bg-tertiary); border-radius: var(--radius-sm); width: 80%; margin-bottom: var(--space-sm);"></div><div style="height: var(--space-md); background-color: var(--color-bg-tertiary); border-radius: var(--radius-sm); width: 20%;"></div></div>`;
+            const homepageSummary = document.getElementById('homepage-summary');
             
-            if (SCRIPT_URL === 'YOUR_NEW_GOOGLE_APPS_SCRIPT_URL_HERE') {
-                 recentEntriesContainer.innerHTML = `<p class="text-center text-caption padding-element" style="color: var(--color-warning);">Please configure the script URL to load entries.</p>`;
-                 trackEvent('data_fetch_error', { error: 'script_url_not_configured' });
-                 return;
-            }
-            
+            // Skeletons
+            recentEntriesContainer.innerHTML = `<div class="modern-card p-4 animate-pulse"><div class="h-4 bg-gray-200 rounded w-3/4 mb-3"></div><div class="h-3 bg-gray-200 rounded w-1/4"></div></div><div class="modern-card p-4 animate-pulse delay-75"><div class="h-4 bg-gray-200 rounded w-3/4 mb-3"></div><div class="h-3 bg-gray-200 rounded w-1/4"></div></div>`;
+            homepageSummary.classList.remove('hidden');
+            homepageSummary.innerHTML = `<div class="animate-pulse space-y-4"><div class="h-4 bg-gray-200 rounded w-1/4"></div><div class="h-8 bg-gray-200 rounded w-3/4"></div><div class="h-4 bg-gray-200 rounded w-full"></div></div>`;
+
             try {
                 const url = SCRIPT_URL + '?cacheBust=' + new Date().getTime();
                 const response = await fetch(url);
-                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                if (!response.ok) throw new Error(`Network error`);
                 const data = await response.json();
                 if (data.error) throw new Error(data.error);
                 allEntries = Array.isArray(data.entries) ? data.entries : [];
                 renderRecentEntries(allEntries);
                 renderSummary(data.summary);
+                applyFilters(); // Initial filter apply
                 trackEvent('data_fetch_success', { entries_count: allEntries.length });
             } catch (error) {
-                console.error('Error fetching initial data!', error);
-                recentEntriesContainer.innerHTML = `<p class="text-center text-caption padding-element" style="color: var(--color-warning);">Could not load entries. Please contact us.</p>`;
+                console.error('Error fetching data!', error);
+                recentEntriesContainer.innerHTML = `<p class="text-center text-xs text-red-500 py-4">Failed to load history.</p>`;
+                homepageSummary.classList.add('hidden');
                 trackEvent('data_fetch_error', { error: error.message });
             }
         }
 
         function renderRecentEntries(entries) {
             const recentEntriesContainer = document.getElementById('recent-entries');
-            if (entries.length === 0) {
-                recentEntriesContainer.innerHTML = '<p class="text-center text-caption padding-element" style="color: var(--color-text-muted);">No entries yet.</p>';
-                return;
-            }
+            if (entries.length === 0) { recentEntriesContainer.innerHTML = '<p class="text-center text-xs text-gray-400 py-4">No recent activity.</p>'; return; }
             const recent = entries.slice(0, 5);
-            const entriesHTML = recent.map(([gAmount, zAmount, tag, timestamp], i) => {
-                const name = gAmount ? "Gulnaz dena" : "Ghazala dena";
+            const tagColorMap = { "Kirana": "bg-green-500", "Gosht": "bg-red-500", "Kheema": "bg-orange-500", "Gosht Kheema": "bg-red-600", "Chicken": "bg-yellow-400", "Mutton": "bg-red-500", "Bheja": "bg-pink-500", "Fish": "bg-sky-400", "Light Bill": "bg-indigo-500", "Society": "bg-teal-500" };
+            const defaultColors = ["bg-blue-500", "bg-purple-500", "bg-pink-500", "bg-teal-500"];
+            
+            const entriesHTML = recent.map(([gAmount, zAmount, tag, timestamp]) => {
+                const name = gAmount ? "Gulnaz" : "Ghazala";
                 const amount = gAmount || zAmount;
-                const separator = i < recent.length - 1 ? `<hr style="border-color: var(--color-border-medium); margin: var(--space-sm) 0;">` : '';
-                return `<div><p class="text-body" style="color: var(--color-text-primary);"><span>${name} </span><span style="color: var(--color-success);">${formatAmount(amount)}</span><span> — ${tag}</span></p><p class="text-caption" style="margin-top: var(--space-xs);">${timestamp}</p></div>${separator}`;
+                const tagInitial = tag ? tag.charAt(0).toUpperCase() : '?';
+                let colorClass = tagColorMap[tag];
+                if (!colorClass) { let hash = 0; for (let i = 0; i < tag.length; i++) hash = tag.charCodeAt(i) + ((hash << 5) - hash); const colorIndex = Math.abs(hash) % defaultColors.length; colorClass = defaultColors[colorIndex]; }
+                return `<div class="modern-card p-4 flex items-center justify-between group hover:shadow-hover transition-all"><div class="flex items-center gap-4"><div class="w-12 h-12 rounded-full ${colorClass} flex items-center justify-center text-base font-bold text-white shadow-sm flex-shrink-0">${tagInitial}</div><div class="flex flex-col"><span class="text-lg font-bold text-gray-900 leading-tight">${tag}</span><span class="text-base text-gray-500 font-medium mt-0.5">${name} Dena</span></div></div><div class="text-right flex flex-col items-end"><span class="text-lg font-bold text-gray-900 leading-tight">₹${formatAmount(amount)}</span><span class="text-base text-gray-400 font-medium mt-0.5">${formatTimestamp(timestamp)}</span></div></div>`;
             }).join('');
-            recentEntriesContainer.innerHTML = `<div class="card-small text-body-small">${entriesHTML}</div>`;
+            recentEntriesContainer.innerHTML = entriesHTML;
         }
         
         function renderSummary(summary) {
-            const summaryContainer = document.getElementById('summary-container');
+            // Update Modal Summary
+            const modalSummary = document.getElementById('summary-container');
+            const homeSummary = document.getElementById('homepage-summary');
+            
             if (!summary) return;
-            summaryContainer.innerHTML = `
-                <p class="text-body" style="font-weight: var(--font-bold); color: var(--color-text-primary);">${summary.h1 || ''} owes ₹ ${formatAmount(summary.i1)}</p>
-                <p class="text-body-small" style="color: var(--color-text-muted); margin-top: var(--space-xs);">Gulnaz ${formatAmount(summary.f1)}, Ghazala ${formatAmount(summary.g1)}</p>
+            const owes = summary.h1 || 'None';
+            const diff = formatAmount(summary.i1);
+            
+            // Reduced font size from text-3xl to text-xl
+            const summaryHTML = `
+                <div class="flex justify-between items-end mb-4">
+                    <div>
+                        <p class="text-xs text-blue-600 font-bold uppercase tracking-widest mb-1">Net Balance</p>
+                        <p class="text-xl font-medium text-gray-900 font-sans">${owes} owes <span class="font-bold">₹${diff}</span></p>
+                    </div>
+                </div>
+                <div class="flex gap-6 text-sm text-gray-500 pt-4 border-t border-gray-100 font-medium">
+                    <span>Gulnaz Dena: <span class="text-gray-900 font-semibold">₹${formatAmount(summary.f1)}</span></span>
+                    <span>Ghazala Dena: <span class="text-gray-900 font-semibold">₹${formatAmount(summary.g1)}</span></span>
+                </div>
             `;
+
+            modalSummary.innerHTML = summaryHTML;
+            
+            // Ensure homepage summary is visible and updated
+            homeSummary.classList.remove('hidden');
+            homeSummary.innerHTML = summaryHTML;
         }
 
-        function sortAndRenderTable() {
-            const { column, direction } = sortState;
-            filteredEntries.sort((a, b) => {
-                let valA = a[column], valB = b[column];
-                if (column === 0 || column === 1) {
-                    valA = parseFloat(valA) || 0; valB = parseFloat(valB) || 0;
-                } else if (column === 3) {
-                    valA = new Date(valA); valB = new Date(valB);
-                } else {
-                    valA = String(valA).toLowerCase(); valB = String(valB).toLowerCase();
+        function populateYearOptions() {
+            const yearSelect = document.getElementById('custom-year-input');
+            const years = new Set(allEntries.map(e => new Date(e[3]).getFullYear()));
+            const sortedYears = Array.from(years).sort().reverse();
+            
+            const currentVal = yearSelect.value;
+            yearSelect.innerHTML = '<option value="" disabled selected>Select Year</option>';
+            
+            sortedYears.forEach(year => {
+                if(!isNaN(year)) {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    if(year == currentVal) option.selected = true;
+                    yearSelect.appendChild(option);
                 }
-                if (valA < valB) return direction === 'asc' ? -1 : 1;
-                if (valA > valB) return direction === 'asc' ? 1 : -1;
+            });
+        }
+
+        // --- FILTER & SORT LOGIC ---
+        function applyFilters() {
+            const query = document.getElementById('filter-input').value.toLowerCase();
+            
+            // 1. Text Search
+            let tempEntries = allEntries.filter(entry => entry.some(cell => String(cell).toLowerCase().includes(query)));
+            
+            // 2. Date Filtering
+            if (currentFilter !== 'all') {
+                const now = new Date();
+                tempEntries = tempEntries.filter(entry => {
+                    const entryDate = new Date(entry[3]); // timestamp is at index 3
+                    
+                    if (currentFilter === 'this_month') {
+                        return entryDate.getMonth() === now.getMonth() && entryDate.getFullYear() === now.getFullYear();
+                    } else if (currentFilter === 'last_month') {
+                        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                        return entryDate.getMonth() === lastMonth.getMonth() && entryDate.getFullYear() === lastMonth.getFullYear();
+                    } else if (currentFilter === 'last_30') {
+                        const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+                        return entryDate >= thirtyDaysAgo;
+                    } else if (currentFilter === 'custom_date' && customDateVal) {
+                        return entryDate.toDateString() === new Date(customDateVal).toDateString();
+                    } else if (currentFilter === 'custom_month' && customMonthVal) {
+                        const [y, m] = customMonthVal.split('-');
+                        return entryDate.getFullYear() == y && (entryDate.getMonth() + 1) == m;
+                    } else if (currentFilter === 'custom_year' && customYearVal) {
+                        return entryDate.getFullYear() == customYearVal;
+                    }
+                    return true;
+                });
+            }
+
+            // 3. Sorting
+            tempEntries.sort((a, b) => {
+                let dateA = new Date(a[3]), dateB = new Date(b[3]);
+                let amtA = (parseFloat(a[0]) || 0) + (parseFloat(a[1]) || 0); // Gulnaz + Ghazala
+                let amtB = (parseFloat(b[0]) || 0) + (parseFloat(b[1]) || 0);
+
+                if (currentSort === 'newest') return dateB - dateA;
+                if (currentSort === 'oldest') return dateA - dateB;
+                if (currentSort === 'high_low') return amtB - amtA;
+                if (currentSort === 'low_high') return amtA - amtB;
                 return 0;
             });
-            renderTable();
+
+            filteredEntries = tempEntries;
+            visibleCount = INITIAL_LOAD_COUNT;
+            renderEntries();
         }
 
-        function renderTable() {
-            const entriesTableContainer = document.getElementById('entries-table-container');
-            const loadMoreContainer = document.getElementById('load-more-container');
-            
-            if (filteredEntries.length === 0) {
-                entriesTableContainer.innerHTML = `<p class="padding-element" style="text-align: center; color: var(--color-text-muted);">No entries match your filter.</p>`;
-                loadMoreContainer.innerHTML = ''; 
-                return;
-            }
-            
-            const headers = [{ title: 'Gulnaz', index: 0 }, { title: 'Ghazala', index: 1 }, { title: 'Tag', index: 2 }, { title: 'Date', index: 3 }];
-            const headerHTML = headers.map(h => `<th scope="col" class="sortable" style="padding: var(--space-sm) var(--space-md); color: var(--color-text-secondary); text-transform: uppercase; background-color: var(--color-bg-secondary); position: sticky; top: 0; backdrop-filter: blur(8px);" data-index="${h.index}">${h.title}<span class="sort-icon">${sortState.column === h.index ? (sortState.direction === 'asc' ? '▲' : '▼') : '↕'}</span></th>`).join('');
-            
-            const tableRows = filteredEntries.slice(0, visibleCount)
-                .map(([gAmount, zAmount, tag, timestamp]) => `<tr style="border-bottom: 1px solid var(--color-border-medium); transition: background-color 0.3s ease;"><td style="padding: var(--space-sm) var(--space-md); color: var(--color-text-primary);">${formatAmount(gAmount)}</td><td style="padding: var(--space-sm) var(--space-md); color: var(--color-text-primary);">${formatAmount(zAmount)}</td><td style="padding: var(--space-sm) var(--space-md); color: var(--color-text-secondary);">${tag}</td><td style="padding: var(--space-sm) var(--space-md); color: var(--color-text-secondary);">${timestamp.substring(0, 11)}</td></tr>`)
-                .join('');
-            
-            entriesTableContainer.innerHTML = `<table style="width: 100%; font-size: var(--text-sm); text-align: left; color: var(--color-text-muted);"><thead>${headerHTML}</thead><tbody>${tableRows}</tbody></table>`;
-            document.querySelectorAll('.sortable').forEach(th => th.addEventListener('click', handleSort));
+        function renderEntries() {
+            if (currentView === 'feed') renderFeedView();
+            else if (currentView === 'ledger') renderLedgerView();
+            else if (currentView === 'calendar') renderCalendarView();
+            else if (currentView === 'split') renderSplitView();
             renderLoadMoreButtons();
         }
 
+        function renderFeedView() {
+            const container = document.getElementById('entries-content-area');
+            if (filteredEntries.length === 0) { container.innerHTML = `<p class="text-center py-12 text-gray-400 font-medium">No entries found.</p>`; return; }
+
+            // Group by Date
+            const groups = {};
+            const today = new Date().toDateString();
+            const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toDateString();
+
+            const tagColorMap = { "Kirana": "bg-green-500", "Gosht": "bg-red-500", "Kheema": "bg-orange-500", "Gosht Kheema": "bg-red-600", "Chicken": "bg-yellow-400", "Mutton": "bg-red-500", "Bheja": "bg-pink-500", "Fish": "bg-sky-400", "Light Bill": "bg-indigo-500", "Society": "bg-teal-500" };
+            const defaultColors = ["bg-blue-500", "bg-purple-500", "bg-pink-500", "bg-teal-500"];
+
+            filteredEntries.slice(0, visibleCount).forEach(entry => {
+                const dateObj = new Date(entry[3]);
+                const dateStr = dateObj.toDateString();
+                let label = dateStr;
+                if (dateStr === today) label = "Today";
+                else if (dateStr === yesterday) label = "Yesterday";
+                else label = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+                if (!groups[label]) groups[label] = [];
+                groups[label].push(entry);
+            });
+
+            let html = '';
+            for (const [label, entries] of Object.entries(groups)) {
+                html += `
+                    <div class="bg-gray-50 border-b border-gray-200 px-4 py-2 sticky top-0 z-10 font-bold text-xs text-gray-500 uppercase tracking-wide flex justify-between">
+                        <span>${label}</span>
+                    </div>
+                    <div class="bg-white">
+                `;
+                
+                entries.forEach(entry => {
+                    const [gAmount, zAmount, tag, timestamp] = entry;
+                    const amount = gAmount || zAmount;
+                    const payerName = gAmount ? 'Gulnaz' : 'Ghazala';
+                    const tagInitial = tag ? tag.charAt(0).toUpperCase() : '?';
+                    let colorClass = tagColorMap[tag];
+                    if (!colorClass) { let hash = 0; for (let i = 0; i < tag.length; i++) hash = tag.charCodeAt(i) + ((hash << 5) - hash); const colorIndex = Math.abs(hash) % defaultColors.length; colorClass = defaultColors[colorIndex]; }
+                    
+                    html += `
+                        <div class="px-4 py-4 flex items-center justify-between border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full ${colorClass} flex items-center justify-center text-xs font-bold text-white shadow-sm flex-shrink-0">
+                                    ${tagInitial}
+                                </div>
+                                <div>
+                                    <p class="text-base font-bold text-gray-900">${tag}</p>
+                                    <p class="text-sm text-gray-500 font-medium">${payerName} Dena</p>
+                                </div>
+                            </div>
+                            <span class="text-base font-bold text-gray-900">₹${formatAmount(amount)}</span>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function renderLedgerView() {
+            const container = document.getElementById('entries-content-area');
+            if (filteredEntries.length === 0) { container.innerHTML = `<p class="text-center py-12 text-gray-400 font-medium">No entries found.</p>`; return; }
+
+            const tagColorMap = { "Kirana": "bg-green-500", "Gosht": "bg-red-500", "Kheema": "bg-orange-500", "Gosht Kheema": "bg-red-600", "Chicken": "bg-yellow-400", "Mutton": "bg-red-500", "Bheja": "bg-pink-500", "Fish": "bg-sky-400", "Light Bill": "bg-indigo-500", "Society": "bg-teal-500" };
+            const defaultColors = ["bg-blue-500", "bg-purple-500", "bg-pink-500", "bg-teal-500"];
+
+            let rows = filteredEntries.slice(0, visibleCount).map(([g, z, tag, time]) => {
+                const tagInitial = tag ? tag.charAt(0).toUpperCase() : '?';
+                let colorClass = tagColorMap[tag];
+                if (!colorClass) { let hash = 0; for (let i = 0; i < tag.length; i++) hash = tag.charCodeAt(i) + ((hash << 5) - hash); const colorIndex = Math.abs(hash) % defaultColors.length; colorClass = defaultColors[colorIndex]; }
+
+                return `
+                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                        <td class="px-4 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full ${colorClass} flex items-center justify-center text-[10px] font-bold text-white shadow-sm flex-shrink-0">
+                                    ${tagInitial}
+                                </div>
+                                <div>
+                                    <span class="font-bold text-gray-900 block text-base leading-tight">${tag}</span>
+                                    <span class="text-xs text-gray-400 block mt-0.5">${formatTimestamp(time)}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-4 py-4 text-right font-bold text-sm text-gray-900">${g ? '₹'+formatAmount(g) : '-'}</td>
+                        <td class="px-4 py-4 text-right font-bold text-sm text-gray-900">${z ? '₹'+formatAmount(z) : '-'}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <table class="w-full text-left bg-white">
+                    <thead class="sticky top-0 z-20">
+                        <tr class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider border-b border-gray-200">
+                            <th class="px-4 py-3 font-bold">Category</th>
+                            <th class="px-4 py-3 font-bold text-right">Gulnaz</th>
+                            <th class="px-4 py-3 font-bold text-right">Ghazala</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
+
+        function renderSplitView() {
+            const container = document.getElementById('entries-content-area');
+            if (filteredEntries.length === 0) { container.innerHTML = `<p class="text-center py-12 text-gray-400 font-medium">No entries found.</p>`; return; }
+
+            let gulnazTotal = 0;
+            let ghazalaTotal = 0;
+            let gulnazRows = '';
+            let ghazalaRows = '';
+
+            filteredEntries.forEach(([g, z, tag, time]) => {
+                if (g) {
+                    gulnazTotal += parseFloat(g);
+                    // Updated to show full time string
+                    gulnazRows += `
+                        <div class="border-b border-gray-50 py-3 last:border-0">
+                            <div class="flex justify-between text-sm font-bold text-gray-800"><span>${tag}</span><span>₹${formatAmount(g)}</span></div>
+                            <div class="text-xs text-gray-400 mt-1 font-medium">${formatTimestamp(time)}</div>
+                        </div>
+                    `;
+                }
+                if (z) {
+                    ghazalaTotal += parseFloat(z);
+                    // Updated to show full time string
+                    ghazalaRows += `
+                        <div class="border-b border-gray-50 py-3 last:border-0">
+                            <div class="flex justify-between text-sm font-bold text-gray-800"><span>${tag}</span><span>₹${formatAmount(z)}</span></div>
+                            <div class="text-xs text-gray-400 mt-1 font-medium">${formatTimestamp(time)}</div>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = `
+                <div class="flex h-full bg-white divide-x divide-gray-100">
+                    <div class="flex-1 flex flex-col">
+                        <div class="bg-purple-50 p-4 border-b border-purple-100 text-center sticky top-0 z-10">
+                            <span class="text-xs font-bold text-purple-600 block mb-1 uppercase tracking-wide">GULNAZ</span>
+                            <span class="text-lg font-bold text-gray-900">₹${formatAmount(gulnazTotal)}</span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-4 space-y-1">${gulnazRows || '<p class="text-center text-xs text-gray-400 mt-4">No entries</p>'}</div>
+                    </div>
+                    <div class="flex-1 flex flex-col">
+                        <div class="bg-teal-50 p-4 border-b border-teal-100 text-center sticky top-0 z-10">
+                            <span class="text-xs font-bold text-teal-600 block mb-1 uppercase tracking-wide">GHAZALA</span>
+                            <span class="text-lg font-bold text-gray-900">₹${formatAmount(ghazalaTotal)}</span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto p-4 space-y-1">${ghazalaRows || '<p class="text-center text-xs text-gray-400 mt-4">No entries</p>'}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Variable to track selected day in calendar view
+        let selectedCalendarDay = null;
+
+        function renderCalendarView() {
+            const container = document.getElementById('entries-content-area');
+            
+            // Use state variable for navigation
+            let year = calendarViewDate.getFullYear();
+            let month = calendarViewDate.getMonth();
+            const query = document.getElementById('filter-input').value.toLowerCase();
+
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDay = new Date(year, month, 1).getDay(); // 0 is Sunday
+
+            // Filter ALL entries for this specific month (ignoring global time filter to allow navigation)
+            const monthEntries = allEntries.filter(entry => {
+                if (query && !entry.some(cell => String(cell).toLowerCase().includes(query))) {
+                    return false;
+                }
+                const d = new Date(entry[3]);
+                return d.getMonth() === month && d.getFullYear() === year;
+            });
+
+            // Map entries to days
+            const dayEntries = {};
+            monthEntries.forEach(entry => {
+                const d = new Date(entry[3]);
+                const day = d.getDate();
+                if (!dayEntries[day]) dayEntries[day] = [];
+                dayEntries[day].push(entry);
+            });
+
+            // Grid Generation
+            let calendarGrid = '';
+            for (let i = 0; i < firstDay; i++) calendarGrid += `<span></span>`;
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const hasEntries = dayEntries[day];
+                const isSelected = selectedCalendarDay === day;
+                let cellClasses = 'aspect-square flex flex-col items-center justify-center relative rounded-xl text-sm font-medium transition-all cursor-pointer border border-transparent';
+                let dots = '';
+                
+                if (isSelected) {
+                    cellClasses += ' bg-blue-500 text-white shadow-md transform scale-105 z-10';
+                } else if (hasEntries) {
+                    cellClasses += ' bg-gray-50 text-gray-900 hover:bg-gray-100 hover:border-gray-200';
+                    const hasGulnaz = hasEntries.some(e => e[0]);
+                    const hasGhazala = hasEntries.some(e => e[1]);
+                    
+                    dots = `<div class="flex gap-1 mt-1">`;
+                    if (hasGulnaz) dots += `<div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div>`;
+                    if (hasGhazala) dots += `<div class="w-1.5 h-1.5 rounded-full bg-teal-500"></div>`;
+                    dots += `</div>`;
+                } else {
+                    cellClasses += ' text-gray-400 hover:text-gray-600';
+                }
+
+                calendarGrid += `<div class="calendar-day ${cellClasses}" data-day="${day}">${day}${dots}</div>`;
+            }
+
+            // List Generation (Bottom Half)
+            let detailsHTML = '';
+            const displayEntries = selectedCalendarDay ? (dayEntries[selectedCalendarDay] || []) : monthEntries;
+            displayEntries.sort((a, b) => new Date(b[3]) - new Date(a[3]));
+
+            if (displayEntries.length > 0) {
+                detailsHTML = displayEntries.map(entry => {
+                    const [g, z, tag, time] = entry;
+                    const amount = g || z;
+                    const payer = g ? 'Gulnaz' : 'Ghazala';
+                    const color = g ? 'text-purple-600 bg-purple-50' : 'text-teal-600 bg-teal-50';
+                    return `
+                        <div class="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl mb-2 shadow-sm">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full ${color} flex items-center justify-center text-xs font-bold">${payer.charAt(0)}</div>
+                                <div>
+                                    <p class="text-sm font-bold text-gray-900">${tag}</p>
+                                    <p class="text-sm text-gray-500 font-medium">${payer} Dena <span class="mx-1">•</span> ${formatTimestamp(time)}</p>
+                                </div>
+                            </div>
+                            <span class="text-sm font-bold text-gray-900">₹${formatAmount(amount)}</span>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                detailsHTML = `<p class="text-center text-sm text-gray-400 py-8">${selectedCalendarDay ? 'No entries on this day.' : 'No transactions this month.'}</p>`;
+            }
+
+            container.innerHTML = `
+                <div class="flex flex-col h-full bg-white">
+                    <!-- Calendar Header & Grid -->
+                    <div class="p-4 border-b border-gray-100 flex-none bg-white z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <button id="cal-prev-btn" class="p-1.5 rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                            </button>
+                            
+                            <!-- Clickable Month/Year with Native Picker -->
+                            <div class="text-center relative">
+                                <div class="relative inline-block group cursor-pointer">
+                                    <span class="font-bold text-gray-900 text-lg block leading-none group-hover:text-blue-600 transition-colors">${monthNames[month]} ${year}</span>
+                                    <input type="month" id="cal-month-picker" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" value="${year}-${String(month + 1).padStart(2, '0')}">
+                                </div>
+                                ${selectedCalendarDay ? `<button id="clear-cal-selection" class="text-xs text-blue-600 font-bold hover:underline mt-1 block w-full relative z-10">Show Month</button>` : ''}
+                            </div>
+
+                            <button id="cal-next-btn" class="p-1.5 rounded-full hover:bg-gray-100 text-gray-500 transition-colors">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 text-center mb-2">
+                            <span class="text-xs text-gray-400 font-bold">S</span>
+                            <span class="text-xs text-gray-400 font-bold">M</span>
+                            <span class="text-xs text-gray-400 font-bold">T</span>
+                            <span class="text-xs text-gray-400 font-bold">W</span>
+                            <span class="text-xs text-gray-400 font-bold">T</span>
+                            <span class="text-xs text-gray-400 font-bold">F</span>
+                            <span class="text-xs text-gray-400 font-bold">S</span>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 text-center">
+                            ${calendarGrid}
+                        </div>
+                    </div>
+                    
+                    <!-- Details List -->
+                    <div class="flex-1 overflow-y-auto bg-gray-50 p-4">
+                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
+                            ${selectedCalendarDay ? `Entries for ${monthNames[month]} ${selectedCalendarDay}` : `All Entries in ${monthNames[month]}`}
+                        </h4>
+                        ${detailsHTML}
+                    </div>
+                </div>
+            `;
+
+            // Month Picker Listener
+            const monthPicker = document.getElementById('cal-month-picker');
+            if (monthPicker) {
+                monthPicker.addEventListener('change', (e) => {
+                    if (e.target.value) {
+                        const [y, m] = e.target.value.split('-');
+                        calendarViewDate = new Date(parseInt(y), parseInt(m) - 1, 1);
+                        selectedCalendarDay = null; // Reset day selection
+                        renderCalendarView();
+                    }
+                });
+            }
+
+            // Add Event Listeners for Days
+            document.querySelectorAll('.calendar-day').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    const day = parseInt(e.currentTarget.dataset.day);
+                    if (selectedCalendarDay === day) {
+                        selectedCalendarDay = null; // Toggle off
+                    } else {
+                        selectedCalendarDay = day;
+                    }
+                    renderCalendarView(); // Re-render
+                });
+            });
+
+            // Navigation Listeners
+            document.getElementById('cal-prev-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                calendarViewDate.setMonth(calendarViewDate.getMonth() - 1);
+                selectedCalendarDay = null;
+                renderCalendarView();
+            });
+
+            document.getElementById('cal-next-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                calendarViewDate.setMonth(calendarViewDate.getMonth() + 1);
+                selectedCalendarDay = null;
+                renderCalendarView();
+            });
+
+            // Clear Selection Listener
+            const clearBtn = document.getElementById('clear-cal-selection');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedCalendarDay = null;
+                    renderCalendarView();
+                });
+            }
+        }
+
         function renderLoadMoreButtons() {
-            const loadMoreContainer = document.getElementById('load-more-container');
+            // Hide load more buttons in calendar/split view as they handle their own scrolling/data
+            const container = document.getElementById('load-more-container');
+            
+            if (currentView === 'calendar' || currentView === 'split') {
+                container.innerHTML = '';
+                container.classList.add('hidden');
+                return;
+            } else {
+                container.classList.remove('hidden');
+            }
+
             if (visibleCount >= filteredEntries.length) {
-                loadMoreContainer.innerHTML = `<p class="text-caption" style="color: var(--color-text-disabled);">Showing all ${filteredEntries.length} entries.</p>`;
+                container.innerHTML = `<p class="text-xs text-gray-400 font-medium">End of list.</p>`;
                 return;
             }
             const remaining = filteredEntries.length - visibleCount;
-            const buttons = [{ val: 50 }, { val: 100 }, { val: 200 }];
-            let buttonHTML = `<p class="text-caption margin-small" style="color: var(--color-text-muted);">Load more:</p><div class="flex flex-wrap justify-center" style="gap: var(--space-sm);">`;
-            buttons.forEach(btn => {
-                if (remaining >= btn.val) buttonHTML += `<button data-amount="${btn.val}" class="load-more-btn text-caption" style="background-color: var(--color-bg-input); color: var(--color-text-secondary); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-sm); border: 1px solid var(--color-border-medium); cursor: pointer; min-height: 36px; transition: background-color 0.3s ease;">${btn.val}</button>`;
-            });
-            buttonHTML += `<button data-amount="${remaining}" class="load-more-btn text-caption" style="background-color: var(--color-bg-input); color: var(--color-text-secondary); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-sm); border: 1px solid var(--color-border-medium); cursor: pointer; min-height: 36px; transition: background-color 0.3s ease;">All (${remaining})</button></div>`;
-            loadMoreContainer.innerHTML = buttonHTML;
+            container.innerHTML = `
+                <button data-amount="50" class="load-more-btn px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 mx-1 font-bold shadow-sm transition-all">Load 50</button>
+                <button data-amount="${remaining}" class="load-more-btn px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 mx-1 font-bold shadow-sm transition-all">Load All (${remaining})</button>
+            `;
             document.querySelectorAll('.load-more-btn').forEach(btn => btn.addEventListener('click', handleLoadMore));
-        }
-
-        function handleSort(e) {
-            const newCol = parseInt(e.currentTarget.dataset.index, 10);
-            const { column, direction } = sortState;
-            sortState.direction = column === newCol ? (direction === 'asc' ? 'desc' : 'asc') : ((newCol === 3) ? 'desc' : 'asc');
-            sortState.column = newCol;
-            sortAndRenderTable();
-            trackEvent('table_sorted', { column: newCol, direction: sortState.direction });
-        }
-
-        function handleFilter() {
-            const filterInput = document.getElementById('filter-input');
-            const query = filterInput.value.toLowerCase();
-            filteredEntries = allEntries.filter(entry => entry.some(cell => String(cell).toLowerCase().includes(query)));
-            visibleCount = INITIAL_LOAD_COUNT;
-            sortAndRenderTable();
-            trackEvent('table_filtered', { query: query, results: filteredEntries.length });
         }
 
         function handleLoadMore(e) {
             const amount = parseInt(e.currentTarget.dataset.amount, 10);
             visibleCount += amount;
-            renderTable();
-            trackEvent('load_more_entries', { amount: amount, total_visible: visibleCount });
+            renderEntries();
+            trackEvent('load_more_entries', { amount: amount });
         }
     </script>
 </body>
