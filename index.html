@@ -486,7 +486,6 @@
         const loginForm = document.getElementById('login-form');
         const signupButton = document.getElementById('signup-button');
         const goBackButton = document.getElementById('go-back-button');
-        // const logoutButton = document.getElementById('logout-button'); // Removed direct ref
         const userEmailDisplay = document.getElementById('user-email-display-header');
         const rememberMeCheckbox = document.getElementById('remember-me');
         const forgotPasswordLink = document.getElementById('forgot-password-link');
@@ -519,25 +518,37 @@
 
         const trackEvent = (eventName, parameters = {}) => { if (typeof gtag !== 'undefined') gtag('event', eventName, parameters); };
 
-        // Helper: Robust Date Parsing for Safari/Mobile
-        const parseDate = (dateStr) => {
-            if (!dateStr) return new Date();
-            // Try standard parsing
+        /**
+         * Robust Date Parsing for Mobile Compatibility (Safari/iOS)
+         * - Replaces dashes with slashes (preferred by Safari)
+         * - Cleans up common Google Sheet timestamp weirdness
+         * - Returns null if truly unparseable to avoid defaulting to "Today"
+         */
+        const parseDate = (dateInput) => {
+            if (!dateInput) return null;
+            
+            // If already a Date object
+            if (dateInput instanceof Date) return isNaN(dateInput.getTime()) ? null : dateInput;
+
+            let dateStr = String(dateInput).trim();
+            
+            // Try ISO format directly
             let d = new Date(dateStr);
             if (!isNaN(d.getTime())) return d;
+
+            // Handle "YYYY-MM-DD HH:mm:ss" - Safari hates dashes.
+            // Convert to "YYYY/MM/DD HH:mm:ss"
+            let safeStr = dateStr.replace(/-/g, '/');
+            d = new Date(safeStr);
+            if (!isNaN(d.getTime())) return d;
+
+            // Handle formats like "DD/MM/YYYY" or "M/D/YYYY" if they slip through
+            // JS Date usually handles these fine if slashes are used.
             
-            // Handle "yyyy-mm-dd hh:mm:ss" which often fails on Safari/iOS
-            // Replacing dashes with slashes usually fixes it for basic JS Date parsing
-            if (typeof dateStr === 'string') {
-                const safeStr = dateStr.replace(/-/g, '/'); 
-                d = new Date(safeStr);
-                if (!isNaN(d.getTime())) return d;
-            }
-            return new Date(); // Fallback to current date on total failure to prevent crash
+            return null; // Return null instead of new Date() to avoid "Today" bug
         };
 
         const showButtonSpinner = (buttonId, textId, spinnerId) => { document.getElementById(buttonId).disabled = true; document.getElementById(textId).style.display = 'none'; document.getElementById(spinnerId).classList.remove('hidden'); };
-        // Updated Logout Spinner Logic for Menu Item
         const showLogoutSpinner = () => { 
             const btn = document.getElementById('menu-logout-btn');
             btn.disabled = true; 
@@ -567,8 +578,6 @@
             trackEvent('app_initialized');
             
             const form = document.getElementById('data-form');
-            // const viewEntriesBtn = document.getElementById('view-entries-btn'); // Removed old btn
-            // const helpFeedbackBtn = document.getElementById('help-feedback-btn'); // Moved to menu
             const trendChartBtn = document.getElementById('trend-chart-btn');
             const entriesModal = document.getElementById('entries-modal');
             const helpModal = document.getElementById('help-modal');
@@ -583,17 +592,13 @@
             const menuHelpBtn = document.getElementById('menu-help-btn');
             const menuLogoutBtn = document.getElementById('menu-logout-btn');
 
-            // Modal Logic Controls
-            // Removed view toggles
             const filterInput = document.getElementById('filter-input');
             
-            // New Home Action Buttons
             const openFeedBtn = document.getElementById('open-feed-btn');
             const openLedgerBtn = document.getElementById('open-ledger-btn');
             const openCalendarBtn = document.getElementById('open-calendar-btn');
             const openSplitBtn = document.getElementById('open-split-btn');
 
-            // New Filter Controls
             const timeFilterSelect = document.getElementById('time-filter');
             const customInputWrapper = document.getElementById('custom-input-wrapper');
             const customDateInput = document.getElementById('custom-date-input');
@@ -604,13 +609,11 @@
 
             form.addEventListener('submit', handleFormSubmit);
             
-            // New Home Button Listeners
             openFeedBtn.addEventListener('click', () => openEntriesModal('feed'));
             openLedgerBtn.addEventListener('click', () => openEntriesModal('ledger'));
             openCalendarBtn.addEventListener('click', () => openEntriesModal('calendar'));
             openSplitBtn.addEventListener('click', () => openEntriesModal('split'));
 
-            // Header Menu Logic
             userMenuBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 userMenuDropdown.classList.toggle('hidden');
@@ -621,7 +624,6 @@
                 }
             });
 
-            // Menu Item Listeners
             menuHelpBtn.addEventListener('click', () => { 
                 helpModal.classList.remove('hidden'); 
                 userMenuDropdown.classList.add('hidden');
@@ -643,14 +645,11 @@
                 } 
             });
 
-            // Filter Logic - Main Search
             filterInput.addEventListener('input', applyFilters);
             
-            // Filter Logic - Time Dropdown
             timeFilterSelect.addEventListener('change', (e) => {
                 const val = e.target.value;
                 if (val === 'custom_date' || val === 'custom_month' || val === 'custom_year') {
-                    // Switch UI to custom input mode
                     customInputWrapper.classList.remove('hidden');
                     customDateInput.classList.add('hidden');
                     customMonthInput.classList.add('hidden');
@@ -669,19 +668,17 @@
                         populateYearOptions();
                         customYearInput.focus();
                     }
-                    currentFilter = val; // Set filter type
+                    currentFilter = val;
                 } else {
                     currentFilter = val;
                     applyFilters();
                 }
             });
 
-            // Filter Logic - Custom Inputs
             customDateInput.addEventListener('change', (e) => { customDateVal = e.target.value; applyFilters(); });
             customMonthInput.addEventListener('change', (e) => { customMonthVal = e.target.value; applyFilters(); });
             customYearInput.addEventListener('change', (e) => { customYearVal = e.target.value; applyFilters(); });
 
-            // Clear Custom Filter Button
             clearCustomFilterBtn.addEventListener('click', () => {
                 customInputWrapper.classList.add('hidden');
                 timeFilterSelect.value = 'all';
@@ -696,7 +693,6 @@
 
             sortFilterSelect.addEventListener('change', (e) => { currentSort = e.target.value; applyFilters(); });
 
-            // helpFeedbackBtn.addEventListener('click', () => { helpModal.classList.remove('hidden'); trackEvent('help_feedback_opened'); }); // Moved
             closeHelpModalBtn.addEventListener('click', () => { helpModal.classList.add('hidden'); trackEvent('help_modal_closed'); });
             trendChartBtn.addEventListener('click', () => { trendChartModal.classList.remove('hidden'); trackEvent('trend_chart_opened'); });
             closeTrendChartBtn.addEventListener('click', () => { trendChartModal.classList.add('hidden'); trackEvent('trend_chart_closed'); });
@@ -709,14 +705,12 @@
             getDeviceDetails();
         }
 
-        // Removed updateToggleUI() as it's no longer needed
-
         const formatAmount = (num) => num ? Number(num).toLocaleString('en-IN') : '';
         
-        const formatTimestamp = (dateStr) => {
-            if (!dateStr) return '';
-            const date = parseDate(dateStr); // Use robust parser
-            if (isNaN(date.getTime())) return dateStr;
+        const formatTimestamp = (dateInput) => {
+            if (!dateInput) return '';
+            const date = parseDate(dateInput);
+            if (!date || isNaN(date.getTime())) return String(dateInput);
             return date.toLocaleString('en-US', { 
                 month: 'short', 
                 day: 'numeric', 
@@ -754,44 +748,38 @@
             document.getElementById('entries-modal').classList.remove('hidden');
             currentView = initialView;
             
-            // Set Modal Title based on view
             const modalTitle = document.getElementById('modal-title');
             if (initialView === 'feed') modalTitle.textContent = 'Transaction Feed';
             else if (initialView === 'ledger') modalTitle.textContent = 'Transaction Ledger';
             else if (initialView === 'calendar') modalTitle.textContent = 'Expense Calendar';
             else if (initialView === 'split') modalTitle.textContent = 'Split Analysis';
 
-            // Toggle Search/Filter Controls
             const modalControls = document.getElementById('modal-controls');
-            // Toggle Content Area Scrolling
             const contentArea = document.getElementById('entries-content-area');
 
             if (initialView === 'calendar') {
                 modalControls.classList.add('hidden');
-                // Lock parent scroll for Calendar to allow internal split scrolling
                 contentArea.classList.remove('overflow-y-auto');
                 contentArea.classList.add('overflow-hidden');
             } else {
                 modalControls.classList.remove('hidden');
-                // Re-enable standard scrolling for other views
                 contentArea.classList.add('overflow-y-auto');
                 contentArea.classList.remove('overflow-hidden');
             }
 
             if (initialView === 'calendar') {
-                // Initialize calendar date
                 if (currentFilter === 'custom_month' && customMonthVal) {
                     const parts = customMonthVal.split('-');
                     calendarViewDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, 1);
                 } else if (currentFilter === 'custom_date' && customDateVal) {
-                    calendarViewDate = parseDate(customDateVal);
+                    calendarViewDate = parseDate(customDateVal) || new Date();
                 } else {
                     calendarViewDate = new Date();
                 }
                 selectedCalendarDay = null;
             }
             
-            applyFilters(); // This triggers renderEntries
+            applyFilters();
             trackEvent('entries_modal_opened', { view: initialView });
         }
 
@@ -799,7 +787,6 @@
             const recentEntriesContainer = document.getElementById('recent-entries');
             const homepageSummary = document.getElementById('homepage-summary');
             
-            // Skeletons
             recentEntriesContainer.innerHTML = `<div class="modern-card p-4 animate-pulse"><div class="h-4 bg-gray-200 rounded w-3/4 mb-3"></div><div class="h-3 bg-gray-200 rounded w-1/4"></div></div><div class="modern-card p-4 animate-pulse delay-75"><div class="h-4 bg-gray-200 rounded w-3/4 mb-3"></div><div class="h-3 bg-gray-200 rounded w-1/4"></div></div>`;
             homepageSummary.classList.remove('hidden');
             homepageSummary.innerHTML = `<div class="animate-pulse space-y-4"><div class="h-4 bg-gray-200 rounded w-1/4"></div><div class="h-8 bg-gray-200 rounded w-3/4"></div><div class="h-4 bg-gray-200 rounded w-full"></div></div>`;
@@ -813,7 +800,7 @@
                 allEntries = Array.isArray(data.entries) ? data.entries : [];
                 renderRecentEntries(allEntries);
                 renderSummary(data.summary);
-                applyFilters(); // Initial filter apply
+                applyFilters();
                 trackEvent('data_fetch_success', { entries_count: allEntries.length });
             } catch (error) {
                 console.error('Error fetching data!', error);
@@ -842,15 +829,11 @@
         }
         
         function renderSummary(summary) {
-            // Update Modal Summary (Removed)
-            // const modalSummary = document.getElementById('summary-container');
             const homeSummary = document.getElementById('homepage-summary');
-            
             if (!summary) return;
             const owes = summary.h1 || 'None';
             const diff = formatAmount(summary.i1);
             
-            // Reduced font size from text-3xl to text-xl
             const summaryHTML = `
                 <div class="flex justify-between items-end mb-4">
                     <div>
@@ -863,17 +846,16 @@
                     <span>Ghazala Dena: <span class="text-gray-900 font-semibold">₹${formatAmount(summary.g1)}</span></span>
                 </div>
             `;
-
-            // modalSummary.innerHTML = summaryHTML;
-            
-            // Ensure homepage summary is visible and updated
             homeSummary.classList.remove('hidden');
             homeSummary.innerHTML = summaryHTML;
         }
 
         function populateYearOptions() {
             const yearSelect = document.getElementById('custom-year-input');
-            const years = new Set(allEntries.map(e => new Date(e[3]).getFullYear()));
+            const years = new Set(allEntries.map(e => {
+                const d = parseDate(e[3]);
+                return d ? d.getFullYear() : null;
+            }).filter(y => y !== null));
             const sortedYears = Array.from(years).sort().reverse();
             
             const currentVal = yearSelect.value;
@@ -890,18 +872,15 @@
             });
         }
 
-        // --- FILTER & SORT LOGIC ---
         function applyFilters() {
             const query = document.getElementById('filter-input').value.toLowerCase();
-            
-            // 1. Text Search
             let tempEntries = allEntries.filter(entry => entry.some(cell => String(cell).toLowerCase().includes(query)));
             
-            // 2. Date Filtering
             if (currentFilter !== 'all') {
                 const now = new Date();
                 tempEntries = tempEntries.filter(entry => {
-                    const entryDate = parseDate(entry[3]); // Use robust parser
+                    const entryDate = parseDate(entry[3]);
+                    if (!entryDate) return false;
                     
                     if (currentFilter === 'this_month') {
                         return entryDate.getMonth() === now.getMonth() && entryDate.getFullYear() === now.getFullYear();
@@ -912,7 +891,8 @@
                         const thirtyDaysAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
                         return entryDate >= thirtyDaysAgo;
                     } else if (currentFilter === 'custom_date' && customDateVal) {
-                        return entryDate.toDateString() === parseDate(customDateVal).toDateString();
+                        const target = parseDate(customDateVal);
+                        return target && entryDate.toDateString() === target.toDateString();
                     } else if (currentFilter === 'custom_month' && customMonthVal) {
                         const [y, m] = customMonthVal.split('-');
                         return entryDate.getFullYear() == y && (entryDate.getMonth() + 1) == m;
@@ -923,10 +903,9 @@
                 });
             }
 
-            // 3. Sorting
             tempEntries.sort((a, b) => {
-                let dateA = parseDate(a[3]), dateB = parseDate(b[3]);
-                let amtA = (parseFloat(a[0]) || 0) + (parseFloat(a[1]) || 0); // Gulnaz + Ghazala
+                let dateA = parseDate(a[3]) || new Date(0), dateB = parseDate(b[3]) || new Date(0);
+                let amtA = (parseFloat(a[0]) || 0) + (parseFloat(a[1]) || 0);
                 let amtB = (parseFloat(b[0]) || 0) + (parseFloat(b[1]) || 0);
 
                 if (currentSort === 'newest') return dateB - dateA;
@@ -953,20 +932,21 @@
             const container = document.getElementById('entries-content-area');
             if (filteredEntries.length === 0) { container.innerHTML = `<p class="text-center py-12 text-gray-400 font-medium">No entries found.</p>`; return; }
 
-            // Group by Date
             const groups = {};
-            const today = new Date().toDateString();
-            const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toDateString();
+            const now = new Date();
+            const todayStr = now.toDateString();
+            const yesterdayStr = new Date(now.setDate(now.getDate() - 1)).toDateString();
 
             const tagColorMap = { "Kirana": "bg-green-500", "Gosht": "bg-red-500", "Kheema": "bg-orange-500", "Gosht Kheema": "bg-red-600", "Chicken": "bg-yellow-400", "Mutton": "bg-red-500", "Bheja": "bg-pink-500", "Fish": "bg-sky-400", "Light Bill": "bg-indigo-500", "Society": "bg-teal-500" };
             const defaultColors = ["bg-blue-500", "bg-purple-500", "bg-pink-500", "bg-teal-500"];
 
             filteredEntries.slice(0, visibleCount).forEach(entry => {
-                const dateObj = parseDate(entry[3]); // Use robust parser
+                const dateObj = parseDate(entry[3]);
+                if (!dateObj) return;
                 const dateStr = dateObj.toDateString();
                 let label = dateStr;
-                if (dateStr === today) label = "Today";
-                else if (dateStr === yesterday) label = "Yesterday";
+                if (dateStr === todayStr) label = "Today";
+                else if (dateStr === yesterdayStr) label = "Yesterday";
                 else label = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
                 if (!groups[label]) groups[label] = [];
@@ -975,13 +955,7 @@
 
             let html = '';
             for (const [label, entries] of Object.entries(groups)) {
-                html += `
-                    <div class="bg-gray-50 border-b border-gray-200 px-4 py-2 sticky top-0 z-10 font-bold text-xs text-gray-500 uppercase tracking-wide flex justify-between">
-                        <span>${label}</span>
-                    </div>
-                    <div class="bg-white">
-                `;
-                
+                html += `<div class="bg-gray-50 border-b border-gray-200 px-4 py-2 sticky top-0 z-10 font-bold text-xs text-gray-500 uppercase tracking-wide flex justify-between"><span>${label}</span></div><div class="bg-white">`;
                 entries.forEach(entry => {
                     const [gAmount, zAmount, tag, timestamp] = entry;
                     const amount = gAmount || zAmount;
@@ -989,21 +963,7 @@
                     const tagInitial = tag ? tag.charAt(0).toUpperCase() : '?';
                     let colorClass = tagColorMap[tag];
                     if (!colorClass) { let hash = 0; for (let i = 0; i < tag.length; i++) hash = tag.charCodeAt(i) + ((hash << 5) - hash); const colorIndex = Math.abs(hash) % defaultColors.length; colorClass = defaultColors[colorIndex]; }
-                    
-                    html += `
-                        <div class="px-4 py-4 flex items-center justify-between border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-full ${colorClass} flex items-center justify-center text-xs font-bold text-white shadow-sm flex-shrink-0">
-                                    ${tagInitial}
-                                </div>
-                                <div>
-                                    <p class="text-base font-bold text-gray-900">${tag}</p>
-                                    <p class="text-sm text-gray-500 font-medium">${payerName} Dena</p>
-                                </div>
-                            </div>
-                            <span class="text-base font-bold text-gray-900">₹${formatAmount(amount)}</span>
-                        </div>
-                    `;
+                    html += `<div class="px-4 py-4 flex items-center justify-between border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-full ${colorClass} flex items-center justify-center text-xs font-bold text-white shadow-sm flex-shrink-0">${tagInitial}</div><div><p class="text-base font-bold text-gray-900">${tag}</p><p class="text-sm text-gray-500 font-medium">${payerName} Dena</p></div></div><span class="text-base font-bold text-gray-900">₹${formatAmount(amount)}</span></div>`;
                 });
                 html += `</div>`;
             }
@@ -1013,317 +973,125 @@
         function renderLedgerView() {
             const container = document.getElementById('entries-content-area');
             if (filteredEntries.length === 0) { container.innerHTML = `<p class="text-center py-12 text-gray-400 font-medium">No entries found.</p>`; return; }
-
             const tagColorMap = { "Kirana": "bg-green-500", "Gosht": "bg-red-500", "Kheema": "bg-orange-500", "Gosht Kheema": "bg-red-600", "Chicken": "bg-yellow-400", "Mutton": "bg-red-500", "Bheja": "bg-pink-500", "Fish": "bg-sky-400", "Light Bill": "bg-indigo-500", "Society": "bg-teal-500" };
             const defaultColors = ["bg-blue-500", "bg-purple-500", "bg-pink-500", "bg-teal-500"];
-
             let rows = filteredEntries.slice(0, visibleCount).map(([g, z, tag, time]) => {
                 const tagInitial = tag ? tag.charAt(0).toUpperCase() : '?';
                 let colorClass = tagColorMap[tag];
                 if (!colorClass) { let hash = 0; for (let i = 0; i < tag.length; i++) hash = tag.charCodeAt(i) + ((hash << 5) - hash); const colorIndex = Math.abs(hash) % defaultColors.length; colorClass = defaultColors[colorIndex]; }
-
-                return `
-                    <tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                        <td class="px-4 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full ${colorClass} flex items-center justify-center text-[10px] font-bold text-white shadow-sm flex-shrink-0">
-                                    ${tagInitial}
-                                </div>
-                                <div>
-                                    <span class="font-bold text-gray-900 block text-base leading-tight">${tag}</span>
-                                    <span class="text-xs text-gray-400 block mt-0.5">${formatTimestamp(time)}</span>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-4 py-4 text-right font-bold text-sm text-gray-900">${g ? '₹'+formatAmount(g) : '-'}</td>
-                        <td class="px-4 py-4 text-right font-bold text-sm text-gray-900">${z ? '₹'+formatAmount(z) : '-'}</td>
-                    </tr>
-                `;
+                return `<tr class="border-b border-gray-100 hover:bg-gray-50 transition-colors"><td class="px-4 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full ${colorClass} flex items-center justify-center text-[10px] font-bold text-white shadow-sm flex-shrink-0">${tagInitial}</div><div><span class="font-bold text-gray-900 block text-base leading-tight">${tag}</span><span class="text-xs text-gray-400 block mt-0.5">${formatTimestamp(time)}</span></div></div></td><td class="px-4 py-4 text-right font-bold text-sm text-gray-900">${g ? '₹'+formatAmount(g) : '-'}</td><td class="px-4 py-4 text-right font-bold text-sm text-gray-900">${z ? '₹'+formatAmount(z) : '-'}</td></tr>`;
             }).join('');
-
-            container.innerHTML = `
-                <table class="w-full text-left bg-white">
-                    <thead class="sticky top-0 z-20">
-                        <tr class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider border-b border-gray-200">
-                            <th class="px-4 py-3 font-bold">Category</th>
-                            <th class="px-4 py-3 font-bold text-right">Gulnaz</th>
-                            <th class="px-4 py-3 font-bold text-right">Ghazala</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rows}</tbody>
-                </table>
-            `;
+            container.innerHTML = `<table class="w-full text-left bg-white"><thead class="sticky top-0 z-20"><tr class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider border-b border-gray-200"><th class="px-4 py-3 font-bold">Category</th><th class="px-4 py-3 font-bold text-right">Gulnaz</th><th class="px-4 py-3 font-bold text-right">Ghazala</th></tr></thead><tbody>${rows}</tbody></table>`;
         }
 
         function renderSplitView() {
             const container = document.getElementById('entries-content-area');
             if (filteredEntries.length === 0) { container.innerHTML = `<p class="text-center py-12 text-gray-400 font-medium">No entries found.</p>`; return; }
-
-            let gulnazTotal = 0;
-            let ghazalaTotal = 0;
-            let gulnazRows = '';
-            let ghazalaRows = '';
-
+            let gulnazTotal = 0, ghazalaTotal = 0, gulnazRows = '', ghazalaRows = '';
             filteredEntries.forEach(([g, z, tag, time]) => {
                 if (g) {
                     gulnazTotal += parseFloat(g);
-                    // Updated to show full time string
-                    gulnazRows += `
-                        <div class="border-b border-gray-50 py-3 last:border-0">
-                            <div class="flex justify-between text-sm font-bold text-gray-800"><span>${tag}</span><span>₹${formatAmount(g)}</span></div>
-                            <div class="text-xs text-gray-400 mt-1 font-medium">${formatTimestamp(time)}</div>
-                        </div>
-                    `;
+                    gulnazRows += `<div class="border-b border-gray-50 py-3 last:border-0"><div class="flex justify-between text-sm font-bold text-gray-800"><span>${tag}</span><span>₹${formatAmount(g)}</span></div><div class="text-xs text-gray-400 mt-1 font-medium">${formatTimestamp(time)}</div></div>`;
                 }
                 if (z) {
                     ghazalaTotal += parseFloat(z);
-                    // Updated to show full time string
-                    ghazalaRows += `
-                        <div class="border-b border-gray-50 py-3 last:border-0">
-                            <div class="flex justify-between text-sm font-bold text-gray-800"><span>${tag}</span><span>₹${formatAmount(z)}</span></div>
-                            <div class="text-xs text-gray-400 mt-1 font-medium">${formatTimestamp(time)}</div>
-                        </div>
-                    `;
+                    ghazalaRows += `<div class="border-b border-gray-50 py-3 last:border-0"><div class="flex justify-between text-sm font-bold text-gray-800"><span>${tag}</span><span>₹${formatAmount(z)}</span></div><div class="text-xs text-gray-400 mt-1 font-medium">${formatTimestamp(time)}</div></div>`;
                 }
             });
-
-            container.innerHTML = `
-                <div class="flex h-full bg-white divide-x divide-gray-100">
-                    <div class="flex-1 flex flex-col">
-                        <div class="bg-purple-50 p-4 border-b border-purple-100 text-center sticky top-0 z-10">
-                            <span class="text-xs font-bold text-purple-600 block mb-1 uppercase tracking-wide">GULNAZ</span>
-                            <span class="text-lg font-bold text-gray-900">₹${formatAmount(gulnazTotal)}</span>
-                        </div>
-                        <div class="flex-1 overflow-y-auto p-4 space-y-1">${gulnazRows || '<p class="text-center text-xs text-gray-400 mt-4">No entries</p>'}</div>
-                    </div>
-                    <div class="flex-1 flex flex-col">
-                        <div class="bg-teal-50 p-4 border-b border-teal-100 text-center sticky top-0 z-10">
-                            <span class="text-xs font-bold text-teal-600 block mb-1 uppercase tracking-wide">GHAZALA</span>
-                            <span class="text-lg font-bold text-gray-900">₹${formatAmount(ghazalaTotal)}</span>
-                        </div>
-                        <div class="flex-1 overflow-y-auto p-4 space-y-1">${ghazalaRows || '<p class="text-center text-xs text-gray-400 mt-4">No entries</p>'}</div>
-                    </div>
-                </div>
-            `;
+            container.innerHTML = `<div class="flex h-full bg-white divide-x divide-gray-100"><div class="flex-1 flex flex-col"><div class="bg-purple-50 p-4 border-b border-purple-100 text-center sticky top-0 z-10"><span class="text-xs font-bold text-purple-600 block mb-1 uppercase tracking-wide">GULNAZ</span><span class="text-lg font-bold text-gray-900">₹${formatAmount(gulnazTotal)}</span></div><div class="flex-1 overflow-y-auto p-4 space-y-1">${gulnazRows || '<p class="text-center text-xs text-gray-400 mt-4">No entries</p>'}</div></div><div class="flex-1 flex flex-col"><div class="bg-teal-50 p-4 border-b border-teal-100 text-center sticky top-0 z-10"><span class="text-xs font-bold text-teal-600 block mb-1 uppercase tracking-wide">GHAZALA</span><span class="text-lg font-bold text-gray-900">₹${formatAmount(ghazalaTotal)}</span></div><div class="flex-1 overflow-y-auto p-4 space-y-1">${ghazalaRows || '<p class="text-center text-xs text-gray-400 mt-4">No entries</p>'}</div></div></div>`;
         }
 
-        // Variable to track selected day in calendar view
         let selectedCalendarDay = null;
 
         function renderCalendarView() {
             const container = document.getElementById('entries-content-area');
-            
-            // Use state variable for navigation
-            let year = calendarViewDate.getFullYear();
-            let month = calendarViewDate.getMonth();
-            // Note: filter-input is hidden in calendar view, but we check just in case
+            let year = calendarViewDate.getFullYear(), month = calendarViewDate.getMonth();
             const query = document.getElementById('filter-input').value.toLowerCase();
-
             const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const firstDay = new Date(year, month, 1).getDay(); // 0 is Sunday
+            const firstDay = new Date(year, month, 1).getDay();
 
-            // Filter ALL entries for this specific month (ignoring global time filter to allow navigation)
             const monthEntries = allEntries.filter(entry => {
-                if (query && !entry.some(cell => String(cell).toLowerCase().includes(query))) {
-                    return false;
-                }
-                const d = parseDate(entry[3]); // Use robust parser
-                return d.getMonth() === month && d.getFullYear() === year;
+                if (query && !entry.some(cell => String(cell).toLowerCase().includes(query))) return false;
+                const d = parseDate(entry[3]);
+                return d && d.getMonth() === month && d.getFullYear() === year;
             });
 
-            // Map entries to days
             const dayEntries = {};
             monthEntries.forEach(entry => {
-                const d = parseDate(entry[3]); // Use robust parser
+                const d = parseDate(entry[3]);
+                if (!d) return;
                 const day = d.getDate();
                 if (!dayEntries[day]) dayEntries[day] = [];
                 dayEntries[day].push(entry);
             });
 
-            // Grid Generation
             let calendarGrid = '';
             for (let i = 0; i < firstDay; i++) calendarGrid += `<span></span>`;
-            
             for (let day = 1; day <= daysInMonth; day++) {
                 const hasEntries = dayEntries[day];
                 const isSelected = selectedCalendarDay === day;
                 let cellClasses = 'aspect-square flex flex-col items-center justify-center relative rounded-xl text-sm font-medium transition-all cursor-pointer border border-transparent select-none tap-highlight-transparent';
                 let dots = '';
-                
-                if (isSelected) {
-                    cellClasses += ' bg-blue-500 text-white shadow-md transform scale-105 z-10';
-                } else if (hasEntries) {
+                if (isSelected) cellClasses += ' bg-blue-500 text-white shadow-md transform scale-105 z-10';
+                else if (hasEntries) {
                     cellClasses += ' bg-gray-50 text-gray-900 hover:bg-gray-100 hover:border-gray-200';
-                    const hasGulnaz = hasEntries.some(e => e[0]);
-                    const hasGhazala = hasEntries.some(e => e[1]);
-                    
+                    const hasGulnaz = hasEntries.some(e => e[0]), hasGhazala = hasEntries.some(e => e[1]);
                     dots = `<div class="flex gap-1 mt-1">`;
                     if (hasGulnaz) dots += `<div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div>`;
                     if (hasGhazala) dots += `<div class="w-1.5 h-1.5 rounded-full bg-teal-500"></div>`;
                     dots += `</div>`;
-                } else {
-                    cellClasses += ' text-gray-400 hover:text-gray-600';
-                }
-
+                } else cellClasses += ' text-gray-400 hover:text-gray-600';
                 calendarGrid += `<div class="calendar-day ${cellClasses}" data-day="${day}">${day}${dots}</div>`;
             }
 
-            // List Generation (Bottom Half)
             let detailsHTML = '';
             const displayEntries = selectedCalendarDay ? (dayEntries[selectedCalendarDay] || []) : monthEntries;
-            displayEntries.sort((a, b) => parseDate(b[3]) - parseDate(a[3]));
+            displayEntries.sort((a, b) => (parseDate(b[3]) || 0) - (parseDate(a[3]) || 0));
 
             if (displayEntries.length > 0) {
                 detailsHTML = displayEntries.map(entry => {
                     const [g, z, tag, time] = entry;
-                    const amount = g || z;
-                    const payer = g ? 'Gulnaz' : 'Ghazala';
+                    const amount = g || z, payer = g ? 'Gulnaz' : 'Ghazala';
                     const color = g ? 'text-purple-600 bg-purple-50' : 'text-teal-600 bg-teal-50';
-                    return `
-                        <div class="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl mb-2 shadow-sm">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full ${color} flex items-center justify-center text-xs font-bold">${payer.charAt(0)}</div>
-                                <div>
-                                    <p class="text-sm font-bold text-gray-900">${tag}</p>
-                                    <p class="text-sm text-gray-500 font-medium">${payer} Dena <span class="mx-1">•</span> ${formatTimestamp(time)}</p>
-                                </div>
-                            </div>
-                            <span class="text-sm font-bold text-gray-900">₹${formatAmount(amount)}</span>
-                        </div>
-                    `;
+                    return `<div class="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl mb-2 shadow-sm"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full ${color} flex items-center justify-center text-xs font-bold">${payer.charAt(0)}</div><div><p class="text-sm font-bold text-gray-900">${tag}</p><p class="text-sm text-gray-500 font-medium">${payer} Dena <span class="mx-1">•</span> ${formatTimestamp(time)}</p></div></div><span class="text-sm font-bold text-gray-900">₹${formatAmount(amount)}</span></div>`;
                 }).join('');
-            } else {
-                detailsHTML = `<p class="text-center text-sm text-gray-400 py-8">${selectedCalendarDay ? 'No entries on this day.' : 'No transactions this month.'}</p>`;
-            }
+            } else detailsHTML = `<p class="text-center text-sm text-gray-400 py-8">${selectedCalendarDay ? 'No entries on this day.' : 'No transactions this month.'}</p>`;
 
-            container.innerHTML = `
-                <div class="flex flex-col h-full bg-white">
-                    <!-- Calendar Header & Grid -->
-                    <div class="p-4 border-b border-gray-100 flex-none bg-white z-10">
-                        <div class="flex items-center justify-between mb-4">
-                            <button id="cal-prev-btn" class="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors active:bg-gray-200">
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
-                            </button>
-                            
-                            <!-- Clickable Month/Year with Native Picker -->
-                            <div class="text-center relative">
-                                <div class="relative inline-block group cursor-pointer">
-                                    <span class="font-bold text-gray-900 text-lg block leading-none group-hover:text-blue-600 transition-colors select-none">${monthNames[month]} ${year}</span>
-                                    <input type="month" id="cal-month-picker" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" value="${year}-${String(month + 1).padStart(2, '0')}">
-                                </div>
-                                ${selectedCalendarDay ? `<button id="clear-cal-selection" class="text-xs text-blue-600 font-bold hover:underline mt-1 block w-full relative z-10">Show Month</button>` : ''}
-                            </div>
+            container.innerHTML = `<div class="flex flex-col h-full bg-white"><div class="p-4 border-b border-gray-100 flex-none bg-white z-10"><div class="flex items-center justify-between mb-4"><button id="cal-prev-btn" class="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors active:bg-gray-200"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button><div class="text-center relative"><div class="relative inline-block group cursor-pointer"><span class="font-bold text-gray-900 text-lg block leading-none group-hover:text-blue-600 transition-colors select-none">${monthNames[month]} ${year}</span><input type="month" id="cal-month-picker" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" value="${year}-${String(month + 1).padStart(2, '0')}"></div>${selectedCalendarDay ? `<button id="clear-cal-selection" class="text-xs text-blue-600 font-bold hover:underline mt-1 block w-full relative z-10">Show Month</button>` : ''}</div><button id="cal-next-btn" class="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors active:bg-gray-200"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button></div><div class="grid grid-cols-7 gap-1 text-center mb-2"><span class="text-xs text-gray-400 font-bold">S</span><span class="text-xs text-gray-400 font-bold">M</span><span class="text-xs text-gray-400 font-bold">T</span><span class="text-xs text-gray-400 font-bold">W</span><span class="text-xs text-gray-400 font-bold">T</span><span class="text-xs text-gray-400 font-bold">F</span><span class="text-xs text-gray-400 font-bold">S</span></div><div class="grid grid-cols-7 gap-1 text-center">${calendarGrid}</div></div><div class="flex-1 overflow-y-auto bg-gray-50 p-4 overscroll-contain"><h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">${selectedCalendarDay ? `Entries for ${monthNames[month]} ${selectedCalendarDay}` : `All Entries in ${monthNames[month]}`}</h4>${detailsHTML}</div></div>`;
 
-                            <button id="cal-next-btn" class="p-2 rounded-full hover:bg-gray-100 text-gray-500 transition-colors active:bg-gray-200">
-                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                            </button>
-                        </div>
-                        <div class="grid grid-cols-7 gap-1 text-center mb-2">
-                            <span class="text-xs text-gray-400 font-bold">S</span>
-                            <span class="text-xs text-gray-400 font-bold">M</span>
-                            <span class="text-xs text-gray-400 font-bold">T</span>
-                            <span class="text-xs text-gray-400 font-bold">W</span>
-                            <span class="text-xs text-gray-400 font-bold">T</span>
-                            <span class="text-xs text-gray-400 font-bold">F</span>
-                            <span class="text-xs text-gray-400 font-bold">S</span>
-                        </div>
-                        <div class="grid grid-cols-7 gap-1 text-center">
-                            ${calendarGrid}
-                        </div>
-                    </div>
-                    
-                    <!-- Details List -->
-                    <div class="flex-1 overflow-y-auto bg-gray-50 p-4 overscroll-contain">
-                        <h4 class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">
-                            ${selectedCalendarDay ? `Entries for ${monthNames[month]} ${selectedCalendarDay}` : `All Entries in ${monthNames[month]}`}
-                        </h4>
-                        ${detailsHTML}
-                    </div>
-                </div>
-            `;
-
-            // Month Picker Listener
-            const monthPicker = document.getElementById('cal-month-picker');
-            if (monthPicker) {
-                monthPicker.addEventListener('change', (e) => {
-                    if (e.target.value) {
-                        const [y, m] = e.target.value.split('-');
-                        calendarViewDate = new Date(parseInt(y), parseInt(m) - 1, 1);
-                        selectedCalendarDay = null; // Reset day selection
-                        renderCalendarView();
-                    }
-                });
-            }
-
-            // Add Event Listeners for Days
-            document.querySelectorAll('.calendar-day').forEach(el => {
-                el.addEventListener('click', (e) => {
-                    const day = parseInt(e.currentTarget.dataset.day);
-                    if (selectedCalendarDay === day) {
-                        selectedCalendarDay = null; // Toggle off
-                    } else {
-                        selectedCalendarDay = day;
-                    }
-                    renderCalendarView(); // Re-render
-                });
+            document.getElementById('cal-month-picker')?.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    const [y, m] = e.target.value.split('-');
+                    calendarViewDate = new Date(parseInt(y), parseInt(m) - 1, 1);
+                    selectedCalendarDay = null; renderCalendarView();
+                }
             });
-
-            // Navigation Listeners
-            document.getElementById('cal-prev-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                calendarViewDate.setMonth(calendarViewDate.getMonth() - 1);
-                selectedCalendarDay = null;
+            document.querySelectorAll('.calendar-day').forEach(el => el.addEventListener('click', (e) => {
+                const day = parseInt(e.currentTarget.dataset.day);
+                selectedCalendarDay = (selectedCalendarDay === day) ? null : day;
                 renderCalendarView();
-            });
-
-            document.getElementById('cal-next-btn').addEventListener('click', (e) => {
-                e.stopPropagation();
-                calendarViewDate.setMonth(calendarViewDate.getMonth() + 1);
-                selectedCalendarDay = null;
-                renderCalendarView();
-            });
-
-            // Clear Selection Listener
-            const clearBtn = document.getElementById('clear-cal-selection');
-            if (clearBtn) {
-                clearBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    selectedCalendarDay = null;
-                    renderCalendarView();
-                });
-            }
+            }));
+            document.getElementById('cal-prev-btn').addEventListener('click', () => { calendarViewDate.setMonth(calendarViewDate.getMonth() - 1); selectedCalendarDay = null; renderCalendarView(); });
+            document.getElementById('cal-next-btn').addEventListener('click', () => { calendarViewDate.setMonth(calendarViewDate.getMonth() + 1); selectedCalendarDay = null; renderCalendarView(); });
+            document.getElementById('clear-cal-selection')?.addEventListener('click', () => { selectedCalendarDay = null; renderCalendarView(); });
         }
 
         function renderLoadMoreButtons() {
-            // Hide load more buttons in calendar/split view as they handle their own scrolling/data
             const container = document.getElementById('load-more-container');
-            
             if (currentView === 'calendar' || currentView === 'split') {
-                container.innerHTML = '';
-                container.classList.add('hidden');
-                return;
-            } else {
-                container.classList.remove('hidden');
+                container.innerHTML = ''; container.classList.add('hidden'); return;
             }
-
+            container.classList.remove('hidden');
             if (visibleCount >= filteredEntries.length) {
-                container.innerHTML = `<p class="text-xs text-gray-400 font-medium">End of list.</p>`;
-                return;
+                container.innerHTML = `<p class="text-xs text-gray-400 font-medium">End of list.</p>`; return;
             }
             const remaining = filteredEntries.length - visibleCount;
-            container.innerHTML = `
-                <button data-amount="50" class="load-more-btn px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 mx-1 font-bold shadow-sm transition-all">Load 50</button>
-                <button data-amount="${remaining}" class="load-more-btn px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 mx-1 font-bold shadow-sm transition-all">Load All (${remaining})</button>
-            `;
-            document.querySelectorAll('.load-more-btn').forEach(btn => btn.addEventListener('click', handleLoadMore));
-        }
-
-        function handleLoadMore(e) {
-            const amount = parseInt(e.currentTarget.dataset.amount, 10);
-            visibleCount += amount;
-            renderEntries();
-            trackEvent('load_more_entries', { amount: amount });
+            container.innerHTML = `<button data-amount="50" class="load-more-btn px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 mx-1 font-bold shadow-sm transition-all">Load 50</button><button data-amount="${remaining}" class="load-more-btn px-5 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 mx-1 font-bold shadow-sm transition-all">Load All (${remaining})</button>`;
+            document.querySelectorAll('.load-more-btn').forEach(btn => btn.addEventListener('click', (e) => {
+                visibleCount += parseInt(e.currentTarget.dataset.amount, 10);
+                renderEntries();
+            }));
         }
     </script>
 </body>
