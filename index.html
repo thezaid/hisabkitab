@@ -773,7 +773,6 @@ async function handleSubmit(e){
         $('amount').value='';$('other-tag-input').value='';$('other-input-wrap').classList.remove('open');$('other-chip-btn').classList.remove('active');
         if(lastName){const r=document.querySelector(`input[name="name"][value="${lastName}"]`);if(r)r.checked=true;}
         if(lastTag){const r=document.querySelector(`input[name="tag"][value="${lastTag}"]`);if(r)r.checked=true;}
-        $('amount').focus();
         fetchData();track('form_submit_success',{name,amount,tag});
     }catch(err){
         console.error(err);showMsg("Couldn't save. Please contact us.");
